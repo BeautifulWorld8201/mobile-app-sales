@@ -1,16 +1,16 @@
-import {StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import EditScreenInfo from '../../components/EditScreenInfo';
 import { Text, View, Button } from '../../components/Themed';
+import { Link, useNavigation } from 'expo-router';
 
-export default function TabOneScreen() {
-	return <View style={styles.container}>
-    {/* add a Button that will say "Make new Sale" and that will trigger going to another page */}
-    <Button title="Make new Sale" onPress={() => {
-      // go to a new page 
-      
-    }} />
-  </View>;
+export default function HomeScreen() {
+	const navigation = useNavigation();
+	return (
+		<View style={styles.container}>
+			<Button title="Make new Sale" onPress={() => navigation.push('Sale')} />
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
@@ -27,5 +27,13 @@ const styles = StyleSheet.create({
 		marginVertical: 30,
 		height: 1,
 		width: '80%',
+	},
+	link: {
+		marginTop: 15,
+		paddingVertical: 15,
+	},
+	linkText: {
+		fontSize: 14,
+		color: '#2e78b7',
 	},
 });
