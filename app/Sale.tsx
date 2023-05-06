@@ -3,6 +3,7 @@ import { StyleSheet, TextInput } from 'react-native';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Button, Text, View } from '../components/Themed';
 import { useState } from 'react';
+import { writeGoogleLinkOnNFC } from '../functions/NFC';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { MAPS_API_KEY } from '@env';
 
@@ -34,7 +35,7 @@ export default function Sale() {
 				disabled={!location.name && !location.place_id}
 				onPress={() => {
 					if (!location.place_id) return;
-					
+					writeGoogleLinkOnNFC(location.place_id);
 				}}
 			/>
 		</>
