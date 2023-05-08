@@ -16,17 +16,25 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.popcard"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.NFC"
+      ],
+      "package": "com.popcard"
     },
     "web": {
       "bundler": "metro",
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "plugins": [
+      "react-native-nfc-manager"
+    ]
   }
 }
