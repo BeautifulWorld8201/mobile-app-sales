@@ -87,8 +87,7 @@ const googleInputStyles = {
     height: 38,
     color: "#5d5d5d",
     fontSize: 16,
-    textStyle: "italic",
-    border: "1px solid red",
+    fontStyle: "italic"
   },
   predefinedPlacesDescription: {
     color: "#1faadb",
