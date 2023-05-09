@@ -1,0 +1,29 @@
+{
+  "cli": {
+    "version": ">= 2.9.0"
+  },
+  "build": {
+    "development": {
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "ios": {
+        "buildConfiguration": "Debug"
+      }
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "walletmessengerapp@gmail.com",
+        "ascAppId": "6448954487",
+        "appleTeamId": "GRB7LM6FK4"
+      }
+    }
+  }
+}
