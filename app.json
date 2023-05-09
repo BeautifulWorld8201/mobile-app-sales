@@ -17,7 +17,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.popcard"
+      "bundleIdentifier": "com.popcard",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
