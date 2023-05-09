@@ -1,16 +1,58 @@
-import { StyleSheet, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Platform, StyleSheet, TextInput, ToastAndroid } from 'react-native';
+import NfcManager, { Ndef, NfcTech } from 'react-native-nfc-manager';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Button, Text, View } from '../components/Themed';
-import { useState } from 'react';
+import { writeGoogleLinkOnNFC } from '../functions/NFC';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { MAPS_API_KEY } from '@env';
+NfcManager.start();
 
-export default function Sale() {
+export default function Sale(): JSX.Element {
 	const [location, setLocation] = useState<{
 		name: string | undefined;
 		place_id: string | undefined;
 	}>({ name: undefined, place_id: undefined });
+
+	useEffect(() => {
+		return () => {
+			NfcManager.cancelTechnologyRequest();
+		};
+	}, []);
+
+	async function writeGoogleLinkOnNFC(place_id: string) {
+		// only show this toast if its on android
+		if (Platform.OS === 'android') {
+			ToastAndroid.show('Please tap card to write.', ToastAndroid.SHORT);
+		}
+
+		const reviewLink = `https://search.google.com/local/writereview?placeid=${place_id}`;
+
+		let result = false;
+
+		try {
+			await NfcManager.requestTechnology(NfcTech.Ndef);
+			const bytes = Ndef.encodeMessage([Ndef.uriRecord(reviewLink)]);
+			if (bytes) {
+				await NfcManager.ndefHandler.writeNdefMessage(bytes);
+				result = true;
+			}
+			if (Platform.OS === 'android') {
+				ToastAndroid.show('Data written successfully', ToastAndroid.SHORT);
+			}
+		} catch (ex) {
+			if (Platform.OS === 'android') {
+				ToastAndroid.show('An error occured', ToastAndroid.SHORT);
+			}
+			console.log(JSON.stringify(ex));
+		} finally {
+			NfcManager.cancelTechnologyRequest();
+		}
+
+		return result;
+	}
+
 	return (
 		<>
 			{/* for some reason the GoogleMapsInput doesn't work when inside a <View /> */}
@@ -34,7 +76,7 @@ export default function Sale() {
 				disabled={!location.name && !location.place_id}
 				onPress={() => {
 					if (!location.place_id) return;
-					
+					writeGoogleLinkOnNFC(location?.place_id);
 				}}
 			/>
 		</>
@@ -51,8 +93,7 @@ const googleInputStyles = {
 		height: 38,
 		color: '#5d5d5d',
 		fontSize: 16,
-		textStyle: 'italic',
-		border: '1px solid red',
+		fontStyle: 'italic',
 	},
 	predefinedPlacesDescription: {
 		color: '#1faadb',
