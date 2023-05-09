@@ -113,7 +113,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.popcard"
+    namespace "com.popcardsalesmen"
     defaultConfig {
         applicationId 'com.popcard'
         minSdkVersion rootProject.ext.minSdkVersion
