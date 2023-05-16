@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
 
-import EditScreenInfo from "../../components/EditScreenInfo";
-import { Text, View, Button } from "../../components/Themed";
+// import EditScreenInfo from "../../components/EditScreenInfo";
+import { Text, View, Button } from "../../../components/Themed";
 // import { Link, useNavigation } from "expo-router";
 
-export default function HomeScreen(props: any) {
+export default function MakeSale(props: any) {
   // const navigation: any = useNavigation();
   return (
     <View style={styles.container}>

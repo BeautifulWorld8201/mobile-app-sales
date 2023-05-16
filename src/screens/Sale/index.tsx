@@ -8,12 +8,11 @@ import {
 } from "react-native";
 import NfcManager, { Ndef, NfcTech } from "react-native-nfc-manager";
 
-import EditScreenInfo from "../components/EditScreenInfo";
-import { Button, Text, View } from "../components/Themed";
-import { writeGoogleLinkOnNFC } from "../functions/NFC";
+// import EditScreenInfo from '../components/EditScreenInfo';
+import { Button, Text, View } from "../../../components/Themed";
+// import { writeGoogleLinkOnNFC } from '../functions/NFC';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MAPS_API_KEY } from "@env";
-import { View } from "../components/Themed";
 NfcManager.start();
 
 export default function Sale(): JSX.Element {
@@ -97,6 +96,7 @@ const styles = StyleSheet.create({});
 const googleInputStyles = {
   container: {
     flex: 0,
+    marginTop: 50,
   },
   textInput: {
     height: 38,

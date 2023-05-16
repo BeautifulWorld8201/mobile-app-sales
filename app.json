@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.popcard",
@@ -25,9 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-logo.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.NFC"
-      ],
+      "permissions": ["android.permission.NFC"],
       "package": "com.popcard"
     },
     "web": {
