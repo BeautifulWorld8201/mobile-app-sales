@@ -99,7 +99,7 @@ export default function StackNavigator() {
         animationEnabled: true,
       })}
     >
-      {authToken == null ? (
+      {authToken && Object.keys(authToken).length === 0 ? (
         <Stack.Screen name="AuthStack" component={AuthStack} />
       ) : (
         <Stack.Screen name="AppStack" component={AppStack} />

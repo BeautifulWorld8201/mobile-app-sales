@@ -7,16 +7,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import { PersistGate } from "redux-persist/integration/react";
 import StackNavigator from "./src/navigation";
 import { store, persistor } from "./redux/store";
-
+import { RootSiblingParent } from "react-native-root-siblings";
 const App = () => {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
-          <StackNavigator />
-        </NavigationContainer>
-      </PersistGate>
-    </Provider>
+    <RootSiblingParent>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer>
+            <StackNavigator />
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
+    </RootSiblingParent>
   );
 };
 

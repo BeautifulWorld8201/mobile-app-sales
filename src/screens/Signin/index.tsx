@@ -14,10 +14,15 @@ import Input from "../../../components/Input";
 import Button from "../../../components/Button";
 import { Formik, useFormik } from "formik";
 import * as yup from "yup";
-import { tintColorDark } from "../../../constants/Colors";
+import { tintColorDark, tintColorLight } from "../../../constants/Colors";
 import { useLoginMutation } from "../../../redux/auth/authApiSlice";
 import { useDispatch } from "react-redux";
-import { setAuthToken } from "../../../redux/auth/authSlice";
+import {
+  setAuthToken,
+  setLoginUser,
+  setRefreshToken,
+} from "../../../redux/auth/authSlice";
+import Toast from "react-native-root-toast";
 export default function Signin(props: any) {
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
@@ -30,12 +35,22 @@ export default function Signin(props: any) {
     password: yup.string("Required").required("Required"),
   });
   const onLogin = async (values: object) => {
-    // try {
-    // const resp = await login(values);
-    dispatch(setAuthToken("token"));
-    // } catch (e) {
-    //   console.log("login error--->", e);
-    // }
+    try {
+      const resp = await login(values);
+
+      if (resp?.error) {
+        Toast.show(resp?.error?.data?.message, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+        });
+      } else {
+        dispatch(setAuthToken(resp?.data?.token?.access));
+        dispatch(setRefreshToken(resp?.data?.token?.refresh));
+        dispatch(setLoginUser(resp?.data?.user));
+      }
+    } catch (e) {
+      console.log("login error--->", e);
+    }
   };
   return (
     <KeyboardAwareScrollView style={styles.container}>
@@ -141,14 +156,13 @@ export default function Signin(props: any) {
 
       <View style={styles.signupView}>
         <Text>Don't have an account? </Text>
-        {/* <Link href="/Register" asChild> */}
+
         <Text
           style={styles.signupText}
           onPress={() => props.navigation.navigate("Register")}
         >
           Sign up
         </Text>
-        {/* </Link> */}
       </View>
     </KeyboardAwareScrollView>
   );
