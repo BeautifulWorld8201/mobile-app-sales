@@ -16,14 +16,20 @@ import { Formik, useFormik } from "formik";
 import * as yup from "yup";
 import { tintColorDark } from "../../../constants/Colors";
 import { useSignUpMutation } from "../../../redux/auth/authApiSlice";
+import {
+  setAuthToken,
+  setRefreshToken,
+  setLoginUser,
+} from "../../../redux/auth/authSlice";
+import { useDispatch } from "react-redux";
+import Toast from "react-native-root-toast";
 
 export default function Register(props: any) {
-  //   const navigation: any = useNavigation();
   const [signUp, { isLoading }] = useSignUpMutation();
-  // const [isLoading, setIsLoading] = useState(false);
   const _formik = useRef();
+  const dispatch = useDispatch();
   const validationSchema = yup.object().shape({
-    name: yup.string("Required").required("Name is required"),
+    username: yup.string("Required").required("Name is required"),
     email: yup
       .string("Required")
       .required("Required")
@@ -32,11 +38,20 @@ export default function Register(props: any) {
   });
 
   const onSignUp = async (values: object) => {
-    console.log("-----values----", values);
     try {
-      // const resp = await signUp(values);
+      const resp = await signUp(values);
+      if (resp?.error) {
+        Toast.show(resp?.error?.data?.message, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+        });
+      } else {
+        dispatch(setAuthToken(resp?.data?.token?.access));
+        dispatch(setRefreshToken(resp?.data?.token?.refresh));
+        dispatch(setLoginUser(resp?.data?.user));
+      }
     } catch (e) {
-      console.log("login error--->", e);
+      console.log("register error--->", e);
     }
   };
 
@@ -61,7 +76,7 @@ export default function Register(props: any) {
             <Formik
               innerRef={_formik}
               initialValues={{
-                name: "",
+                username: "",
                 email: "",
                 password: "",
               }}
@@ -78,23 +93,23 @@ export default function Register(props: any) {
                 touched,
               }) => (
                 <View>
-                  <Text style={styles.credsFont}>Name</Text>
+                  <Text style={styles.credsFont}>User Name</Text>
                   <Input
                     onChangeText={(text) =>
-                      handleChange("name")(text.replace(/\s/g, ""))
+                      handleChange("username")(text.replace(/\s/g, ""))
                     }
-                    onBlur={handleBlur("name")}
-                    value={values.name}
+                    onBlur={handleBlur("username")}
+                    value={values.username}
                     style={styles.inputField}
                     icon
                     iconName="account"
                     inputViewStyle={styles.inputViewStyle}
                     iconColor={"#ccc"}
                     autoCapitalize={"none"}
-                    placeholder={"Enter your name"}
+                    placeholder={"Enter your user name"}
                   />
-                  {errors.name && touched.name && (
-                    <Text style={styles.errorText}>{errors.name}</Text>
+                  {errors.username && touched.username && (
+                    <Text style={styles.errorText}>{errors.username}</Text>
                   )}
                   <Text style={styles.credsFont}>Email</Text>
                   <Input
