@@ -13,7 +13,7 @@ import { Button, Text, View } from "../components/Themed";
 import { writeGoogleLinkOnNFC } from "../functions/NFC";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MAPS_API_KEY } from "@env";
-import { View } from "../components/Themed";
+
 NfcManager.start();
 
 export default function Sale(): JSX.Element {
