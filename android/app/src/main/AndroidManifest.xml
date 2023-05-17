@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.popcard">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.popcardsalesmen">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.NFC"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -28,7 +28,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
-        <data android:scheme="com.popcard"/>
+        <data android:scheme="com.popcardsalesmen"/>
         <data android:scheme="exp+popcard-salesmen"/>
       </intent-filter>
     </activity>

@@ -1,4 +1,4 @@
-package com.popcard;
+package com.popcardsalesmen;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
-
+// import com.popcard.BuildConfig;
 import expo.modules.ReactActivityDelegateWrapper;
 
 public class MainActivity extends ReactActivity {

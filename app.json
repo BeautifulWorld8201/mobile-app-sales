@@ -24,7 +24,7 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": ["android.permission.NFC"],
-      "package": "com.popcard"
+      "package": "com.popcardsalesmen"
     },
     "web": {
       "bundler": "metro",
