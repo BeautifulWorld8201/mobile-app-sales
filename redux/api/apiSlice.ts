@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
+import { baseUrl } from "../../constants";
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://popcard-backend.herokuapp.com/v1",
+  baseUrl: baseUrl,
 
   prepareHeaders: (headers, { getState }) => {
-    const token = getState().auth.authToken;
-
+    const token = getState()?.auth?.accessToken?.token;
+    console.log("token", token);
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }

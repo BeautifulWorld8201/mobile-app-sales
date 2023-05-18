@@ -1,12 +1,30 @@
 import { StyleSheet } from "react-native";
 
-// import EditScreenInfo from "../../components/EditScreenInfo";
-import { Text, View } from "../../../components/Themed";
+import { Text, View, Button } from "../../../components/Themed";
+import { useLogoutUserMutation } from "../../../redux/auth/authApiSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { logOut } from "../../../redux/auth/authSlice";
+export default function Settings(props: any) {
+  const dispatch = useDispatch();
+  const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
 
-export default function Settings() {
+  const [logoutUser, { isLoading }] = useLogoutUserMutation();
+  const logoutApi = async () => {
+    const data = {
+      refreshToken,
+    };
+    try {
+      const resp = await logoutUser(data);
+
+      dispatch(logOut());
+    } catch (error) {
+      console.log("---error--logout-", error);
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>SETTINGS</Text>
+      <Button title="Logout" onPress={() => logoutApi()} />
     </View>
   );
 }

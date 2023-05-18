@@ -18,7 +18,7 @@ import { tintColorDark, tintColorLight } from "../../../constants/Colors";
 import { useLoginMutation } from "../../../redux/auth/authApiSlice";
 import { useDispatch } from "react-redux";
 import {
-  setAuthToken,
+  setAccessToken,
   setLoginUser,
   setRefreshToken,
 } from "../../../redux/auth/authSlice";
@@ -37,15 +37,15 @@ export default function Signin(props: any) {
   const onLogin = async (values: object) => {
     try {
       const resp = await login(values);
-
+      console.log("resp login user", resp?.data?.user);
       if (resp?.error) {
         Toast.show(resp?.error?.data?.message, {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
         });
       } else {
-        dispatch(setAuthToken(resp?.data?.token?.access));
-        dispatch(setRefreshToken(resp?.data?.token?.refresh));
+        dispatch(setAccessToken(resp?.data?.tokens?.access));
+        dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
         dispatch(setLoginUser(resp?.data?.user));
       }
     } catch (e) {
@@ -73,8 +73,8 @@ export default function Signin(props: any) {
             <Formik
               innerRef={_formik}
               initialValues={{
-                email: "",
-                password: "",
+                email: "max@gmail.com",
+                password: "Test@123",
               }}
               validationSchema={validationSchema}
               validateOnBlur={false}

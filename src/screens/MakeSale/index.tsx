@@ -1,16 +1,58 @@
 import { StyleSheet } from "react-native";
-
-// import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View, Button } from "../../../components/Themed";
-// import { Link, useNavigation } from "expo-router";
+import { useSelector, useDispatch } from "react-redux";
+import { getRefreshedToken } from "../../helpers";
+import { setAccessToken, setRefreshToken } from "../../../redux/auth/authSlice";
+
+import { useSubmitApplicationMutation } from "../../../redux/user/userApiSlice";
+import moment from "moment";
 
 export default function MakeSale(props: any) {
-  // const navigation: any = useNavigation();
+  const dispatch = useDispatch();
+  const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
+  const accessToken = useSelector((state) => state?.auth?.accessToken);
+
+  const [submitApplication, { isLoading }] = useSubmitApplicationMutation();
+
+  const setTokens = async () => {
+    const resp = await getRefreshedToken(refreshToken);
+
+    dispatch(setAccessToken(resp?.data?.tokens?.access));
+    dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
+  };
+
+  const submitApplicationApi = async () => {
+    const data = {
+      professionalStatus: "student",
+      inquiryId: "inq_FrrSyZso6KkzhP8XXVaTau93",
+    };
+
+    try {
+      const resp = await submitApplication(data);
+
+      if (moment().isAfter(accessToken?.expires)) {
+        setTokens();
+        setTimeout(() => {
+          submitApplicationApi();
+        }, 500);
+      }
+    } catch (error) {
+      console.log("error is here", error);
+    }
+  };
   return (
     <View style={styles.container}>
       <Button
         title="Make new Sale"
         onPress={() => props.navigation.navigate("Sale")}
+      />
+
+      <Button
+        title="Test API"
+        onPress={() => {
+          // submitApplicationApi()
+          console.log("test");
+        }}
       />
     </View>
   );
