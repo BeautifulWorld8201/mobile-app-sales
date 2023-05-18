@@ -6,6 +6,7 @@ import { setAccessToken, setRefreshToken } from "../../../redux/auth/authSlice";
 
 import { useSubmitApplicationMutation } from "../../../redux/user/userApiSlice";
 import moment from "moment";
+import { useEffect } from "react";
 
 export default function MakeSale(props: any) {
   const dispatch = useDispatch();
@@ -19,6 +20,8 @@ export default function MakeSale(props: any) {
 
     dispatch(setAccessToken(resp?.data?.tokens?.access));
     dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
+
+    return true;
   };
 
   const submitApplicationApi = async () => {
@@ -28,18 +31,19 @@ export default function MakeSale(props: any) {
     };
 
     try {
-      const resp = await submitApplication(data);
-
       if (moment().isAfter(accessToken?.expires)) {
-        setTokens();
-        setTimeout(() => {
-          submitApplicationApi();
-        }, 500);
+        const status = await setTokens();
+        if (status) {
+          const resp = await submitApplication(data);
+        }
+      } else {
+        const resp = await submitApplication(data);
       }
     } catch (error) {
       console.log("error is here", error);
     }
   };
+
   return (
     <View style={styles.container}>
       <Button
@@ -50,8 +54,7 @@ export default function MakeSale(props: any) {
       <Button
         title="Test API"
         onPress={() => {
-          // submitApplicationApi()
-          console.log("test");
+          submitApplicationApi();
         }}
       />
     </View>
