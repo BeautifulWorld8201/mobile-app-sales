@@ -80,7 +80,7 @@ export default function Register(props: any) {
                 email: "",
                 password: "",
               }}
-              validationSchema={validationSchema}
+              // validationSchema={validationSchema}
               validateOnBlur={false}
               onSubmit={(values) => onSignUp(values)}
             >
@@ -157,7 +157,8 @@ export default function Register(props: any) {
               <Button
                 style={styles.button}
                 onPress={() => {
-                  _formik.current.handleSubmit();
+                  // _formik.current.handleSubmit();
+                  props.navigation.navigate("IdentityVerification");
                 }}
                 isLoading={isLoading}
                 disabled={isLoading}

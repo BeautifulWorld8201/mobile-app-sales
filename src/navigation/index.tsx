@@ -6,10 +6,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Signin from "../screens/Signin";
 import Register from "../screens/Register";
+import IdentityVerification from "../screens/IdentityVerification";
 
 import MakeSale from "../screens/MakeSale";
 import Settings from "../screens/Settings";
-import Sale from "../screens/Sale";
+// import Sale from "../screens/Sale";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,10 @@ function AuthStack() {
     >
       <Stack.Screen name="Signin" component={Signin} />
       <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen
+        name="IdentityVerification"
+        component={IdentityVerification}
+      />
     </Stack.Navigator>
   );
 }
@@ -82,7 +87,7 @@ function AppStack() {
       })}
     >
       <Stack.Screen name="TabStack" component={TabStack} />
-      <Stack.Screen name="Sale" component={Sale} />
+      {/* <Stack.Screen name="Sale" component={Sale} /> */}
     </Stack.Navigator>
   );
 }
