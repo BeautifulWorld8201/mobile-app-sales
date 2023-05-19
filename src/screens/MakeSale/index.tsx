@@ -7,22 +7,11 @@ import { setAccessToken, setRefreshToken } from "../../../redux/auth/authSlice";
 import { useSubmitApplicationMutation } from "../../../redux/user/userApiSlice";
 import moment from "moment";
 import { useEffect } from "react";
-
+import useCheckToken from "../../helpers/useCheckToken";
 export default function MakeSale(props: any) {
-  const dispatch = useDispatch();
-  const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
-  const accessToken = useSelector((state) => state?.auth?.accessToken);
-
   const [submitApplication, { isLoading }] = useSubmitApplicationMutation();
 
-  const setTokens = async () => {
-    const resp = await getRefreshedToken(refreshToken);
-
-    dispatch(setAccessToken(resp?.data?.tokens?.access));
-    dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
-
-    return true;
-  };
+  const { setTokens, checkTokenExpiry } = useCheckToken();
 
   const submitApplicationApi = async () => {
     const data = {
@@ -31,7 +20,7 @@ export default function MakeSale(props: any) {
     };
 
     try {
-      if (moment().isAfter(accessToken?.expires)) {
+      if (checkTokenExpiry()) {
         const status = await setTokens();
         if (status) {
           const resp = await submitApplication(data);
@@ -40,7 +29,7 @@ export default function MakeSale(props: any) {
         const resp = await submitApplication(data);
       }
     } catch (error) {
-      console.log("error is here", error);
+      console.log("error", error);
     }
   };
 
@@ -55,6 +44,7 @@ export default function MakeSale(props: any) {
         title="Test API"
         onPress={() => {
           submitApplicationApi();
+          // console.log(setTokens());
         }}
       />
     </View>
