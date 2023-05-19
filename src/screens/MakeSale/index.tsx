@@ -1,16 +1,51 @@
 import { StyleSheet } from "react-native";
-
-// import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View, Button } from "../../../components/Themed";
-// import { Link, useNavigation } from "expo-router";
+import { useSelector, useDispatch } from "react-redux";
+import { getRefreshedToken } from "../../helpers";
+import { setAccessToken, setRefreshToken } from "../../../redux/auth/authSlice";
 
+import { useSubmitApplicationMutation } from "../../../redux/user/userApiSlice";
+import moment from "moment";
+import { useEffect } from "react";
+import useCheckToken from "../../helpers/useCheckToken";
 export default function MakeSale(props: any) {
-  // const navigation: any = useNavigation();
+  const [submitApplication, { isLoading }] = useSubmitApplicationMutation();
+
+  const { setTokens, checkTokenExpiry } = useCheckToken();
+
+  const submitApplicationApi = async () => {
+    const data = {
+      professionalStatus: "student",
+      inquiryId: "inq_FrrSyZso6KkzhP8XXVaTau93",
+    };
+
+    try {
+      if (checkTokenExpiry()) {
+        const status = await setTokens();
+        if (status) {
+          const resp = await submitApplication(data);
+        }
+      } else {
+        const resp = await submitApplication(data);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Button
         title="Make new Sale"
         onPress={() => props.navigation.navigate("Sale")}
+      />
+
+      <Button
+        title="Test API"
+        onPress={() => {
+          submitApplicationApi();
+          // console.log(setTokens());
+        }}
       />
     </View>
   );

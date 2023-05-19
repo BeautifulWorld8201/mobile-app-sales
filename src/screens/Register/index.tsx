@@ -17,7 +17,7 @@ import * as yup from "yup";
 import { tintColorDark } from "../../../constants/Colors";
 import { useSignUpMutation } from "../../../redux/auth/authApiSlice";
 import {
-  setAuthToken,
+  setAccessToken,
   setRefreshToken,
   setLoginUser,
 } from "../../../redux/auth/authSlice";
@@ -46,7 +46,7 @@ export default function Register(props: any) {
           position: Toast.positions.BOTTOM,
         });
       } else {
-        dispatch(setAuthToken(resp?.data?.token?.access));
+        dispatch(setAccessToken(resp?.data?.token?.access));
         dispatch(setRefreshToken(resp?.data?.token?.refresh));
         dispatch(setLoginUser(resp?.data?.user));
       }

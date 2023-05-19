@@ -88,7 +88,7 @@ function AppStack() {
 }
 
 export default function StackNavigator() {
-  const authToken = useSelector((state) => state?.auth?.authToken);
+  const loginUser = useSelector((state) => state?.auth?.loginUser);
 
   return (
     <Stack.Navigator
@@ -99,7 +99,7 @@ export default function StackNavigator() {
         animationEnabled: true,
       })}
     >
-      {authToken && Object.keys(authToken).length === 0 ? (
+      {loginUser && Object.keys(loginUser).length === 0 ? (
         <Stack.Screen name="AuthStack" component={AuthStack} />
       ) : (
         <Stack.Screen name="AppStack" component={AppStack} />
