@@ -6,8 +6,19 @@ import { hp, wp } from "../../../utils";
 import Input from "../../../components/Input";
 import { Inquiry, Environment } from "react-native-persona";
 import { Button } from "../../../components/Themed";
+import useCheckToken from "../../helpers/useCheckToken";
+import { useSubmitApplicationMutation } from "../../../redux/user/userApiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoginUser } from "../../../redux/auth/authSlice";
+import Toast from "react-native-root-toast";
 
 export default function IdentityVerification(props: any) {
+  const { setTokens, checkTokenExpiry } = useCheckToken();
+  const [submitApplication, { isLoading }] = useSubmitApplicationMutation();
+  const dispatch = useDispatch();
+
+  const user = props?.route?.param?.user;
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -16,6 +27,57 @@ export default function IdentityVerification(props: any) {
     { label: "Other", value: "other" },
   ]);
   const [otherValue, setOtherValue] = useState("");
+
+  const submitApplicationApi = async (inquiryId, status) => {
+    const data = {
+      professionalStatus: otherValue ? otherValue : value,
+      inquiryId,
+    };
+
+    try {
+      if (checkTokenExpiry()) {
+        const status = await setTokens();
+
+        if (status) {
+          const resp = await submitApplication(data);
+          if (resp?.error) {
+            Toast.show(resp?.error?.data?.message, {
+              duration: Toast.durations.LONG,
+              position: Toast.positions.BOTTOM,
+            });
+          } else {
+            dispatch(setLoginUser(user));
+            Toast.show(
+              `Complete inquiry ${inquiryId} completed with status "${status}."`,
+              {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.BOTTOM,
+              }
+            );
+          }
+        }
+      } else {
+        const resp = await submitApplication(data);
+        if (resp?.error) {
+          Toast.show(resp?.error?.data?.message, {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM,
+          });
+        } else {
+          dispatch(setLoginUser(user));
+          Toast.show(
+            `Complete inquiry ${inquiryId} completed with status "${status}."`,
+            {
+              duration: Toast.durations.LONG,
+              position: Toast.positions.BOTTOM,
+            }
+          );
+        }
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   return (
     <View style={styles.container}>
       <Header
@@ -24,17 +86,23 @@ export default function IdentityVerification(props: any) {
       />
       <View style={styles.innerContainer}>
         <Text style={styles.credsFont}>What’s your professional status?</Text>
-
-        <DropDownPicker
-          open={open}
-          value={value}
-          items={items}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setItems}
-          style={styles.dropDownContainer}
-          dropDownContainerStyle={styles.dropDownContainerList}
-        />
+        <View style={{ zIndex: 100 }}>
+          <DropDownPicker
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            style={styles.dropDownContainer}
+            dropDownContainerStyle={styles.dropDownContainerList}
+            onChangeValue={(val) => {
+              if (val != "other") {
+                setOtherValue("");
+              }
+            }}
+          />
+        </View>
         {value == "other" && (
           <>
             <Text style={styles.credsFont}>Please specify your status</Text>
@@ -56,10 +124,7 @@ export default function IdentityVerification(props: any) {
             Inquiry.fromTemplate("itmpl_8Bv8HzfgETE6aXgeFnAZ5Z4E")
               .environment(Environment.SANDBOX)
               .onComplete((inquiryId, status, fields) =>
-                Alert.alert(
-                  "Complete",
-                  `Inquiry ${inquiryId} completed with status "${status}."`
-                )
+                submitApplicationApi(inquiryId, status)
               )
               .onCanceled((inquiryId, sessionToken) =>
                 Alert.alert("Canceled", `Inquiry ${inquiryId} was cancelled`)
@@ -98,6 +163,7 @@ const styles = StyleSheet.create({
 
     width: "100%",
     color: "black",
+    marginBottom: hp(2),
   },
   inputViewStyle: {
     flexDirection: "row",
@@ -107,7 +173,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     backgroundColor: "#f9f9f9",
-    marginBottom: hp(1),
   },
 
   dropDownContainerList: {

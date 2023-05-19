@@ -10,7 +10,7 @@ import IdentityVerification from "../screens/IdentityVerification";
 
 import MakeSale from "../screens/MakeSale";
 import Settings from "../screens/Settings";
-// import Sale from "../screens/Sale";
+import Sale from "../screens/Sale";
 
 const Stack = createStackNavigator();
 
@@ -87,7 +87,7 @@ function AppStack() {
       })}
     >
       <Stack.Screen name="TabStack" component={TabStack} />
-      {/* <Stack.Screen name="Sale" component={Sale} /> */}
+      <Stack.Screen name="Sale" component={Sale} />
     </Stack.Navigator>
   );
 }

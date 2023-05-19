@@ -37,7 +37,7 @@ export default function Signin(props: any) {
   const onLogin = async (values: object) => {
     try {
       const resp = await login(values);
-      console.log("resp login user", resp?.data?.user);
+
       if (resp?.error) {
         Toast.show(resp?.error?.data?.message, {
           duration: Toast.durations.LONG,

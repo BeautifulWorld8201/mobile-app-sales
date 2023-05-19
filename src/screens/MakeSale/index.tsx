@@ -24,9 +24,11 @@ export default function MakeSale(props: any) {
         const status = await setTokens();
         if (status) {
           const resp = await submitApplication(data);
+          console.log("RESPOOOO--1-", resp?.error);
         }
       } else {
         const resp = await submitApplication(data);
+        console.log("RESPOOOO--2-", resp?.error);
       }
     } catch (error) {
       console.log("error", error);

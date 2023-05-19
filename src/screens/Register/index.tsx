@@ -2,9 +2,7 @@ import React, { useRef, useState } from "react";
 
 import { StatusBar } from "expo-status-bar";
 import { Platform, StyleSheet, Image } from "react-native";
-// import { Link, useNavigation } from "expo-router";
 
-// import EditScreenInfo from "../../components/EditScreenInfo";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { View } from "../../../components/Themed";
@@ -40,15 +38,19 @@ export default function Register(props: any) {
   const onSignUp = async (values: object) => {
     try {
       const resp = await signUp(values);
+
       if (resp?.error) {
         Toast.show(resp?.error?.data?.message, {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
         });
       } else {
-        dispatch(setAccessToken(resp?.data?.token?.access));
-        dispatch(setRefreshToken(resp?.data?.token?.refresh));
-        dispatch(setLoginUser(resp?.data?.user));
+        dispatch(setAccessToken(resp?.data?.tokens?.access));
+        dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
+        // dispatch(setLoginUser(resp?.data?.user));
+        props.navigation.navigate("IdentityVerification", {
+          user: resp?.data?.user,
+        });
       }
     } catch (e) {
       console.log("register error--->", e);
@@ -56,7 +58,7 @@ export default function Register(props: any) {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAwareScrollView style={styles.container}>
       <View style={{ flexGrow: 1 }}>
         <View style={styles.imageView}>
           <Image
@@ -80,7 +82,7 @@ export default function Register(props: any) {
                 email: "",
                 password: "",
               }}
-              // validationSchema={validationSchema}
+              validationSchema={validationSchema}
               validateOnBlur={false}
               onSubmit={(values) => onSignUp(values)}
             >
@@ -157,8 +159,7 @@ export default function Register(props: any) {
               <Button
                 style={styles.button}
                 onPress={() => {
-                  // _formik.current.handleSubmit();
-                  props.navigation.navigate("IdentityVerification");
+                  _formik.current.handleSubmit();
                 }}
                 isLoading={isLoading}
                 disabled={isLoading}
@@ -181,7 +182,7 @@ export default function Register(props: any) {
           Sign in
         </Text>
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 }
 
