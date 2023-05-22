@@ -187,23 +187,7 @@ export default function Register(props: any) {
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   // alignItems: "center",
-  //   // justifyContent: "center",
-  // },
-  // title: {
-  //   fontSize: 20,
-  //   fontWeight: "bold",
-  // },
-  // separator: {
-  //   marginVertical: 30,
-  //   height: 1,
-  //   width: "80%",
-  // },
-
   container: {
-    // backgroundColor: "white",
     flex: 1,
     backgroundColor: "white",
   },
@@ -296,6 +280,7 @@ const styles = StyleSheet.create({
   signupView: {
     flexDirection: "row",
     alignSelf: "center",
-    marginBottom: hp(3),
+
+    marginTop: 20,
   },
 });

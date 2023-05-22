@@ -15,12 +15,14 @@ export default function CustomHeader(props: any) {
       containerStyle={styles.container}
       centerComponent={<Text style={styles.headerText}>{props.title}</Text>}
       leftComponent={
-        <Icon
-          name={"arrow-left"}
-          color={"white"}
-          size={20}
-          onPress={props.leftButton}
-        />
+        props.leftButton && (
+          <Icon
+            name={"arrow-left"}
+            color={"white"}
+            size={20}
+            onPress={props.leftButton}
+          />
+        )
       }
     />
   );

@@ -16,6 +16,8 @@ const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
 function AuthStack() {
+  const accessToken = useSelector((state) => state?.auth?.accessToken?.token);
+
   return (
     <Stack.Navigator
       initialRouteName="Signin"
@@ -26,8 +28,12 @@ function AuthStack() {
         unmountOnBlur: true,
       })}
     >
-      <Stack.Screen name="Signin" component={Signin} />
-      <Stack.Screen name="Register" component={Register} />
+      {accessToken == undefined && (
+        <>
+          <Stack.Screen name="Signin" component={Signin} />
+          <Stack.Screen name="Register" component={Register} />
+        </>
+      )}
       <Stack.Screen
         name="IdentityVerification"
         component={IdentityVerification}
