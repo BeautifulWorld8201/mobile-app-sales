@@ -20,16 +20,7 @@ export default function MakeSale(props: any) {
     };
 
     try {
-      if (checkTokenExpiry()) {
-        const status = await setTokens();
-        if (status) {
-          const resp = await submitApplication(data);
-          console.log("RESPOOOO--1-", resp?.error);
-        }
-      } else {
-        const resp = await submitApplication(data);
-        console.log("RESPOOOO--2-", resp?.error);
-      }
+      const resp = await submitApplication(data);
     } catch (error) {
       console.log("error", error);
     }
