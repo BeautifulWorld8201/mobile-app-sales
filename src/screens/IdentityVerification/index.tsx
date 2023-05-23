@@ -69,9 +69,11 @@ export default function IdentityVerification(props: any) {
           ? resp?.data?.applicationStatus
           : "required"
       );
-    } catch (error) {
-      console.log("error in getuser", error);
-    }
+
+      if (resp?.data?.applicationStatus == "approved") {
+        dispatch(setLoginUser(resp?.data));
+      }
+    } catch (error) {}
   };
 
   const submitApplicationApi = async (inquiryId, status) => {
@@ -81,45 +83,15 @@ export default function IdentityVerification(props: any) {
     };
 
     try {
-      if (checkTokenExpiry()) {
-        const status = await setTokens();
-
-        if (status) {
-          const resp = await submitApplication(data);
-          if (resp?.error) {
-            Toast.show(resp?.error?.data?.message, {
-              duration: Toast.durations.LONG,
-              position: Toast.positions.BOTTOM,
-            });
-          } else {
-            // dispatch(setLoginUser(user));
-            Toast.show(
-              `Complete inquiry ${inquiryId} completed with status "${status}."`,
-              {
-                duration: Toast.durations.LONG,
-                position: Toast.positions.BOTTOM,
-              }
-            );
-          }
-        }
+      const resp = await submitApplication(data);
+      if (resp?.error) {
+        Toast.show(resp?.error?.data?.message, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+        });
       } else {
-        const resp = await submitApplication(data);
-        if (resp?.error) {
-          Toast.show(resp?.error?.data?.message, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.BOTTOM,
-          });
-        } else {
-          // dispatch(setLoginUser(user));
-          getCurrentUser();
-          Toast.show(
-            `Complete inquiry ${inquiryId} completed with status "${status}."`,
-            {
-              duration: Toast.durations.LONG,
-              position: Toast.positions.BOTTOM,
-            }
-          );
-        }
+        setButtonStatus("initial");
+        getCurrentUser();
       }
     } catch (error) {
       console.log("error", error);
@@ -235,25 +207,36 @@ export default function IdentityVerification(props: any) {
                       <MyButton
                         style={styles.button}
                         onPress={() => {
-                          Inquiry.fromTemplate("itmpl_8Bv8HzfgETE6aXgeFnAZ5Z4E")
-                            .environment(Environment.SANDBOX)
-                            .onComplete((inquiryId, status, fields) =>
-                              submitApplicationApi(inquiryId, status)
+                          if (value) {
+                            Inquiry.fromTemplate(
+                              "itmpl_8Bv8HzfgETE6aXgeFnAZ5Z4E"
                             )
-                            .onCanceled((inquiryId, sessionToken) =>
-                              Alert.alert(
-                                "Canceled",
-                                `Inquiry ${inquiryId} was cancelled`
+                              .environment(Environment.SANDBOX)
+                              .onComplete((inquiryId, status, fields) =>
+                                submitApplicationApi(inquiryId, status)
                               )
-                            )
-                            .onError((error) =>
-                              Alert.alert("Error", error.message)
-                            )
-                            .build()
-                            .start();
+                              .onCanceled((inquiryId, sessionToken) =>
+                                Alert.alert(
+                                  "Canceled",
+                                  `Inquiry ${inquiryId} was cancelled`
+                                )
+                              )
+                              .onError((error) =>
+                                Alert.alert("Error", error.message)
+                              )
+                              .build()
+                              .start();
+                          } else {
+                            Toast.show("Please select status", {
+                              duration: Toast.durations.LONG,
+                              position: Toast.positions.BOTTOM,
+                            });
+                          }
                         }}
                       >
-                        <Text style={styles.buttonText}>Start Inquiry</Text>
+                        <Text style={styles.buttonText}>
+                          Start Indentity Verification
+                        </Text>
                       </MyButton>
                     </>
                   )}
@@ -263,6 +246,7 @@ export default function IdentityVerification(props: any) {
           </View>
         )}
       </View>
+      {/* {buttonStatus == "initial" && ( */}
       <View style={styles.buttonContainer}>
         <MyButton
           style={styles.button}
@@ -270,7 +254,8 @@ export default function IdentityVerification(props: any) {
             setButtonStatus("started");
             if (
               applicationStatus == "rejected" ||
-              applicationStatus == "pending"
+              applicationStatus == "pending" ||
+              buttonStatus == "started"
             ) {
               logoutApi();
             }
@@ -280,10 +265,13 @@ export default function IdentityVerification(props: any) {
           loaderColor={styles.loaderColor}
         >
           <Text style={styles.buttonText}>
-            {applicationStatus == "required" ? "Lets start" : "Logout"}
+            {applicationStatus == "required" && buttonStatus == "initial"
+              ? "Lets start"
+              : "Logout"}
           </Text>
         </MyButton>
       </View>
+      {/* )} */}
     </>
   );
 }
@@ -352,7 +340,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // bottom: 0,
     backgroundColor: "white",
-    marginHorizontal: hp(2.5),
+    paddingHorizontal: hp(2.5),
   },
   loaderColor: {
     color: "white",
