@@ -2,6 +2,13 @@ import { apiSlice } from "../api/apiSlice";
 
 export const userSliceApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getUser: builder.mutation({
+      query: () => ({
+        url: `/users/me`,
+        method: "GET",
+      }),
+    }),
+
     submitApplication: builder.mutation({
       query: (data) => ({
         url: `/users/submitApplication`,
@@ -13,4 +20,5 @@ export const userSliceApi = apiSlice.injectEndpoints({
   overrideExisting: true,
 });
 
-export const { useSubmitApplicationMutation } = userSliceApi;
+export const { useSubmitApplicationMutation, useGetUserMutation } =
+  userSliceApi;

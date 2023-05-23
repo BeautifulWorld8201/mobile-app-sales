@@ -110,6 +110,7 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.71.7)
   - fmt (6.2.1)
   - glog (0.3.5)
+  - PersonaInquirySDK2 (2.8.0)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -425,6 +426,36 @@ PODS:
     - React-Core
   - RNGestureHandler (2.9.0):
     - React-Core
+  - RNPersonaInquiry2 (2.5.0):
+    - PersonaInquirySDK2 (= 2.8.0)
+    - React-Core
+  - RNReanimated (2.14.4):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
@@ -485,12 +516,15 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPersonaInquiry2 (from `../node_modules/react-native-persona`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
     - fmt
+    - PersonaInquirySDK2
 
 EXTERNAL SOURCES:
   boost:
@@ -599,6 +633,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNPersonaInquiry2:
+    :path: "../node_modules/react-native-persona"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   Yoga:
@@ -628,6 +666,7 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 7714e6bc1e9ea23df6c4cb42f0b2fd9c6a3a559c
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  PersonaInquirySDK2: 5d5cfd2c9e1d70c7287bc063a63ea5a36b15a225
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: 5a4a30ac20c86eeadd6844a9328f78d4168cf9b2
   RCTTypeSafety: 279fc5861a89f0f37db3a585f27f971485b4b734
@@ -659,6 +698,8 @@ SPEC CHECKSUMS:
   ReactCommon: 7efec56db1e74f34e24beadcdda6942829d19c4c
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNPersonaInquiry2: 171c7f7cd24fc33182acb36ba114b782427588e9
+  RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   Yoga: d56980c8914db0b51692f55533409e844b66133c
 

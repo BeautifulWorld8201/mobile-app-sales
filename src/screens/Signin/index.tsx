@@ -37,11 +37,21 @@ export default function Signin(props: any) {
   const onLogin = async (values: object) => {
     try {
       const resp = await login(values);
-      console.log("resp login user", resp?.data?.user);
+      console.log("----resp--login---", resp?.data?.user);
       if (resp?.error) {
         Toast.show(resp?.error?.data?.message, {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
+        });
+      } else if (
+        "applicationStatus" in resp?.data?.user == false ||
+        resp?.data?.user?.applicationStatus == "pending" ||
+        resp?.data?.user?.applicationStatus == "rejected"
+      ) {
+        dispatch(setAccessToken(resp?.data?.tokens?.access));
+        dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
+        props.navigation.navigate("IdentityVerification", {
+          user: resp?.data?.user,
         });
       } else {
         dispatch(setAccessToken(resp?.data?.tokens?.access));
