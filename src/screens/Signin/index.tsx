@@ -2,9 +2,7 @@ import React, { useRef, useState } from "react";
 
 import { StatusBar } from "expo-status-bar";
 import { Platform, StyleSheet, Image } from "react-native";
-// import { Link, useNavigation } from "expo-router";
 
-// import EditScreenInfo from "./components/EditScreenInfo";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { View } from "../../../components/Themed";
@@ -22,6 +20,7 @@ import {
   setLoginUser,
   setRefreshToken,
 } from "../../../redux/auth/authSlice";
+import { setApplicationStatus } from "../../../redux/user/userSlice";
 import Toast from "react-native-root-toast";
 export default function Signin(props: any) {
   const [login, { isLoading }] = useLoginMutation();
@@ -50,6 +49,8 @@ export default function Signin(props: any) {
       ) {
         dispatch(setAccessToken(resp?.data?.tokens?.access));
         dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
+        dispatch(setApplicationStatus(resp?.data?.user?.applicationStatus));
+
         props.navigation.navigate("IdentityVerification", {
           user: resp?.data?.user,
         });
@@ -57,6 +58,7 @@ export default function Signin(props: any) {
         dispatch(setAccessToken(resp?.data?.tokens?.access));
         dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
         dispatch(setLoginUser(resp?.data?.user));
+        dispatch(setApplicationStatus(resp?.data?.user?.applicationStatus));
       }
     } catch (e) {
       console.log("login error--->", e);
