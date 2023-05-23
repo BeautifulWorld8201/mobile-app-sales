@@ -91,13 +91,6 @@ export default function IdentityVerification(props: any) {
         });
       } else {
         setButtonStatus("initial");
-        Toast.show(
-          `Complete inquiry ${inquiryId} completed with status "${status}."`,
-          {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.BOTTOM,
-          }
-        );
         getCurrentUser();
       }
     } catch (error) {
