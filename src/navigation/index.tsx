@@ -11,7 +11,9 @@ import IdentityVerification from "../screens/IdentityVerification";
 import MakeSale from "../screens/MakeSale";
 import Settings from "../screens/Settings";
 import Sale from "../screens/Sale";
+import TakePayment from "../screens/TakePayment";
 
+import WriteCards from "../screens/WriteCards";
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -94,6 +96,8 @@ function AppStack() {
     >
       <Stack.Screen name="TabStack" component={TabStack} />
       <Stack.Screen name="Sale" component={Sale} />
+      <Stack.Screen name="TakePayment" component={TakePayment} />
+      <Stack.Screen name="WriteCards" component={WriteCards} />
     </Stack.Navigator>
   );
 }

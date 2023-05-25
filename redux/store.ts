@@ -3,10 +3,13 @@ import { persistReducer, persistStore } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { apiSlice } from "./api/apiSlice";
 import authReducer from "./auth/authSlice";
-
+import userReducer from "./user/userSlice";
+import saleReducer from "./sale/saleSlice";
 const rootReduer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   auth: authReducer,
+  user: userReducer,
+  sale: saleReducer,
 });
 
 const persistConfig = {

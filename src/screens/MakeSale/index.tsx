@@ -13,32 +13,11 @@ export default function MakeSale(props: any) {
 
   const { setTokens, checkTokenExpiry } = useCheckToken();
 
-  const submitApplicationApi = async () => {
-    const data = {
-      professionalStatus: "student",
-      inquiryId: "inq_FrrSyZso6KkzhP8XXVaTau93",
-    };
-
-    try {
-      const resp = await submitApplication(data);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
   return (
     <View style={styles.container}>
       <Button
         title="Make new Sale"
         onPress={() => props.navigation.navigate("Sale")}
-      />
-
-      <Button
-        title="Test API"
-        onPress={() => {
-          submitApplicationApi();
-          // console.log(setTokens());
-        }}
       />
     </View>
   );

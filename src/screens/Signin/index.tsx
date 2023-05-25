@@ -85,8 +85,8 @@ export default function Signin(props: any) {
             <Formik
               innerRef={_formik}
               initialValues={{
-                email: "",
-                password: "",
+                email: "max@gmail.com",
+                password: "Test@123",
               }}
               validationSchema={validationSchema}
               validateOnBlur={false}
