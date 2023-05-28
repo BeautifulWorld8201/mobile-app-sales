@@ -31,7 +31,10 @@ export default function WriteCards(props: any) {
     const found = selectedCards.some((element) => element.checked == false);
 
     if (found == false) {
-      setIsVisible(true);
+      // setIsVisible(true);
+      props.navigation.navigate("TakePayment", {
+        fromScreen: "writeCards",
+      });
     }
   }, [selectedCards]);
 

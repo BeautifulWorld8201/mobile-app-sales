@@ -166,10 +166,12 @@ export default function Sale(props: any): JSX.Element {
                   style={styles.inputViewStyle}
                   onPress={() => setShow(true)}
                 >
-                  {countryCode && (
+                  {countryCode ? (
                     <Text style={{ width: "20%", marginLeft: 10 }}>
                       {countryFlag + " " + countryCode}
                     </Text>
+                  ) : (
+                    <Text style={{ width: "15%", marginLeft: 10 }}>🏳️ +0</Text>
                   )}
                   <Input
                     onChangeText={handleChange("phone")}
@@ -192,23 +194,13 @@ export default function Sale(props: any): JSX.Element {
                     autoCapitalize={"none"}
                     placeholder={"Phone number of business"}
                     keyboardType="number-pad"
+                    // onPressIn={() => setShow(true)}
                   />
                 </TouchableOpacity>
                 {errors.phone && touched.phone && (
                   <Text style={styles.errorText}>{errors.phone}</Text>
                 )}
-                {/* <Input
-                  onChangeText={handleChange("cards_amount")}
-                  onBlur={handleBlur("cards_amount")}
-                  value={values.cards_amount}
-                  style={styles.inputField}
-                  icon
-                  iconName="cards"
-                  iconColor={"#ccc"}
-                  autoCapitalize={"none"}
-                  inputViewStyle={styles.inputViewStyle}
-                  placeholder={"Enter amount of cards"}
-                /> */}
+
                 <View style={styles.cardInputView}>
                   <TouchableOpacity
                     style={styles.addButton}
@@ -267,7 +259,7 @@ export default function Sale(props: any): JSX.Element {
                     handleChange("place_id")(data.place_id);
                   }}
                   query={{
-                    key: "AIzaSyAijbifioHwNKlvdAyBirgqdR82-Xiy84I",
+                    key: MAPS_API_KEY,
                     language: "en",
                   }}
                   textInputProps={{
@@ -345,6 +337,8 @@ export default function Sale(props: any): JSX.Element {
               height: 500,
             },
           }}
+          onBackdropPress={() => setShow(false)}
+          onRequestClose={() => setShow(false)}
           pickerButtonOnPress={(item) => {
             console.log("item here", item);
             setCountryCode(item.dial_code);

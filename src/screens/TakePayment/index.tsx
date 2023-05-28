@@ -11,18 +11,25 @@ export default function TakePayment(props: any) {
     <>
       <View style={styles.container}>
         <Header
-          title={"Take Payment"}
+          title={
+            props?.route?.params?.fromScreen == undefined
+              ? "Take Payment"
+              : "Success"
+          }
           leftButton={() => props.navigation.goBack()}
         />
         <View style={styles.innerContainer}>
           <Text style={styles.statusText}>
-            Your client has received a secure payment request in their email.
-            Please ask the client to check his email to complete the payment.
-            Offer to assist them with any questions or concerns they may have
-            during the payment process.
+            {props?.route?.params?.fromScreen == undefined
+              ? "Your client has received a secure payment request in their email. Please ask the client to check his email to complete the payment. Offer to assist them with any questions or concerns they may have during the payment process."
+              : "Cards written successfully!"}
           </Text>
           <Image
-            source={require("../../../assets/images/checkMail.jpg")}
+            source={
+              props?.route?.params?.fromScreen == undefined
+                ? require("../../../assets/images/checkMail.jpg")
+                : require("../../../assets/images/successCheck.png")
+            }
             style={styles.image}
             resizeMode="contain"
           />
@@ -32,7 +39,9 @@ export default function TakePayment(props: any) {
         <MyButton
           style={styles.button}
           onPress={() => {
-            props.navigation.navigate("WriteCards");
+            props?.route?.params?.fromScreen == undefined
+              ? props.navigation.navigate("WriteCards")
+              : props.navigation.navigate("MakeSale");
           }}
         >
           <Text style={styles.buttonText}>Done</Text>
