@@ -151,6 +151,7 @@ export default function WriteCards(props: any) {
           data={selectedCards}
           renderItem={({ item, index }) => renderCardItem(item, index)}
           style={{ marginBottom: hp(13) }}
+          showsVerticalScrollIndicator={false}
         />
       </View>
       {renderSuccessModal()}

@@ -121,7 +121,10 @@ export default function Sale(props: any): JSX.Element {
   };
   return (
     <View style={styles.container}>
-      <Header title={"Sale"} leftButton={() => props.navigation.goBack()} />
+      <Header
+        title={"Create Sale"}
+        leftButton={() => props.navigation.goBack()}
+      />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         {/* for some reason the GoogleMapsInput doesn't work when inside a <View /> */}
         <View style={styles.innerContainer}>
