@@ -5,7 +5,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useGetSalesMutation } from "../../../redux/sale/saleApiSlice";
 import Header from "../../../components/Header";
-import { hp, wp } from "../../../utils";
+import { formatDateTime, hp, wp } from "../../../utils";
 import { tintColorDark } from "../../../constants/Colors";
 import Button from "../../../components/Button";
 
@@ -31,7 +31,7 @@ export default function MakeSale(props: any) {
           <Text style={{ color: "#ccc", fontSize: 12 }}>#{index + 1} </Text>
           <Text style={{ color: "#ccc", fontSize: 12 }}>
             {/* · {moment(item?.client?.createdAt).calendar()} */}·{" "}
-            {item?.client?.createdAt}
+            {formatDateTime(item?.client?.createdAt)}
           </Text>
         </View>
         <View style={styles.listItemMiddle}>
