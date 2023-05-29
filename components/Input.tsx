@@ -21,6 +21,7 @@ export default function Input({
   autoFocus,
   keyboardType,
   multiline,
+  onPressIn,
 }) {
   return (
     <View style={icon && inputViewStyle}>
@@ -40,6 +41,7 @@ export default function Input({
         autoFocus={autoFocus}
         keyboardType={keyboardType}
         multiline={multiline}
+        onPressIn={onPressIn}
       />
       {icon && <Icon name={iconName} color={iconColor} size={20} />}
     </View>

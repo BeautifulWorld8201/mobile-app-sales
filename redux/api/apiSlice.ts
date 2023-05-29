@@ -27,7 +27,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       api,
       extraOptions
     );
-    console.log("before");
+
     if (refreshResult.data) {
       api.dispatch(setAccessToken(refreshResult?.data?.tokens?.access));
       api.dispatch(setRefreshToken(refreshResult?.data?.tokens?.refresh));
