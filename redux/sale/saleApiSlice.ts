@@ -8,8 +8,16 @@ export const saleApiSlice = apiSlice.injectEndpoints({
         body: { ...data },
       }),
     }),
+    getSales: builder.mutation({
+      query: () => ({
+        url: "/sales",
+        method: "GET",
+        // body: { ...data },
+      }),
+    }),
   }),
+
   overrideExisting: true,
 });
 
-export const { useCreateSaleMutation } = saleApiSlice;
+export const { useCreateSaleMutation, useGetSalesMutation } = saleApiSlice;
