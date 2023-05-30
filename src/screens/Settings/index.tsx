@@ -7,6 +7,7 @@ import { logOut } from "../../../redux/auth/authSlice";
 export default function Settings(props: any) {
   const dispatch = useDispatch();
   const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
+  const user = useSelector((state) => state?.auth?.loginUser);
 
   const [logoutUser, { isLoading }] = useLogoutUserMutation();
   const logoutApi = async () => {
@@ -24,6 +25,7 @@ export default function Settings(props: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>SETTINGS</Text>
+      <Text>Connected as: {user?.username} [{user?.email}]</Text>
       <Button title="Logout" onPress={() => logoutApi()} />
     </View>
   );
