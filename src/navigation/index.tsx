@@ -9,6 +9,7 @@ import Register from "../screens/Register";
 import IdentityVerification from "../screens/IdentityVerification";
 
 import MakeSale from "../screens/MakeSale";
+import SaleDetail from "../screens/SaleDetail";
 import Settings from "../screens/Settings";
 import Sale from "../screens/Sale";
 import TakePayment from "../screens/TakePayment";
@@ -98,6 +99,7 @@ function AppStack() {
       <Stack.Screen name="Sale" component={Sale} />
       <Stack.Screen name="TakePayment" component={TakePayment} />
       <Stack.Screen name="WriteCards" component={WriteCards} />
+      <Stack.Screen name="SaleDetail" component={SaleDetail} />
     </Stack.Navigator>
   );
 }

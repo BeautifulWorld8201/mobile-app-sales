@@ -46,6 +46,7 @@
     "react-native-modal": "^13.0.1",
     "react-native-nfc-manager": "^3.14.3",
     "react-native-persona": "^2.5.0",
+    "react-native-ratings": "^8.1.0",
     "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-reanimated": "~2.14.4",
     "react-native-responsive-screen": "^1.4.2",
