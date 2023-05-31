@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Text, View } from '../../../components/Themed';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -8,6 +8,7 @@ import Header from '../../../components/Header';
 import { formatDateTime, hp, wp } from '../../../utils';
 import { tintColorDark } from '../../../constants/Colors';
 import Button from '../../../components/Button';
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function MakeSale(props: any) {
 	const [getSales, getSalesResp] = useGetSalesMutation();
@@ -26,7 +27,14 @@ export default function MakeSale(props: any) {
 
 	const renderItem = (item: any, index: number) => {
 		return (
-			<View style={styles.listItem}>
+			<TouchableOpacity
+				style={styles.listItem}
+				onPress={() =>
+					props.navigation.navigate('SaleDetail', {
+						sale: item,
+					})
+				}
+			>
 				<View style={styles.listItemTop}>
 					<Text style={{ color: '#ccc', fontSize: 12 }}>#{index + 1} </Text>
 					<Text style={{ color: '#ccc', fontSize: 12 }}>
@@ -40,22 +48,34 @@ export default function MakeSale(props: any) {
 						{item?.price?.amount} {item?.price?.currency}
 					</Text>
 				</View>
-				<View style={styles.listStats}>
-					<View
-						style={{
-							...styles?.paidCard,
-							width: item?.payment_link?.paid ? 42 : 66,
-							backgroundColor: item?.payment_link?.paid ? `#2fbc3690` : `#d3001590`,
-							borderColor: item?.payment_link?.paid ? `#2fbc36` : `#d30015`,
-						}}
-					>
-						<Text style={styles.paidText}>
-							{item?.payment_link?.paid ? 'Paid' : 'Not paid'}
-						</Text>
+				<View style={styles.listItemMiddle}>
+					<View style={styles.listStats}>
+						{/* <View> */}
+						<View
+							style={{
+								...styles?.paidCard,
+								width: item?.payment_link?.paid ? 42 : 66,
+								backgroundColor: item?.payment_link?.paid
+									? `#2fbc362b`
+									: `#d300152b`,
+								borderWidth: 1,
+								borderColor: item?.payment_link?.paid ? `#21c729` : `#ff0019`,
+							}}
+						>
+							<Text
+								style={{
+									...styles.paidText,
+									color: item?.payment_link?.paid ? '#21c729' : '#ff0019',
+								}}
+							>
+								{item?.payment_link?.paid ? 'Paid' : 'Not Paid'}
+							</Text>
+						</View>
+						<Text style={styles.cardAmount}>· {item?.cards_amount} cards</Text>
 					</View>
-					<Text style={styles.cardAmount}>· {item?.cards_amount} cards</Text>
+					<Icon name="chevron-right" size={20} />
 				</View>
-			</View>
+			</TouchableOpacity>
 		);
 	};
 	return (
@@ -112,6 +132,7 @@ const styles = StyleSheet.create({
 	listItemMiddle: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+		alignItems: 'center',
 	},
 	listStats: {
 		flexDirection: 'row',
@@ -127,7 +148,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	paidText: { fontSize: 12, color: 'white' },
+	paidText: { fontSize: 12 },
 	cardAmount: { fontSize: 12, color: '#ccc', marginLeft: 4 },
 	buttonBelow: {
 		backgroundColor: tintColorDark,
