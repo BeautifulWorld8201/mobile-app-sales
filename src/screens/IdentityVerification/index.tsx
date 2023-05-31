@@ -55,7 +55,7 @@ export default function IdentityVerification(props: any) {
   ]);
   const [otherValue, setOtherValue] = useState("");
   const [buttonStatus, setButtonStatus] = useState("initial");
-
+  const [phone, setPhone] = useState("");
   useEffect(() => {
     getCurrentUser();
   }, [focused]);
@@ -80,6 +80,7 @@ export default function IdentityVerification(props: any) {
     const data = {
       professionalStatus: otherValue ? otherValue : value,
       inquiryId,
+      phone,
     };
 
     try {
@@ -169,6 +170,7 @@ export default function IdentityVerification(props: any) {
                       <Text style={styles.credsFont}>
                         What’s your professional status?
                       </Text>
+
                       <View style={{ zIndex: 100 }}>
                         <DropDownPicker
                           open={open}
@@ -191,7 +193,6 @@ export default function IdentityVerification(props: any) {
                           <Text style={styles.credsFont}>
                             Please specify your status
                           </Text>
-
                           <Input
                             onChangeText={(text: string) => setOtherValue(text)}
                             value={otherValue}
@@ -203,15 +204,27 @@ export default function IdentityVerification(props: any) {
                           />
                         </>
                       )}
+                      <Text style={styles.credsFont}>Phone</Text>
+
+                      <Input
+                        onChangeText={(text: string) => setPhone(text)}
+                        value={phone}
+                        style={styles.inputField}
+                        inputViewStyle={styles.inputViewStyle}
+                        iconColor={"#ccc"}
+                        autoCapitalize={"none"}
+                        placeholder={"Phone"}
+                        keyboardType={"number-pad"}
+                      />
 
                       <MyButton
                         style={styles.button}
                         onPress={() => {
-                          if (value) {
+                          if (value && phone) {
                             Inquiry.fromTemplate(
                               "itmpl_8Bv8HzfgETE6aXgeFnAZ5Z4E"
                             )
-                              .environment(Environment.PRODUCTION)
+                              .environment(Environment.SANDBOX)
                               .onComplete((inquiryId, status, fields) =>
                                 submitApplicationApi(inquiryId, status)
                               )
@@ -227,10 +240,13 @@ export default function IdentityVerification(props: any) {
                               .build()
                               .start();
                           } else {
-                            Toast.show("Please select status", {
-                              duration: Toast.durations.LONG,
-                              position: Toast.positions.BOTTOM,
-                            });
+                            Toast.show(
+                              "Please select status and phone number",
+                              {
+                                duration: Toast.durations.LONG,
+                                position: Toast.positions.BOTTOM,
+                              }
+                            );
                           }
                         }}
                       >
@@ -292,7 +308,7 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   inputField: {
-    backgroundColor: "#cccccc60",
+    backgroundColor: "#f9f9f9",
     borderRadius: 10,
     padding: 10,
     // marginVertical: 6,
