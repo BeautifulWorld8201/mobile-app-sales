@@ -1,26 +1,41 @@
-import { StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { Text, View } from "../../../components/Themed";
 import { useSelector, useDispatch } from "react-redux";
-import moment from "moment";
+
 import { useEffect, useState } from "react";
+
 import { useGetSalesMutation } from "../../../redux/sale/saleApiSlice";
+
 import Header from "../../../components/Header";
+import { setCurrentSales } from "../../../redux/sale/saleSlice";
 import { formatDateTime, hp, wp } from "../../../utils";
 import { tintColorDark } from "../../../constants/Colors";
 import Button from "../../../components/Button";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function MakeSale(props: any) {
-  const [getSales, getSalesResp] = useGetSalesMutation();
-  const [sales, setSales] = useState([]);
+  const salesFromStore = useSelector((state) => state.sale.currentSales);
+
+  const dispatch = useDispatch();
+  const [getSales, { isLoading }] = useGetSalesMutation();
+  const [sales, setSales] = useState(salesFromStore);
+  const [isFetching, setIsFetching] = useState(false);
   useEffect(() => {
     getSalesApi();
   }, []);
   const getSalesApi = async () => {
     try {
       const resp = await getSales();
-
-      setSales(resp?.data?.sales);
+      if (resp?.data) {
+        setIsFetching(false);
+        dispatch(setCurrentSales(resp?.data?.sales));
+        // setSales(resp?.data?.sales);
+      }
     } catch (error) {
       console.log("-----error in get sale----", error);
     }
@@ -78,34 +93,50 @@ export default function MakeSale(props: any) {
       </TouchableOpacity>
     );
   };
+
+  const onRefresh = () => {
+    setIsFetching(true);
+    getSalesApi();
+  };
   return (
     <View style={styles.container}>
       <Header title={"Sale"} />
-      <View style={styles.innerContainer}>
-        <View style={styles.buttonView}>
-          <Text style={styles.credsFont}>Recent Sales</Text>
 
-          <Button
-            onPress={() => props.navigation.navigate("Sale")}
-            style={styles.buttonBelow}
-          >
-            <Text style={styles.buttonText}>Make new Sale</Text>
-          </Button>
-        </View>
-        <FlatList
-          data={sales}
-          renderItem={({ item, index }) => renderItem(item, index)}
-          showsVerticalScrollIndicator={false}
-          style={{
-            marginBottom: hp(20),
-          }}
-          ListEmptyComponent={() => (
-            <View style={{ marginTop: 200, alignItems: "center" }}>
-              <Text>No Sales yet</Text>
+      <>
+        <View style={styles.innerContainer}>
+          <View style={styles.buttonView}>
+            <Text style={styles.credsFont}>Recent Sales</Text>
+
+            <Button
+              onPress={() => props.navigation.navigate("Sale")}
+              style={styles.buttonBelow}
+            >
+              <Text style={styles.buttonText}>Make new Sale</Text>
+            </Button>
+          </View>
+          {isLoading ? (
+            <View style={styles.activityIndicator}>
+              <ActivityIndicator size="large" color={tintColorDark} />
             </View>
+          ) : (
+            <FlatList
+              data={salesFromStore}
+              renderItem={({ item, index }) => renderItem(item, index)}
+              showsVerticalScrollIndicator={false}
+              style={{
+                marginBottom: hp(20),
+              }}
+              ListEmptyComponent={() => (
+                <View style={{ marginTop: 200, alignItems: "center" }}>
+                  <Text>No Sales yet</Text>
+                </View>
+              )}
+              refreshing={isFetching}
+              onRefresh={() => onRefresh()}
+            />
           )}
-        />
-      </View>
+        </View>
+      </>
     </View>
   );
 }
@@ -183,5 +214,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingBottom: 10,
+  },
+  activityIndicator: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: hp("30%"),
   },
 });

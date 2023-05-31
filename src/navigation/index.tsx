@@ -57,7 +57,7 @@ function TabStack() {
       screenOptions={({ route, navigation }) => ({
         headerShown: false,
         gestureEnabled: true,
-        unmountOnBlur: true,
+        unmountOnBlur: false,
       })}
     >
       <Tab.Screen
