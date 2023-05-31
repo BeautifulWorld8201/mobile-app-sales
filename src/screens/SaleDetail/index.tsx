@@ -32,6 +32,9 @@ export default function SaleDetail(props: any) {
     const saleId = props?.route?.params?.sale?.id;
     try {
       const resp = await getSaleDetail(saleId);
+      // console.log("resp--->", resp?.data);
+      setClientDetail(resp?.data?.businessInfo);
+
       setSaleDetail(resp?.data?.sale);
     } catch (error) {
       console.log("error--->", error);
@@ -41,14 +44,14 @@ export default function SaleDetail(props: any) {
   const getResendPaymentRequest = async () => {
     try {
       const resp = await resendPaymentRequest(saleDetail?.id);
-      console.log("resp---resend payment", resp);
+
       if (resp?.error?.data?.code == 429) {
         Toast.show(resp?.error?.data?.message, {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
         });
       } else {
-        Toast.show("", {
+        Toast.show("Payment request sent!", {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
         });
@@ -119,11 +122,10 @@ export default function SaleDetail(props: any) {
           </View>
           <View style={styles.itemView}>
             <Text style={styles.credsFont}>Rating:</Text>
-            {/* <Text style={styles.detailFont}>{clientDetail?.rating}</Text> */}
+
             <View style={{ ...styles.itemView, alignItems: "center" }}>
               <AirbnbRating
                 defaultRating={clientDetail?.rating}
-                // style={{ paddingVertical: 10 }}
                 isDisabled
                 size={18}
                 showRating={false}
@@ -133,7 +135,6 @@ export default function SaleDetail(props: any) {
                 style={{
                   ...styles.detailFont,
                   fontSize: hp(1.5),
-                  // marginTop: hp(1),
                 }}
               >
                 ({clientDetail?.user_ratings_total})
@@ -145,38 +146,112 @@ export default function SaleDetail(props: any) {
     );
   };
   return (
-    <View style={styles.container}>
-      <Header
-        title={"Sale Detail"}
-        leftButton={() => props.navigation.goBack()}
-      />
-      <View style={styles.innerContainer}>
-        <View style={styles.itemView}>
-          <Text style={styles.credsFont}>Client:</Text>
-          <Text
-            style={{ ...styles.detailFont, textDecorationLine: "underline" }}
-            onPress={() => getClientDetail()}
-          >
-            {saleDetail?.client?.name}
-          </Text>
+    <>
+      <View style={styles.container}>
+        <Header
+          title={"Sale Detail"}
+          leftButton={() => props.navigation.goBack()}
+        />
+        <View style={styles.innerContainer}>
+          <Image
+            source={{
+              uri: clientDetail?.image,
+            }}
+            style={{
+              width: "100%",
+              height: hp(20),
+              borderRadius: 10,
+              marginBottom: hp(2),
+            }}
+          />
+          <View style={styles.itemView}>
+            <Text style={styles.credsFont}>Client:</Text>
+            <Text style={styles.detailFont}>{saleDetail?.client?.name}</Text>
+          </View>
+
+          <View style={styles.itemView}>
+            <Text style={styles.credsFont}>Card amount:</Text>
+            <Text style={styles.detailFont}>{saleDetail?.cards_amount}</Text>
+          </View>
+          <View style={styles.itemView}>
+            <Text style={styles.credsFont}>Price:</Text>
+            <Text style={styles.detailFont}>
+              {saleDetail?.price?.amount} {saleDetail?.price?.currency}
+            </Text>
+          </View>
+          <View style={styles.itemView}>
+            <Text style={styles.credsFont}>Payment Status:</Text>
+            {/* <Text style={styles.detailFont}>
+              {saleDetail?.payment_link?.paid ? "Paid" : "Unpaid"}
+            </Text> */}
+            <View
+              style={{
+                ...styles?.paidCard,
+                width: saleDetail?.payment_link?.paid ? 42 : 66,
+                backgroundColor: saleDetail?.payment_link?.paid
+                  ? `#2fbc362b`
+                  : `#d300152b`,
+                borderWidth: 1,
+                borderColor: saleDetail?.payment_link?.paid
+                  ? `#21c729`
+                  : `#ff0019`,
+              }}
+            >
+              <Text
+                style={{
+                  ...styles.paidText,
+                  color: saleDetail?.payment_link?.paid ? "#21c729" : "#ff0019",
+                }}
+              >
+                {saleDetail?.payment_link?.paid ? "Paid" : "Not Paid"}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.itemView}>
+            <Text style={styles.credsFont}>Date:</Text>
+            <Text style={styles.detailFont}>
+              {formatDateTime(saleDetail?.createdAt)}
+            </Text>
+          </View>
+
+          <View style={styles.itemView}>
+            <Text style={styles.credsFont}>Address:</Text>
+            <Text
+              style={{
+                ...styles.detailFont,
+                textAlign: "right",
+                width: wp(50),
+              }}
+              numberOfLines={2}
+            >
+              {clientDetail?.formatted_address}
+            </Text>
+          </View>
+          <View style={styles.itemView}>
+            <Text style={styles.credsFont}>Rating:</Text>
+
+            <View style={{ ...styles.itemView, alignItems: "center" }}>
+              <AirbnbRating
+                defaultRating={clientDetail?.rating}
+                isDisabled
+                size={18}
+                showRating={false}
+                starContainerStyle={{ bottom: 5 }}
+              />
+              <Text
+                style={{
+                  ...styles.detailFont,
+                  fontSize: hp(1.5),
+                }}
+              >
+                ({clientDetail?.user_ratings_total})
+              </Text>
+            </View>
+          </View>
+          {/* {renderModal()} */}
         </View>
-        <View style={styles.itemView}>
-          <Text style={styles.credsFont}>Card amount:</Text>
-          <Text style={styles.detailFont}>{saleDetail?.cards_amount}</Text>
-        </View>
-        <View style={styles.itemView}>
-          <Text style={styles.credsFont}>Price:</Text>
-          <Text style={styles.detailFont}>
-            {saleDetail?.price?.amount} {saleDetail?.price?.currency}
-          </Text>
-        </View>
-        <View style={styles.itemView}>
-          <Text style={styles.credsFont}>Date:</Text>
-          <Text style={styles.detailFont}>
-            {formatDateTime(saleDetail?.createdAt)}
-          </Text>
-        </View>
-        {renderModal()}
+      </View>
+      {saleDetail?.payment_link?.paid == false && (
         <View style={styles.buttonContainer}>
           <Button
             style={styles.button}
@@ -190,8 +265,8 @@ export default function SaleDetail(props: any) {
             <Text style={styles.buttonText}>Resend Payment Request</Text>
           </Button>
         </View>
-      </View>
-    </View>
+      )}
+    </>
   );
 }
 
@@ -211,7 +286,8 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(3),
+    // marginTop: hp(3),
+    marginBottom: hp(3),
   },
   buttonText: {
     color: "white",
@@ -220,6 +296,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: "center",
+    backgroundColor: "white",
+    // marginBottom: hp(3),
+    paddingHorizontal: hp(2.5),
   },
   loaderColor: {
     color: "white",
@@ -248,4 +327,11 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     flex: 0.5,
   },
+  paidCard: {
+    borderRadius: 10,
+    height: 22,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paidText: { fontSize: 12 },
 });
