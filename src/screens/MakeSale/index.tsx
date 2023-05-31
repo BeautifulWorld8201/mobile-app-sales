@@ -1,5 +1,4 @@
-<<<<<<< Updated upstream
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Text, View } from '../../../components/Themed';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -9,19 +8,7 @@ import Header from '../../../components/Header';
 import { formatDateTime, hp, wp } from '../../../utils';
 import { tintColorDark } from '../../../constants/Colors';
 import Button from '../../../components/Button';
-=======
-import { StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Text, View } from "../../../components/Themed";
-import { useSelector, useDispatch } from "react-redux";
-import moment from "moment";
-import { useEffect, useState } from "react";
-import { useGetSalesMutation } from "../../../redux/sale/saleApiSlice";
-import Header from "../../../components/Header";
-import { formatDateTime, hp, wp } from "../../../utils";
-import { tintColorDark } from "../../../constants/Colors";
-import Button from "../../../components/Button";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
->>>>>>> Stashed changes
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function MakeSale(props: any) {
 	const [getSales, getSalesResp] = useGetSalesMutation();
@@ -38,10 +25,16 @@ export default function MakeSale(props: any) {
 		}
 	};
 
-<<<<<<< Updated upstream
 	const renderItem = (item: any, index: number) => {
 		return (
-			<View style={styles.listItem}>
+			<TouchableOpacity
+				style={styles.listItem}
+				onPress={() =>
+					props.navigation.navigate('SaleDetail', {
+						sale: item,
+					})
+				}
+			>
 				<View style={styles.listItemTop}>
 					<Text style={{ color: '#ccc', fontSize: 12 }}>#{index + 1} </Text>
 					<Text style={{ color: '#ccc', fontSize: 12 }}>
@@ -55,22 +48,34 @@ export default function MakeSale(props: any) {
 						{item?.price?.amount} {item?.price?.currency}
 					</Text>
 				</View>
-				<View style={styles.listStats}>
-					<View
-						style={{
-							...styles?.paidCard,
-							width: item?.payment_link?.paid ? 42 : 66,
-							backgroundColor: item?.payment_link?.paid ? `#2fbc3690` : `#d3001590`,
-							borderColor: item?.payment_link?.paid ? `#2fbc36` : `#d30015`,
-						}}
-					>
-						<Text style={styles.paidText}>
-							{item?.payment_link?.paid ? 'Paid' : 'Not paid'}
-						</Text>
+				<View style={styles.listItemMiddle}>
+					<View style={styles.listStats}>
+						{/* <View> */}
+						<View
+							style={{
+								...styles?.paidCard,
+								width: item?.payment_link?.paid ? 42 : 66,
+								backgroundColor: item?.payment_link?.paid
+									? `#2fbc362b`
+									: `#d300152b`,
+								borderWidth: 1,
+								borderColor: item?.payment_link?.paid ? `#21c729` : `#ff0019`,
+							}}
+						>
+							<Text
+								style={{
+									...styles.paidText,
+									color: item?.payment_link?.paid ? '#21c729' : '#ff0019',
+								}}
+							>
+								{item?.payment_link?.paid ? 'Paid' : 'Not Paid'}
+							</Text>
+						</View>
+						<Text style={styles.cardAmount}>· {item?.cards_amount} cards</Text>
 					</View>
-					<Text style={styles.cardAmount}>· {item?.cards_amount} cards</Text>
+					<Icon name="chevron-right" size={20} />
 				</View>
-			</View>
+			</TouchableOpacity>
 		);
 	};
 	return (
@@ -79,57 +84,6 @@ export default function MakeSale(props: any) {
 			<View style={styles.innerContainer}>
 				<View style={styles.buttonView}>
 					<Text style={styles.credsFont}>Recent Sales</Text>
-=======
-  const renderItem = (item, index) => {
-    return (
-      <TouchableOpacity
-        style={styles.listItem}
-        onPress={() =>
-          props.navigation.navigate("SaleDetail", {
-            sale: item,
-          })
-        }
-      >
-        <View style={styles.listItemTop}>
-          <Text style={{ color: "#ccc", fontSize: 12 }}>#{index + 1} </Text>
-          <Text style={{ color: "#ccc", fontSize: 12 }}>
-            {/* · {moment(item?.client?.createdAt).calendar()} */}·{" "}
-            {formatDateTime(item?.client?.createdAt)}
-          </Text>
-        </View>
-        <View style={styles.listItemMiddle}>
-          <Text style={{ fontWeight: "500" }}>{item?.client?.name}</Text>
-          <Text>
-            {item?.price?.amount} {item?.price?.currency}
-          </Text>
-        </View>
-        <View style={styles.listItemMiddle}>
-          <View style={styles.listStats}>
-            {/* <View> */}
-            <View
-              style={{
-                ...styles?.paidCard,
-                width: item?.payment_link?.paid ? 42 : 66,
-                backgroundColor: item?.payment_link?.paid
-                  ? `#2fbc3690`
-                  : `#d3001595`,
-              }}
-            >
-              <Text style={styles.paidText}>
-                {item?.payment_link?.paid ? "Paid" : "Not paid"}
-              </Text>
-            </View>
-            <Text style={styles.cardAmount}>· {item?.cards_amount} cards</Text>
-          </View>
-          <Icon name="chevron-right" size={20} />
-        </View>
-      </TouchableOpacity>
-    );
-  };
-  return (
-    <View style={styles.container}>
-      <Header title={"Sale"} leftButton={() => props.navigation.goBack()} />
->>>>>>> Stashed changes
 
 					<Button
 						onPress={() => props.navigation.navigate('Sale')}
@@ -157,7 +111,6 @@ export default function MakeSale(props: any) {
 }
 
 const styles = StyleSheet.create({
-<<<<<<< Updated upstream
 	container: {
 		flex: 1,
 		backgroundColor: 'white',
@@ -179,38 +132,11 @@ const styles = StyleSheet.create({
 	listItemMiddle: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+		alignItems: 'center',
 	},
 	listStats: {
 		flexDirection: 'row',
 		width: wp(40),
-=======
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  innerContainer: {
-    marginHorizontal: hp(2.5),
-    marginTop: hp(2),
-  },
-  listItem: {
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 0.5,
-    height: hp(10),
-    paddingVertical: hp(1),
-  },
-  listItemTop: {
-    flexDirection: "row",
-    width: wp(50),
-  },
-  listItemMiddle: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  listStats: {
-    flexDirection: "row",
-    width: wp(40),
->>>>>>> Stashed changes
 
 		marginTop: 4,
 		alignItems: 'center',
@@ -222,7 +148,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	paidText: { fontSize: 12, color: 'white' },
+	paidText: { fontSize: 12 },
 	cardAmount: { fontSize: 12, color: '#ccc', marginLeft: 4 },
 	buttonBelow: {
 		backgroundColor: tintColorDark,
