@@ -36,6 +36,13 @@ export const saleApiSlice = apiSlice.injectEndpoints({
         // body: { ...data },
       }),
     }),
+    markAsPaid: builder.mutation({
+      query: (id) => ({
+        url: `/sales/${id}/markAsPaid`,
+        method: "POST",
+        // body: { ...data },
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -46,4 +53,5 @@ export const {
   useGetSaleDetailMutation,
   useResendPaymentRequestMutation,
   useGetClientInfoMutation,
+  useMarkAsPaidMutation,
 } = saleApiSlice;
