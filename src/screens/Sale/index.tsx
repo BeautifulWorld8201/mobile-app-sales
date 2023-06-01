@@ -192,7 +192,7 @@ export default function Sale(props: any): JSX.Element {
                       ...styles.inputViewStyle,
 
                       marginTop: 10,
-                      width: countryCode ? "70%" : "100%",
+                      width: countryCode ? "70%" : "80%",
                     }}
                     autoCapitalize={"none"}
                     placeholder={"Phone number of business"}
