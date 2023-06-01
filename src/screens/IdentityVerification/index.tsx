@@ -211,7 +211,7 @@ export default function IdentityVerification(props: any) {
                           />
                         </>
                       )}
-                      <Text style={styles.credsFont}>Phone</Text>
+                      <Text style={styles.credsFont}>Phone number</Text>
                       {/* <Input
                         onChangeText={(text: string) => setPhone(text)}
                         value={phone}
@@ -253,7 +253,7 @@ export default function IdentityVerification(props: any) {
                             width: countryCode ? "70%" : "80%",
                           }}
                           autoCapitalize={"none"}
-                          placeholder={"Phone number of business"}
+                          placeholder={"Phone number"}
                           keyboardType="number-pad"
                           // onPressIn={() => setShow(true)}
                         />
