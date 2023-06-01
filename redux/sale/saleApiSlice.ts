@@ -8,14 +8,14 @@ export const saleApiSlice = apiSlice.injectEndpoints({
         body: { ...data },
       }),
     }),
-    getSales: builder.mutation({
+    getSales: builder.query({
       query: () => ({
         url: "/sales",
         method: "GET",
         // body: { ...data },
       }),
     }),
-    getSaleDetail: builder.mutation({
+    getSaleDetail: builder.query({
       query: (id) => ({
         url: `/sales/${id}`,
         method: "GET",
@@ -42,8 +42,10 @@ export const saleApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useCreateSaleMutation,
-  useGetSalesMutation,
-  useGetSaleDetailMutation,
+  useGetSalesQuery,
+  // useGetSalesMutation,
+  // useGetSaleDetailMutation,
+  useGetSaleDetailQuery,
   useResendPaymentRequestMutation,
   useGetClientInfoMutation,
 } = saleApiSlice;

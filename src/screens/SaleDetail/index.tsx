@@ -7,7 +7,8 @@ import Button from "../../../components/Button";
 import Text from "../../../components/Text";
 
 import {
-  useGetSaleDetailMutation,
+  // useGetSaleDetailMutation,
+  useGetSaleDetailQuery,
   useResendPaymentRequestMutation,
   useGetClientInfoMutation,
 } from "../../../redux/sale/saleApiSlice";
@@ -16,7 +17,13 @@ import RNModal from "react-native-modal";
 import Toast from "react-native-root-toast";
 import { AirbnbRating } from "react-native-ratings";
 export default function SaleDetail(props: any) {
-  const [getSaleDetail, { isLoading }] = useGetSaleDetailMutation();
+  // const [getSaleDetail, { isLoading }] = useGetSaleDetailMutation();
+  const {
+    data: detail,
+    isError,
+    isLoading,
+  } = useGetSaleDetailQuery(props?.route?.params?.sale?.id);
+
   const [resendPaymentRequest, resendPaymentRequestResp] =
     useResendPaymentRequestMutation();
   const [getClientInfo, getClientInfoResp] = useGetClientInfoMutation();
@@ -25,8 +32,10 @@ export default function SaleDetail(props: any) {
   const [isVisible, setIsVisible] = useState(false);
   const [clientDetail, setClientDetail] = useState({});
   useEffect(() => {
-    getSaleDetailApi();
-  }, []);
+    // getSaleDetailApi();
+    setSaleDetail(detail?.sale);
+    setClientDetail(detail?.businessInfo);
+  }, [detail]);
 
   const getSaleDetailApi = async () => {
     const saleId = props?.route?.params?.sale?.id;

@@ -114,6 +114,8 @@ export default function Sale(props: any): JSX.Element {
       dispatch(setSelectedCards(arr));
       if (resp?.data) {
         props.navigation.navigate("TakePayment");
+      } else {
+        console.log("resp", resp);
       }
     } catch (error) {
       console.log("error---in sale->", error);
@@ -262,7 +264,7 @@ export default function Sale(props: any): JSX.Element {
                     handleChange("place_id")(data.place_id);
                   }}
                   query={{
-                    key: MAPS_API_KEY,
+                    key: "AIzaSyAijbifioHwNKlvdAyBirgqdR82-Xiy84I",
                     language: "en",
                   }}
                   textInputProps={{

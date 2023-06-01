@@ -9,7 +9,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useEffect, useState } from "react";
 
-import { useGetSalesMutation } from "../../../redux/sale/saleApiSlice";
+import {
+  // useGetSalesMutation,
+  useGetSalesQuery,
+} from "../../../redux/sale/saleApiSlice";
 
 import Header from "../../../components/Header";
 import { setCurrentSales } from "../../../redux/sale/saleSlice";
@@ -19,27 +22,38 @@ import Button from "../../../components/Button";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function MakeSale(props: any) {
-  const salesFromStore = useSelector((state) => state.sale.currentSales);
+  // const salesFromStore = useSelector((state) => state.sale.currentSales);
 
   const dispatch = useDispatch();
-  const [getSales, { isLoading }] = useGetSalesMutation();
-  const [sales, setSales] = useState(salesFromStore);
-  const [isFetching, setIsFetching] = useState(false);
+  // const [getSales, { isLoading }] = useGetSalesMutation();
+  const {
+    data: saleData,
+    isError,
+    isLoading,
+    refetch,
+    isFetching,
+  } = useGetSalesQuery(props?.route?.params?.sale?.id);
+
+  const [sales, setSales] = useState([]);
+
   useEffect(() => {
-    getSalesApi();
-  }, []);
-  const getSalesApi = async () => {
-    try {
-      const resp = await getSales();
-      if (resp?.data) {
-        setIsFetching(false);
-        dispatch(setCurrentSales(resp?.data?.sales));
-        // setSales(resp?.data?.sales);
-      }
-    } catch (error) {
-      console.log("-----error in get sale----", error);
-    }
-  };
+    setSales(saleData?.sales);
+  }, [saleData]);
+  // const getSalesApi = async () => {
+  //   setIsFetching(true);
+  //   try {
+  //     const resp = await getSales();
+  //     if (resp?.data) {
+  //       setIsFetching(false);
+  //       dispatch(setCurrentSales(resp?.data?.sales));
+  //       // setSales(resp?.data?.sales);
+  //     }
+  //   } catch (error) {
+  //     setIsFetching(false);
+
+  //     console.log("-----error in get sale----", error);
+  //   }
+  // };
 
   const renderItem = (item: any, index: number) => {
     return (
@@ -95,8 +109,7 @@ export default function MakeSale(props: any) {
   };
 
   const onRefresh = () => {
-    setIsFetching(true);
-    getSalesApi();
+    refetch();
   };
   return (
     <View style={styles.container}>
@@ -114,27 +127,22 @@ export default function MakeSale(props: any) {
               <Text style={styles.buttonText}>Make new Sale</Text>
             </Button>
           </View>
-          {isLoading ? (
-            <View style={styles.activityIndicator}>
-              <ActivityIndicator size="large" color={tintColorDark} />
-            </View>
-          ) : (
-            <FlatList
-              data={salesFromStore}
-              renderItem={({ item, index }) => renderItem(item, index)}
-              showsVerticalScrollIndicator={false}
-              style={{
-                marginBottom: hp(20),
-              }}
-              ListEmptyComponent={() => (
-                <View style={{ marginTop: 200, alignItems: "center" }}>
-                  <Text>No Sales yet</Text>
-                </View>
-              )}
-              refreshing={isFetching}
-              onRefresh={() => onRefresh()}
-            />
-          )}
+
+          <FlatList
+            data={sales}
+            renderItem={({ item, index }) => renderItem(item, index)}
+            showsVerticalScrollIndicator={false}
+            style={{
+              marginBottom: hp(20),
+            }}
+            ListEmptyComponent={() => (
+              <View style={{ marginTop: 200, alignItems: "center" }}>
+                <Text>No Sales yet</Text>
+              </View>
+            )}
+            refreshing={isFetching}
+            onRefresh={() => onRefresh()}
+          />
         </View>
       </>
     </View>
