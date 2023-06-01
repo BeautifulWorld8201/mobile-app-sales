@@ -265,7 +265,7 @@ export default function IdentityVerification(props: any) {
                             Inquiry.fromTemplate(
                               "itmpl_8Bv8HzfgETE6aXgeFnAZ5Z4E"
                             )
-                              .environment(Environment.SANDBOX)
+                              .environment(Environment.PRODUCTION)
                               .onComplete((inquiryId, status, fields) =>
                                 submitApplicationApi(inquiryId, status)
                               )
