@@ -269,12 +269,6 @@ export default function IdentityVerification(props: any) {
                               .onComplete((inquiryId, status, fields) =>
                                 submitApplicationApi(inquiryId, status)
                               )
-                              .onCanceled((inquiryId, sessionToken) =>
-                                Alert.alert(
-                                  "Canceled",
-                                  `Inquiry ${inquiryId} was cancelled`
-                                )
-                              )
                               .onError((error) =>
                                 Alert.alert("Error", error.message)
                               )
