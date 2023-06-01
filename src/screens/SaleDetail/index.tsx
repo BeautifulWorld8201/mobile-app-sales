@@ -10,17 +10,21 @@ import {
   useGetSaleDetailMutation,
   useResendPaymentRequestMutation,
   useGetClientInfoMutation,
+  useMarkAsPaidMutation,
 } from "../../../redux/sale/saleApiSlice";
 import { tintColorDark } from "../../../constants/Colors";
 import RNModal from "react-native-modal";
 import Toast from "react-native-root-toast";
 import { AirbnbRating } from "react-native-ratings";
+import { useSelector } from "react-redux";
 export default function SaleDetail(props: any) {
   const [getSaleDetail, { isLoading }] = useGetSaleDetailMutation();
+  const user = useSelector((state) => state?.auth?.loginUser);
+
   const [resendPaymentRequest, resendPaymentRequestResp] =
     useResendPaymentRequestMutation();
   const [getClientInfo, getClientInfoResp] = useGetClientInfoMutation();
-
+  const [markAsPaid, markAsPaidResp] = useMarkAsPaidMutation();
   const [saleDetail, setSaleDetail] = useState({});
   const [isVisible, setIsVisible] = useState(false);
   const [clientDetail, setClientDetail] = useState({});
@@ -32,7 +36,7 @@ export default function SaleDetail(props: any) {
     const saleId = props?.route?.params?.sale?.id;
     try {
       const resp = await getSaleDetail(saleId);
-      // console.log("resp--->", resp?.data);
+      // console.log("resp- detaaill-->", resp?.data);
       setClientDetail(resp?.data?.businessInfo);
 
       setSaleDetail(resp?.data?.sale);
@@ -72,6 +76,27 @@ export default function SaleDetail(props: any) {
       console.log("resp----client info", resp);
     } catch (error) {
       console.log("error in get client", error);
+    }
+  };
+
+  const markAsPaidApi = async () => {
+    try {
+      const resp = await markAsPaid(saleDetail?.id);
+
+      if (resp?.error?.data?.code == 406) {
+        Toast.show(resp?.error?.data?.message, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+        });
+      } else {
+        Toast.show("Sale marked as paid!", {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+        });
+        getSaleDetailApi();
+      }
+    } catch (error) {
+      console.log("markAsPaidApi error", error);
     }
   };
   const renderModal = () => {
@@ -157,12 +182,7 @@ export default function SaleDetail(props: any) {
             source={{
               uri: clientDetail?.image,
             }}
-            style={{
-              width: "100%",
-              height: hp(20),
-              borderRadius: 10,
-              marginBottom: hp(2),
-            }}
+            style={styles.clientImage}
           />
           <View style={styles.itemView}>
             <Text style={styles.credsFont}>Client:</Text>
@@ -181,9 +201,7 @@ export default function SaleDetail(props: any) {
           </View>
           <View style={styles.itemView}>
             <Text style={styles.credsFont}>Payment Status:</Text>
-            {/* <Text style={styles.detailFont}>
-              {saleDetail?.payment_link?.paid ? "Paid" : "Unpaid"}
-            </Text> */}
+
             <View
               style={{
                 ...styles?.paidCard,
@@ -251,21 +269,39 @@ export default function SaleDetail(props: any) {
           {/* {renderModal()} */}
         </View>
       </View>
-      {saleDetail?.payment_link?.paid == false && (
-        <View style={styles.buttonContainer}>
-          <Button
-            style={styles.button}
-            onPress={() => {
-              getResendPaymentRequest();
-            }}
-            isLoading={resendPaymentRequestResp.isLoading}
-            disabled={resendPaymentRequestResp.isLoading}
-            loaderColor={styles.loaderColor}
-          >
-            <Text style={styles.buttonText}>Resend Payment Request</Text>
-          </Button>
-        </View>
-      )}
+      <>
+        {user?.role == "trustedSeller" &&
+          saleDetail?.payment_link?.paid == false && (
+            <View style={styles.buttonContainer}>
+              <Button
+                style={styles.button}
+                onPress={() => {
+                  markAsPaidApi();
+                }}
+                isLoading={markAsPaidResp?.isLoading}
+                disabled={markAsPaidResp?.isLoading}
+                loaderColor={styles.loaderColor}
+              >
+                <Text style={styles.buttonText}>Mark As paid</Text>
+              </Button>
+            </View>
+          )}
+        {saleDetail?.payment_link?.paid == false && (
+          <View style={styles.buttonContainer}>
+            <Button
+              style={styles.button}
+              onPress={() => {
+                getResendPaymentRequest();
+              }}
+              isLoading={resendPaymentRequestResp?.isLoading}
+              disabled={resendPaymentRequestResp?.isLoading}
+              loaderColor={styles.loaderColor}
+            >
+              <Text style={styles.buttonText}>Resend Payment Request</Text>
+            </Button>
+          </View>
+        )}
+      </>
     </>
   );
 }
@@ -334,4 +370,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   paidText: { fontSize: 12 },
+  clientImage: {
+    width: "100%",
+    height: hp(20),
+    borderRadius: 10,
+    marginBottom: hp(2),
+  },
 });
