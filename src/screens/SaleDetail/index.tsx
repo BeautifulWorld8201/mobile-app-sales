@@ -270,21 +270,22 @@ export default function SaleDetail(props: any) {
         </View>
       </View>
       <>
-        {user?.role == "trustedSeller" && (
-          <View style={styles.buttonContainer}>
-            <Button
-              style={styles.button}
-              onPress={() => {
-                markAsPaidApi();
-              }}
-              isLoading={markAsPaidResp?.isLoading}
-              disabled={markAsPaidResp?.isLoading}
-              loaderColor={styles.loaderColor}
-            >
-              <Text style={styles.buttonText}>Mark paid</Text>
-            </Button>
-          </View>
-        )}
+        {user?.role == "trustedSeller" &&
+          saleDetail?.payment_link?.paid == false && (
+            <View style={styles.buttonContainer}>
+              <Button
+                style={styles.button}
+                onPress={() => {
+                  markAsPaidApi();
+                }}
+                isLoading={markAsPaidResp?.isLoading}
+                disabled={markAsPaidResp?.isLoading}
+                loaderColor={styles.loaderColor}
+              >
+                <Text style={styles.buttonText}>Mark As paid</Text>
+              </Button>
+            </View>
+          )}
         {saleDetail?.payment_link?.paid == false && (
           <View style={styles.buttonContainer}>
             <Button
