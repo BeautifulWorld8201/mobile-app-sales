@@ -57,7 +57,7 @@ export default function SaleDetail(props: any) {
 	const getResendPaymentRequest = async () => {
 		try {
 			const resp = await resendPaymentRequest(saleDetail?.id);
-
+      
 			if (resp?.error?.data?.code == 429) {
 				Toast.show(resp?.error?.data?.message, {
 					duration: Toast.durations.LONG,
@@ -73,6 +73,27 @@ export default function SaleDetail(props: any) {
 			console.log('error in resend payment', error);
 		}
 	};
+        
+  const markAsPaidApi = async () => {
+    try {
+      const resp = await markAsPaid(saleDetail?.id);
+
+      if (resp?.error?.data?.code == 406) {
+        Toast.show(resp?.error?.data?.message, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+        });
+      } else {
+        Toast.show("Sale marked as paid!", {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+        });
+        getSaleDetailApi();
+      }
+    } catch (error) {
+      console.log("markAsPaidApi error", error);
+    }
+  };
 
 	const getClientDetail = async () => {
 		try {
@@ -247,45 +268,63 @@ export default function SaleDetail(props: any) {
 						<View style={styles.itemView}>
 							<Text style={styles.credsFont}>Rating:</Text>
 
-							<View style={{ ...styles.itemView, alignItems: 'center' }}>
-								<AirbnbRating
-									defaultRating={clientDetail?.rating}
-									isDisabled
-									size={18}
-									showRating={false}
-									starContainerStyle={{ bottom: 5 }}
-								/>
-								<Text
-									style={{
-										...styles.detailFont,
-										fontSize: hp(1.5),
-									}}
-								>
-									({clientDetail?.user_ratings_total})
-								</Text>
-							</View>
-						</View>
-						{/* {renderModal()} */}
-					</View>
-				)}
-			</View>
-			{saleDetail?.payment_link?.paid == false && isLoading == false && (
-				<View style={styles.buttonContainer}>
-					<Button
-						style={styles.button}
-						onPress={() => {
-							getResendPaymentRequest();
-						}}
-						isLoading={resendPaymentRequestResp.isLoading}
-						disabled={resendPaymentRequestResp.isLoading}
-						loaderColor={styles.loaderColor}
-					>
-						<Text style={styles.buttonText}>Resend Payment Request</Text>
-					</Button>
-				</View>
-			)}
-		</>
-	);
+            <View style={{ ...styles.itemView, alignItems: "center" }}>
+              <AirbnbRating
+                defaultRating={clientDetail?.rating}
+                isDisabled
+                size={18}
+                showRating={false}
+                starContainerStyle={{ bottom: 5 }}
+              />
+              <Text
+                style={{
+                  ...styles.detailFont,
+                  fontSize: hp(1.5),
+                }}
+              >
+                ({clientDetail?.user_ratings_total})
+              </Text>
+            </View>
+          </View>
+          {/* {renderModal()} */}
+        </View>
+      </View>
+      <>
+        {user?.role == "trustedSeller" &&
+          saleDetail?.payment_link?.paid == false && (
+            <View style={styles.buttonContainer}>
+              <Button
+                style={styles.button}
+                onPress={() => {
+                  markAsPaidApi();
+                }}
+                isLoading={markAsPaidResp?.isLoading}
+                disabled={markAsPaidResp?.isLoading}
+                loaderColor={styles.loaderColor}
+              >
+                <Text style={styles.buttonText}>Mark As paid</Text>
+              </Button>
+            </View>
+          )}
+        {saleDetail?.payment_link?.paid == false && (
+          <View style={styles.buttonContainer}>
+            <Button
+              style={styles.button}
+              onPress={() => {
+                getResendPaymentRequest();
+              }}
+              isLoading={resendPaymentRequestResp?.isLoading}
+              disabled={resendPaymentRequestResp?.isLoading}
+              loaderColor={styles.loaderColor}
+            >
+              <Text style={styles.buttonText}>Resend Payment Request</Text>
+            </Button>
+          </View>
+        )}
+      </>
+    </>
+  );
+
 }
 
 const styles = StyleSheet.create({
@@ -331,7 +370,6 @@ const styles = StyleSheet.create({
 		fontSize: hp(2),
 		color: 'black',
 		fontWeight: '700',
-
 		marginBottom: hp(1),
 	},
 	itemView: { flexDirection: 'row', justifyContent: 'space-between' },
@@ -357,4 +395,10 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		flex: 1,
 	},
+  clientImage: {
+    width: "100%",
+    height: hp(20),
+    borderRadius: 10,
+    marginBottom: hp(2),
+  },
 });

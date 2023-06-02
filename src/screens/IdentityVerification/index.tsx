@@ -6,6 +6,7 @@ import {
   Alert,
   ActivityIndicator,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import Header from "../../../components/Header";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -26,6 +27,8 @@ import Toast from "react-native-root-toast";
 import { tintColorDark } from "../../../constants/Colors";
 import { useIsFocused } from "@react-navigation/native";
 import { logOut } from "../../../redux/auth/authSlice";
+import { CountryPicker } from "react-native-country-codes-picker";
+
 export default function IdentityVerification(props: any) {
   const focused = useIsFocused();
   const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
@@ -34,7 +37,9 @@ export default function IdentityVerification(props: any) {
   const [submitApplication] = useSubmitApplicationMutation();
   const [getUser, { isLoading }] = useGetUserMutation();
   const [logoutUser, logoutUserResp] = useLogoutUserMutation();
-
+  const [show, setShow] = useState(false);
+  const [countryCode, setCountryCode] = useState("");
+  const [countryFlag, setCountryFlag] = useState("");
   const dispatch = useDispatch();
 
   const [user, setUser] = useState(props?.route?.params?.user);
@@ -55,7 +60,7 @@ export default function IdentityVerification(props: any) {
   ]);
   const [otherValue, setOtherValue] = useState("");
   const [buttonStatus, setButtonStatus] = useState("initial");
-
+  const [phone, setPhone] = useState("");
   useEffect(() => {
     getCurrentUser();
   }, [focused]);
@@ -80,6 +85,7 @@ export default function IdentityVerification(props: any) {
     const data = {
       professionalStatus: otherValue ? otherValue : value,
       inquiryId,
+      phone: `${countryCode}${phone}`,
     };
 
     try {
@@ -191,11 +197,13 @@ export default function IdentityVerification(props: any) {
                           <Text style={styles.credsFont}>
                             Please specify your status
                           </Text>
-
                           <Input
                             onChangeText={(text: string) => setOtherValue(text)}
                             value={otherValue}
-                            style={styles.inputField}
+                            style={{
+                              ...styles.inputField,
+                              marginBottom: hp(1),
+                            }}
                             inputViewStyle={styles.inputViewStyle}
                             iconColor={"#ccc"}
                             autoCapitalize={"none"}
@@ -203,11 +211,57 @@ export default function IdentityVerification(props: any) {
                           />
                         </>
                       )}
+                      <Text style={styles.credsFont}>Phone number</Text>
+                      {/* <Input
+                        onChangeText={(text: string) => setPhone(text)}
+                        value={phone}
+                        style={styles.inputField}
+                        inputViewStyle={styles.inputViewStyle}
+                        iconColor={"#ccc"}
+                        autoCapitalize={"none"}
+                        placeholder={"Phone"}
+                        keyboardType={"number-pad"}
+                      /> */}
+                      <TouchableOpacity
+                        style={styles.inputViewStyle}
+                        onPress={() => setShow(true)}
+                      >
+                        {countryCode ? (
+                          <Text style={{ width: "20%", marginLeft: 10 }}>
+                            {countryFlag + " " + countryCode}
+                          </Text>
+                        ) : (
+                          <Text style={{ width: "15%", marginLeft: 10 }}>
+                            🏳️ +0
+                          </Text>
+                        )}
+                        <Input
+                          onChangeText={(text: string) => setPhone(text)}
+                          value={phone}
+                          style={{
+                            ...styles.inputField,
 
+                            width: countryCode ? "95%" : "90%",
+                          }}
+                          icon
+                          iconColor={tintColorDark}
+                          iconName="phone"
+                          inputViewStyle={{
+                            ...styles.inputViewStyle,
+
+                            // marginTop: 10,
+                            width: countryCode ? "70%" : "80%",
+                          }}
+                          autoCapitalize={"none"}
+                          placeholder={"Phone number"}
+                          keyboardType="number-pad"
+                          // onPressIn={() => setShow(true)}
+                        />
+                      </TouchableOpacity>
                       <MyButton
-                        style={styles.button}
+                        style={{ ...styles.button, marginTop: hp(2) }}
                         onPress={() => {
-                          if (value) {
+                          if (value && phone) {
                             Inquiry.fromTemplate(
                               "itmpl_8Bv8HzfgETE6aXgeFnAZ5Z4E"
                             )
@@ -215,22 +269,19 @@ export default function IdentityVerification(props: any) {
                               .onComplete((inquiryId, status, fields) =>
                                 submitApplicationApi(inquiryId, status)
                               )
-                              .onCanceled((inquiryId, sessionToken) =>
-                                Alert.alert(
-                                  "Canceled",
-                                  `Inquiry ${inquiryId} was cancelled`
-                                )
-                              )
                               .onError((error) =>
                                 Alert.alert("Error", error.message)
                               )
                               .build()
                               .start();
                           } else {
-                            Toast.show("Please select status", {
-                              duration: Toast.durations.LONG,
-                              position: Toast.positions.BOTTOM,
-                            });
+                            Toast.show(
+                              "Please select status and phone number",
+                              {
+                                duration: Toast.durations.LONG,
+                                position: Toast.positions.BOTTOM,
+                              }
+                            );
                           }
                         }}
                       >
@@ -245,6 +296,21 @@ export default function IdentityVerification(props: any) {
             </>
           </View>
         )}
+        <CountryPicker
+          show={show}
+          style={{
+            modal: {
+              height: 500,
+            },
+          }}
+          onBackdropPress={() => setShow(false)}
+          onRequestClose={() => setShow(false)}
+          pickerButtonOnPress={(item) => {
+            setCountryCode(item.dial_code);
+            setCountryFlag(item.flag);
+            setShow(false);
+          }}
+        />
       </View>
       {/* {buttonStatus == "initial" && ( */}
       <View style={styles.buttonContainer}>
@@ -292,7 +358,7 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   inputField: {
-    backgroundColor: "#cccccc60",
+    backgroundColor: "#f9f9f9",
     borderRadius: 10,
     padding: 10,
     // marginVertical: 6,
@@ -300,7 +366,7 @@ const styles = StyleSheet.create({
 
     width: "100%",
     color: "black",
-    marginBottom: hp(2),
+    // marginBottom: hp(2),
   },
   inputViewStyle: {
     flexDirection: "row",
@@ -310,6 +376,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     backgroundColor: "#f9f9f9",
+    // marginBottom: hp(2),
   },
 
   dropDownContainerList: {
@@ -329,6 +396,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+
     marginBottom: hp(3),
   },
   buttonText: {
