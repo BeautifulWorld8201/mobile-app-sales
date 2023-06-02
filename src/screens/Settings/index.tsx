@@ -32,7 +32,7 @@ export default function Settings(props: any) {
 			<Header title={'Settings'} />
 
 			<ScrollView style={styles.innerContainer}>
-				<Text style={styles.textTitle}>Profile</Text>
+				<Text style={styles.textTitle}>Account</Text>
 
 				<View style={styles.mainContainer}>
 					<View style={styles.backgroundView}>
@@ -217,8 +217,10 @@ const styles = StyleSheet.create({
 	textTitle: {
 		marginTop: hp(2),
 		marginBottom: hp(1),
-		fontSize: 20,
-		fontWeight: '600',
+		fontSize: 12,
+    color: '#aaa',
+    textTransform: 'uppercase',
+    fontWeight: '600'
 	},
 	separator: {
 		marginVertical: 30,
