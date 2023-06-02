@@ -182,15 +182,13 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 16,
-    fontWeight: "400",
-    textTransform: "capitalize",
+    fontWeight: "400"
   },
   textTitle: {
     marginTop: hp(2),
     marginBottom: hp(1),
     fontSize: 20,
     fontWeight: "600",
-    textTransform: "capitalize",
   },
   separator: {
     marginVertical: 30,
