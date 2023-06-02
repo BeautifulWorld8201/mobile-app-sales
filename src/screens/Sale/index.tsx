@@ -264,7 +264,7 @@ export default function Sale(props: any): JSX.Element {
                     handleChange("place_id")(data.place_id);
                   }}
                   query={{
-                    key: "AIzaSyAijbifioHwNKlvdAyBirgqdR82-Xiy84I",
+                    key: MAPS_API_KEY,
                     language: "en",
                   }}
                   textInputProps={{
