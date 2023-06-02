@@ -125,13 +125,25 @@ export default function Sale(props: any): JSX.Element {
     //     });
     //   });
 
-    //   dispatch(setSelectedCards(arr));
-    //   if (resp?.data) {
-    //     props.navigation.navigate("TakePayment");
-    //   }
-    // } catch (error) {
-    //   console.log("error---in sale->", error);
-    // }
+    let arr = [];
+    try {
+      const resp = await createSale(obj);
+      resp.data?.links?.links.map((item) => {
+        arr.push({
+          link: item,
+          checked: false,
+        });
+      });
+
+      dispatch(setSelectedCards(arr));
+      if (resp?.data) {
+        props.navigation.navigate("TakePayment");
+      } else {
+        console.log("resp", resp);
+      }
+    } catch (error) {
+      console.log("error---in sale->", error);
+    }
   };
   return (
     <View style={styles.container}>
