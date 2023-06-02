@@ -28,6 +28,8 @@ import { useCreateSaleMutation } from "../../../redux/sale/saleApiSlice";
 import { CountryPicker } from "react-native-country-codes-picker";
 import { setSelectedCards } from "../../../redux/sale/saleSlice";
 import { useDispatch } from "react-redux";
+import DropDownPicker from "react-native-dropdown-picker";
+
 // NfcManager.start();
 export default function Sale(props: any): JSX.Element {
   const RBSheetRef = useRef();
@@ -38,6 +40,59 @@ export default function Sale(props: any): JSX.Element {
   const [show, setShow] = useState(false);
   const [countryCode, setCountryCode] = useState("");
   const [countryFlag, setCountryFlag] = useState("");
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {
+      label: "1 Google Popcard",
+      value: "1",
+      sub: "$49.00",
+      slashed: "$99.00",
+      icon: () => (
+        <Image
+          source={require("../../../assets/cards/card-1.jpeg")}
+          style={{ height: 50, width: 50 }}
+        />
+      ),
+    },
+    {
+      label: "3 Google Popcards",
+      value: "3",
+      sub: "$79.00",
+      slashed: "$161.00",
+      icon: () => (
+        <Image
+          source={require("../../../assets/cards/card-3.jpeg")}
+          style={{ height: 50, width: 50 }}
+        />
+      ),
+    },
+    {
+      label: "5 Google Popcards",
+      value: "5",
+      sub: "$99.00",
+      slashed: "$199.00",
+
+      icon: () => (
+        <Image
+          source={require("../../../assets/cards/card-5.jpeg")}
+          style={{ height: 50, width: 50 }}
+        />
+      ),
+    },
+    {
+      label: "10 Google Popcards",
+      value: "10",
+      sub: "$149.00",
+      slashed: "$299.00",
+      icon: () => (
+        <Image
+          source={require("../../../assets/cards/card-10.jpeg")}
+          style={{ height: 50, width: 50 }}
+        />
+      ),
+    },
+  ]);
   const [location, setLocation] = useState<{
     name: string | undefined;
     place_id: string | undefined;
@@ -52,47 +107,6 @@ export default function Sale(props: any): JSX.Element {
     cards_amount: yup.number().required("Required"),
     place_id: yup.string("Required").required("Required"),
   });
-  // useEffect(() => {
-  //   return () => {
-  //     NfcManager.cancelTechnologyRequest();
-  //   };
-  // }, []);
-
-  // async function writeGoogleLinkOnNFC(place_id: string) {
-  //   if (Platform.OS === "android") {
-  //     setTimeout(() => {
-  //       RBSheetRef?.current?.open();
-  //     }, 500);
-  //   }
-
-  //   const reviewLink = `https://search.google.com/local/writereview?placeid=${place_id}`;
-
-  //   let result = false;
-
-  //   try {
-  //     await NfcManager.requestTechnology(NfcTech.Ndef);
-  //     const bytes = Ndef.encodeMessage([Ndef.uriRecord(reviewLink)]);
-  //     if (bytes) {
-  //       if (Platform.OS === "android") {
-  //         RBSheetRef?.current?.close();
-  //       }
-  //       await NfcManager.ndefHandler.writeNdefMessage(bytes);
-  //       result = true;
-  //       if (Platform.OS === "android") {
-  //         setIsScanned(true);
-  //         setTimeout(() => {
-  //           RBSheetRef?.current?.open();
-  //         }, 1000);
-  //       }
-  //     }
-  //   } catch (ex) {
-  //     console.log(JSON.stringify(ex));
-  //   } finally {
-  //     NfcManager.cancelTechnologyRequest();
-  //   }
-
-  //   return result;
-  // }
 
   const createSaleApi = async (values: any) => {
     let obj = {
@@ -100,24 +114,24 @@ export default function Sale(props: any): JSX.Element {
       business_name: location?.name,
       phone: countryCode + values["phone"],
     };
+    console.log("obj--->", obj);
+    // let arr = [];
+    // try {
+    //   const resp = await createSale(obj);
+    //   resp.data?.links?.links.map((item) => {
+    //     arr.push({
+    //       link: item,
+    //       checked: false,
+    //     });
+    //   });
 
-    let arr = [];
-    try {
-      const resp = await createSale(obj);
-      resp.data?.links?.links.map((item) => {
-        arr.push({
-          link: item,
-          checked: false,
-        });
-      });
-
-      dispatch(setSelectedCards(arr));
-      if (resp?.data) {
-        props.navigation.navigate("TakePayment");
-      }
-    } catch (error) {
-      console.log("error---in sale->", error);
-    }
+    //   dispatch(setSelectedCards(arr));
+    //   if (resp?.data) {
+    //     props.navigation.navigate("TakePayment");
+    //   }
+    // } catch (error) {
+    //   console.log("error---in sale->", error);
+    // }
   };
   return (
     <View style={styles.container}>
@@ -204,49 +218,55 @@ export default function Sale(props: any): JSX.Element {
                   <Text style={styles.errorText}>{errors.phone}</Text>
                 )}
 
-                <View style={styles.cardInputView}>
-                  <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={() => {
-                      if (
-                        values.cards_amount == "" ||
-                        values.cards_amount == 1
-                      ) {
-                        _formik.current.setFieldValue("cards_amount", 0);
-                      } else {
-                        _formik.current.setFieldValue(
-                          "cards_amount",
-                          parseInt(values.cards_amount) - 1
-                        );
-                      }
-                    }}
-                  >
-                    <Icon name={"minus"} color={"white"} size={20} />
-                  </TouchableOpacity>
-
-                  <TextInput
-                    onChangeText={handleChange("cards_amount")}
-                    onBlur={handleBlur("cards_amount")}
-                    value={values.cards_amount.toString()}
-                    keyboardType="number-pad"
-                    placeholder={"Amount of cards"}
-                    style={styles.cardInput}
+                <View style={{ zIndex: 100 }}>
+                  <DropDownPicker
+                    open={open}
+                    value={value}
+                    items={items}
+                    setOpen={setOpen}
+                    setValue={setValue}
+                    setItems={setItems}
+                    style={styles.dropDownContainer}
+                    placeholder="Select card bundle"
+                    placeholderStyle={{ color: "#ccc" }}
+                    dropDownContainerStyle={styles.dropDownContainerList}
+                    renderListItem={({ item, onPress, value }) => (
+                      <TouchableOpacity
+                        style={styles.listItem}
+                        onPress={() => {
+                          _formik?.current?.setFieldValue(
+                            "cards_amount",
+                            value
+                          );
+                          setValue(value);
+                          setOpen(false);
+                        }}
+                      >
+                        <View style={{ flexDirection: "row" }}>
+                          {item?.icon()}
+                          <View style={{ marginTop: 5, marginLeft: 10 }}>
+                            <Text>{item?.label}</Text>
+                            <View
+                              style={{ flexDirection: "row", marginTop: 5 }}
+                            >
+                              <Text style={{ color: "green" }}>
+                                {item?.sub}
+                              </Text>
+                              <Text
+                                style={{
+                                  textDecorationLine: "line-through",
+                                  marginLeft: 10,
+                                  color: "gray",
+                                }}
+                              >
+                                {item?.slashed}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    )}
                   />
-                  <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={() => {
-                      if (values.cards_amount == "") {
-                        _formik.current.setFieldValue("cards_amount", 1);
-                      } else {
-                        _formik.current.setFieldValue(
-                          "cards_amount",
-                          parseInt(values.cards_amount) + 1
-                        );
-                      }
-                    }}
-                  >
-                    <Icon name={"plus"} color={"white"} size={20} />
-                  </TouchableOpacity>
                 </View>
                 {errors.cards_amount && touched.cards_amount && (
                   <Text style={styles.errorText}>{errors.cards_amount}</Text>
@@ -278,17 +298,6 @@ export default function Sale(props: any): JSX.Element {
           </Formik>
         </View>
 
-        {/* <Button
-          title={`Configure NFC card${
-            location.name ? ` for ${location.name}` : ""
-          }`}
-          disabled={!location.name && !location.place_id}
-          onPress={() => {
-            if (!location.place_id) return;
-
-            writeGoogleLinkOnNFC(location?.place_id);
-          }}
-        /> */}
         <RBSheet
           ref={RBSheetRef}
           // height={hp(30)}
@@ -456,6 +465,20 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
   },
+  dropDownContainerList: {
+    borderWidth: 2,
+    borderTopWidth: 0,
+    borderColor: "#cccccc60",
+    // height: 250,
+    maxHeight: hp(35),
+  },
+  dropDownContainer: {
+    // borderWidth: 2,
+    marginBottom: hp(1),
+    borderColor: "#f9f9f9",
+    backgroundColor: "#f9f9f9",
+  },
+  listItem: { height: hp(8), padding: 5 },
 });
 
 const googleInputStyles = {
@@ -473,5 +496,4 @@ const googleInputStyles = {
   predefinedPlacesDescription: {
     color: "#1faadb",
   },
-  textInputContainer: {},
 };
