@@ -97,6 +97,7 @@ const Payouts = (props: any) => {
                 }}
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
+                checkedColor={tintColorDark}
               />
             </TouchableOpacity>
           ) : (
@@ -123,6 +124,7 @@ const Payouts = (props: any) => {
                         }}
                         checkedIcon="dot-circle-o"
                         uncheckedIcon="circle-o"
+                        checkedColor={tintColorDark}
                       />
                     </TouchableOpacity>
                     <View style={styles.divider} />
@@ -178,7 +180,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: tintColorDark,
-    borderRadius: hp(1),
+    borderRadius: hp(5),
+
     height: hp(7),
 
     justifyContent: "center",

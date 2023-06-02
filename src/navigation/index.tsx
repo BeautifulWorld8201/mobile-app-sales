@@ -92,7 +92,7 @@ function TabStack() {
 function AppStack() {
   return (
     <Stack.Navigator
-      initialRouteName="Payouts"
+      initialRouteName="TabStack"
       screenOptions={({ route, navigation }) => ({
         headerShown: false,
       })}

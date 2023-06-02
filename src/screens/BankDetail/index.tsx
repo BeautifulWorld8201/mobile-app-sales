@@ -9,6 +9,8 @@ import * as yup from "yup";
 import Button from "../../../components/Button";
 import { usePayoutMethodMutation } from "../../../redux/user/userApiSlice";
 import { tintColorDark } from "../../../constants/Colors";
+import Toast from "react-native-root-toast";
+
 const BankDetail = (props: any) => {
   const { country, paymentType } = props.route.params.data;
 
@@ -74,7 +76,18 @@ const BankDetail = (props: any) => {
 
     try {
       const resp = await payoutMethod(data);
-      console.log("RESPNSE API----->", resp);
+
+      if (resp?.data) {
+        Toast.show("Payout added!", {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+        });
+      } else {
+        Toast.show("Error", {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+        });
+      }
     } catch (error) {
       console.log("payout method error---", error);
     }
@@ -287,7 +300,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: tintColorDark,
-    borderRadius: hp(1),
+    borderRadius: hp(5),
+
     height: hp(7),
     width: "100%",
     justifyContent: "center",
