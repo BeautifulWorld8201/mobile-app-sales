@@ -15,7 +15,7 @@ import Sale from "../screens/Sale";
 import TakePayment from "../screens/TakePayment";
 
 import WriteCards from "../screens/WriteCards";
-
+import Payouts from "../screens/Payouts";
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -91,7 +91,7 @@ function TabStack() {
 function AppStack() {
   return (
     <Stack.Navigator
-      // initialRouteName="TabStack"
+      initialRouteName="Payouts"
       screenOptions={({ route, navigation }) => ({
         headerShown: false,
       })}
@@ -102,6 +102,7 @@ function AppStack() {
       <Stack.Screen name="WriteCards" component={WriteCards} />
 
       <Stack.Screen name="SaleDetail" component={SaleDetail} />
+      <Stack.Screen name="Payouts" component={Payouts} />
     </Stack.Navigator>
   );
 }
