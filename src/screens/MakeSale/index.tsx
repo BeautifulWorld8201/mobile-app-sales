@@ -1,14 +1,12 @@
-import { StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Text, View } from "../../../components/Themed";
-import { useSelector, useDispatch } from "react-redux";
-import moment from "moment";
-import { useEffect, useState } from "react";
-import { useGetSalesMutation } from "../../../redux/sale/saleApiSlice";
-import Header from "../../../components/Header";
-import { formatDateTime, hp, wp } from "../../../utils";
-import { tintColorDark } from "../../../constants/Colors";
-import Button from "../../../components/Button";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { useEffect, useState } from "react";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import Button from "../../../components/Button";
+import Header from "../../../components/Header";
+import { Text, View } from "../../../components/Themed";
+import { tintColorDark } from "../../../constants/Colors";
+import { useGetSalesMutation } from "../../../redux/sale/saleApiSlice";
+import { formatDateTime, hp, wp } from "../../../utils";
 
 export default function MakeSale(props: any) {
   const [getSales, getSalesResp] = useGetSalesMutation();
