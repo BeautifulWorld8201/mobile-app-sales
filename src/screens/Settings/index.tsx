@@ -1,7 +1,11 @@
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 
-import Icon from "@expo/vector-icons/Entypo";
-import Icons from "@expo/vector-icons/SimpleLineIcons";
+import MIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../../../components/Header";
@@ -39,7 +43,7 @@ export default function Settings(props: any) {
           <View style={styles.backgroundView}>
             <View style={styles.rowView}>
               <View style={styles.iconView}>
-                <Icon name="user" size={20} />
+                <MIcons name="account-outline" size={20} />
               </View>
               <Text style={styles.titleText}>Name</Text>
             </View>
@@ -51,7 +55,7 @@ export default function Settings(props: any) {
           <View style={styles.backgroundView}>
             <View style={styles.rowView}>
               <View style={styles.iconView}>
-                <Icon name="email" size={20} />
+                <MIcons name="email-outline" size={20} />
               </View>
               <Text style={styles.titleText}>Email</Text>
             </View>
@@ -63,7 +67,7 @@ export default function Settings(props: any) {
           <View style={styles.backgroundView}>
             <View style={styles.rowView}>
               <View style={styles.iconView}>
-                <Icon name="flag" size={20} />
+                <MIcons name="flag-outline" size={20} />
               </View>
               <Text style={styles.titleText}>Role</Text>
             </View>
@@ -75,7 +79,7 @@ export default function Settings(props: any) {
           <View style={styles.backgroundView}>
             <View style={styles.rowView}>
               <View style={styles.iconView}>
-                <Icon name="calendar" size={20} />
+                <MIcons name="calendar-blank-outline" size={20} />
               </View>
               <Text style={styles.titleText}>Created</Text>
             </View>
@@ -90,12 +94,12 @@ export default function Settings(props: any) {
           <TouchableOpacity style={styles.backgroundView}>
             <View style={styles.rowView}>
               <View style={styles.iconView}>
-                <Icon name="wallet" size={20} />
+                <MIcons name="wallet-outline" size={20} />
               </View>
               <Text style={styles.titleText}>Payouts</Text>
             </View>
             <View style={styles.iconsView}>
-              <Icons name="arrow-right" size={15} />
+              <MIcons name="chevron-right" size={20} />
             </View>
           </TouchableOpacity>
 
@@ -104,30 +108,54 @@ export default function Settings(props: any) {
           <TouchableOpacity style={styles.backgroundView}>
             <View style={styles.rowView}>
               <View style={styles.iconView}>
-                <Icons name="bell" size={20} />
+                <MIcons name="bell-outline" size={20} />
               </View>
               <Text style={styles.titleText}>Notifications</Text>
             </View>
             <View style={styles.iconsView}>
-              <Icons name="arrow-right" size={15} />
-            </View>
-          </TouchableOpacity>
-
-          <View style={styles.divider} />
-
-          <TouchableOpacity style={styles.backgroundView}>
-            <View style={styles.rowView}>
-              <View style={styles.iconView}>
-                <Icons name="info" size={20} />
-              </View>
-              <Text style={styles.titleText}>Miscellaneous</Text>
-            </View>
-            <View style={styles.iconsView}>
-              <Icons name="arrow-right" size={15} />
+              <MIcons name="chevron-right" size={20} />
             </View>
           </TouchableOpacity>
         </View>
+        <Text style={styles.textTitle}>Miscellaneous</Text>
 
+        <View style={styles.mainContainer}>
+          <View style={styles.backgroundView}>
+            <View style={styles.rowView}>
+              <View style={styles.iconView}>
+                <MIcons name="share-variant-outline" size={20} />
+              </View>
+              <Text style={styles.titleText}>Share Popcard Salesmen</Text>
+            </View>
+          </View>
+
+          <View style={styles.divider} />
+
+          <View style={styles.backgroundView}>
+            <View style={styles.rowView}>
+              <View style={styles.iconView}>
+                <MIcons name="star-outline" size={20} />
+              </View>
+              <Text style={styles.titleText}>Rate Popcard Salesmen</Text>
+            </View>
+          </View>
+
+          <View style={styles.divider} />
+
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(`mailto:contact@popcard.io`);
+            }}
+            style={styles.backgroundView}
+          >
+            <View style={styles.rowView}>
+              <View style={styles.iconView}>
+                <MIcons name="phone-outline" size={20} />
+              </View>
+              <Text style={styles.titleText}>Contact Us</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity onPress={() => logoutApi()} style={styles.logoutView}>
           <Text style={styles.logoutText}>Log Out</Text>
         </TouchableOpacity>
@@ -153,7 +181,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   titleText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "400",
     textTransform: "capitalize",
   },
