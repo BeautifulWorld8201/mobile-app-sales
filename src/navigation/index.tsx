@@ -16,6 +16,7 @@ import TakePayment from "../screens/TakePayment";
 
 import WriteCards from "../screens/WriteCards";
 import Payouts from "../screens/Payouts";
+import BankDetail from "../screens/BankDetail";
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -103,6 +104,7 @@ function AppStack() {
 
       <Stack.Screen name="SaleDetail" component={SaleDetail} />
       <Stack.Screen name="Payouts" component={Payouts} />
+      <Stack.Screen name="BankDetail" component={BankDetail} />
     </Stack.Navigator>
   );
 }

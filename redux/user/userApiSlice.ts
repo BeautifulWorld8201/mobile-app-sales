@@ -16,9 +16,19 @@ export const userSliceApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    payoutMethod: builder.mutation({
+      query: (data) => ({
+        url: `/users/payoutMethod`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
   overrideExisting: true,
 });
 
-export const { useSubmitApplicationMutation, useGetUserMutation } =
-  userSliceApi;
+export const {
+  useSubmitApplicationMutation,
+  useGetUserMutation,
+  usePayoutMethodMutation,
+} = userSliceApi;
