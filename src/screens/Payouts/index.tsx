@@ -110,6 +110,7 @@ const Payouts = (props: any) => {
                         setIndex(index);
                       }}
                       style={styles.payoutCard}
+                      key={index}
                     >
                       <Image style={styles.bankIcon} source={item.image} />
                       <View style={{ width: wp(55) }}>
