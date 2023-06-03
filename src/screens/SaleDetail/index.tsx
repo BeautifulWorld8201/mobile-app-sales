@@ -11,11 +11,13 @@ import {
 	useGetSaleDetailQuery,
 	useResendPaymentRequestMutation,
 	useGetClientInfoMutation,
+	useMarkAsPaidMutation,
 } from '../../../redux/sale/saleApiSlice';
 import { tintColorDark } from '../../../constants/Colors';
 import RNModal from 'react-native-modal';
 import Toast from 'react-native-root-toast';
 import { AirbnbRating } from 'react-native-ratings';
+import { useSelector } from 'react-redux';
 export default function SaleDetail(props: any) {
 	// const [getSaleDetail, { isLoading }] = useGetSaleDetailMutation();
 	const {
@@ -24,10 +26,11 @@ export default function SaleDetail(props: any) {
 		isLoading,
 		refetch,
 	} = useGetSaleDetailQuery(props?.route?.params?.sale?.id);
+	const user = useSelector((state) => state?.auth?.loginUser);
 
 	const [resendPaymentRequest, resendPaymentRequestResp] = useResendPaymentRequestMutation();
 	const [getClientInfo, getClientInfoResp] = useGetClientInfoMutation();
-
+	const [markAsPaid, markAsPaidResp] = useMarkAsPaidMutation();
 	const [saleDetail, setSaleDetail] = useState({});
 	const [isVisible, setIsVisible] = useState(false);
 	const [clientDetail, setClientDetail] = useState({});
@@ -57,7 +60,7 @@ export default function SaleDetail(props: any) {
 	const getResendPaymentRequest = async () => {
 		try {
 			const resp = await resendPaymentRequest(saleDetail?.id);
-      
+
 			if (resp?.error?.data?.code == 429) {
 				Toast.show(resp?.error?.data?.message, {
 					duration: Toast.durations.LONG,
@@ -73,27 +76,28 @@ export default function SaleDetail(props: any) {
 			console.log('error in resend payment', error);
 		}
 	};
-        
-  const markAsPaidApi = async () => {
-    try {
-      const resp = await markAsPaid(saleDetail?.id);
 
-      if (resp?.error?.data?.code == 406) {
-        Toast.show(resp?.error?.data?.message, {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.BOTTOM,
-        });
-      } else {
-        Toast.show("Sale marked as paid!", {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.BOTTOM,
-        });
-        getSaleDetailApi();
-      }
-    } catch (error) {
-      console.log("markAsPaidApi error", error);
-    }
-  };
+	const markAsPaidApi = async () => {
+		try {
+			const resp = await markAsPaid(saleDetail?.id);
+
+			if (resp?.error?.data?.code == 406) {
+				Toast.show(resp?.error?.data?.message, {
+					duration: Toast.durations.LONG,
+					position: Toast.positions.BOTTOM,
+				});
+			} else {
+				Toast.show('Sale marked as paid!', {
+					duration: Toast.durations.LONG,
+					position: Toast.positions.BOTTOM,
+				});
+				getSaleDetailApi();
+				refetch();
+			}
+		} catch (error) {
+			console.log('markAsPaidApi error', error);
+		}
+	};
 
 	const getClientDetail = async () => {
 		try {
@@ -218,19 +222,19 @@ export default function SaleDetail(props: any) {
 						<View style={styles.itemView}>
 							<Text style={styles.credsFont}>Payment Status:</Text>
 							{/* <Text style={styles.detailFont}>
-              {saleDetail?.payment_link?.paid ? "Paid" : "Unpaid"}
-            </Text> */}
+					{saleDetail?.payment_link?.paid ? "Paid" : "Unpaid"}
+				  </Text> */}
 							<View
 								style={{
 									...styles?.paidCard,
 									width: saleDetail?.payment_link?.paid ? 42 : 66,
 									backgroundColor: saleDetail?.payment_link?.paid
-										? `#2fbc362b`
-										: `#d300152b`,
+										? '#2fbc362b'
+										: '#d300152b',
 									borderWidth: 1,
 									borderColor: saleDetail?.payment_link?.paid
-										? `#21c729`
-										: `#ff0019`,
+										? '#21c729'
+										: '#ff0019',
 								}}
 							>
 								<Text
@@ -268,63 +272,62 @@ export default function SaleDetail(props: any) {
 						<View style={styles.itemView}>
 							<Text style={styles.credsFont}>Rating:</Text>
 
-            <View style={{ ...styles.itemView, alignItems: "center" }}>
-              <AirbnbRating
-                defaultRating={clientDetail?.rating}
-                isDisabled
-                size={18}
-                showRating={false}
-                starContainerStyle={{ bottom: 5 }}
-              />
-              <Text
-                style={{
-                  ...styles.detailFont,
-                  fontSize: hp(1.5),
-                }}
-              >
-                ({clientDetail?.user_ratings_total})
-              </Text>
-            </View>
-          </View>
-          {/* {renderModal()} */}
-        </View>
-      </View>
-      <>
-        {user?.role == "trustedSeller" &&
-          saleDetail?.payment_link?.paid == false && (
-            <View style={styles.buttonContainer}>
-              <Button
-                style={styles.button}
-                onPress={() => {
-                  markAsPaidApi();
-                }}
-                isLoading={markAsPaidResp?.isLoading}
-                disabled={markAsPaidResp?.isLoading}
-                loaderColor={styles.loaderColor}
-              >
-                <Text style={styles.buttonText}>Mark As paid</Text>
-              </Button>
-            </View>
-          )}
-        {saleDetail?.payment_link?.paid == false && (
-          <View style={styles.buttonContainer}>
-            <Button
-              style={styles.button}
-              onPress={() => {
-                getResendPaymentRequest();
-              }}
-              isLoading={resendPaymentRequestResp?.isLoading}
-              disabled={resendPaymentRequestResp?.isLoading}
-              loaderColor={styles.loaderColor}
-            >
-              <Text style={styles.buttonText}>Resend Payment Request</Text>
-            </Button>
-          </View>
-        )}
-      </>
-    </>
-  );
-
+							<View style={{ ...styles.itemView, alignItems: 'center' }}>
+								<AirbnbRating
+									defaultRating={clientDetail?.rating}
+									isDisabled
+									size={18}
+									showRating={false}
+									starContainerStyle={{ bottom: 5 }}
+								/>
+								<Text
+									style={{
+										...styles.detailFont,
+										fontSize: hp(1.5),
+									}}
+								>
+									({clientDetail?.user_ratings_total})
+								</Text>
+							</View>
+						</View>
+						{/* {renderModal()} */}
+					</View>
+				)}
+				<>
+					{user?.role == 'trustedSeller' && saleDetail?.payment_link?.paid == false && (
+						<View style={styles.buttonContainer}>
+							<Button
+								style={styles.button}
+								onPress={() => {
+									markAsPaidApi();
+								}}
+								isLoading={markAsPaidResp?.isLoading}
+								disabled={markAsPaidResp?.isLoading}
+								loaderColor={styles.loaderColor}
+							>
+								<Text style={styles.buttonText}>Mark As paid</Text>
+							</Button>
+						</View>
+					)}
+					{saleDetail?.payment_link?.paid == false && (
+						<View style={styles.buttonContainer}>
+							<Button
+								style={styles.button}
+								onPress={() => {
+									getResendPaymentRequest();
+								}}
+								isLoading={resendPaymentRequestResp?.isLoading}
+								disabled={resendPaymentRequestResp?.isLoading}
+								loaderColor={styles.loaderColor}
+							>
+								<Text style={styles.buttonText}>Resend Payment Request</Text>
+							</Button>
+						</View>
+					)}
+				</>
+			</View>
+		</>
+	);
 }
 
 const styles = StyleSheet.create({
@@ -395,10 +398,10 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		flex: 1,
 	},
-  clientImage: {
-    width: "100%",
-    height: hp(20),
-    borderRadius: 10,
-    marginBottom: hp(2),
-  },
+	clientImage: {
+		width: '100%',
+		height: hp(20),
+		borderRadius: 10,
+		marginBottom: hp(2),
+	},
 });
