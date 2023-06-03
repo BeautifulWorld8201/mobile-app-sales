@@ -11,17 +11,17 @@ import {
 import { tintColorDark } from "../../../constants/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Toast from "react-native-root-toast";
-// import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function UserPayouts(props: any) {
-  // const focused = useIsFocused();
+  const focused = useIsFocused();
 
-  // const {
-  //   data: payouts,
-  //   isError,
-  //   isLoading,
-  //   refetch,
-  // } = useGetPayoutMethodQuery();
+  const {
+    data: payouts,
+    isError,
+    isLoading,
+    refetch,
+  } = useGetPayoutMethodQuery();
 
   const [deletePayoutMethod, deletePayoutMethodResp] =
     useDeletePayoutMethodMutation();
