@@ -7,6 +7,7 @@ import {
   Platform,
   Alert,
 } from "react-native";
+import React, { useEffect } from "react";
 
 import MIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import moment from "moment";
@@ -16,13 +17,21 @@ import { Text, View } from "../../../components/Themed";
 import { useLogoutUserMutation } from "../../../redux/auth/authApiSlice";
 import { logOut } from "../../../redux/auth/authSlice";
 import { hp, wp } from "../../../utils";
+import { useGetPayoutMethodQuery } from "../../../redux/user/userApiSlice";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Settings(props: any) {
+  const focused = useIsFocused();
+
   const dispatch = useDispatch();
   const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
   const user = useSelector((state) => state?.auth?.loginUser);
 
+  const { data: payouts, isError, refetch } = useGetPayoutMethodQuery();
   const [logoutUser, { isLoading }] = useLogoutUserMutation();
+  useEffect(() => {
+    refetch();
+  }, [focused]);
   const logoutApi = async () => {
     const data = {
       refreshToken,
@@ -39,7 +48,10 @@ export default function Settings(props: any) {
     <View style={styles.container}>
       <Header title={"Settings"} />
 
-      <ScrollView style={styles.innerContainer}>
+      <ScrollView
+        style={styles.innerContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.textTitle}>Account</Text>
 
         <View style={styles.mainContainer}>
@@ -94,7 +106,14 @@ export default function Settings(props: any) {
         <Text style={styles.textTitle}>Settings</Text>
 
         <View style={styles.mainContainer}>
-          <TouchableOpacity style={styles.backgroundView}>
+          <TouchableOpacity
+            style={styles.backgroundView}
+            onPress={() =>
+              payouts
+                ? props?.navigation?.navigate("UserPayouts")
+                : props?.navigation?.navigate("Payouts")
+            }
+          >
             <View style={styles.rowView}>
               <View style={styles.iconView}>
                 <MIcons name="wallet-outline" size={20} />

@@ -23,6 +23,20 @@ export const userSliceApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    deletePayoutMethod: builder.mutation({
+      query: (id) => ({
+        url: `/users/payoutMethod/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Payouts"],
+    }),
+    getPayoutMethod: builder.query({
+      query: () => ({
+        url: `/users/payoutMethod`,
+        method: "GET",
+      }),
+      providesTags: ["Payouts"],
+    }),
   }),
   overrideExisting: true,
 });
@@ -31,4 +45,6 @@ export const {
   useSubmitApplicationMutation,
   useGetUserMutation,
   usePayoutMethodMutation,
+  useGetPayoutMethodQuery,
+  useDeletePayoutMethodMutation,
 } = userSliceApi;

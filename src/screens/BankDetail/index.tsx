@@ -72,8 +72,6 @@ const BankDetail = (props: any) => {
       data["account"] = country == "europe" ? values.iban : values?.account;
     }
 
-    console.log("data--FINAL-->", data);
-
     try {
       const resp = await payoutMethod(data);
 
@@ -82,6 +80,7 @@ const BankDetail = (props: any) => {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
         });
+        props.navigation.navigate("Settings");
       } else {
         Toast.show("Error", {
           duration: Toast.durations.LONG,
