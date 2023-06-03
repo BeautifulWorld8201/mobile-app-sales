@@ -15,7 +15,7 @@ const rootReduer = combineReducers({
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["auth"],
+  whitelist: ["auth", "sale"],
   blacklist: [],
 };
 
