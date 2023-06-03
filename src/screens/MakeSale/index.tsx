@@ -17,7 +17,6 @@ import {
 
 import Header from "../../../components/Header";
 import { setCurrentSales } from "../../../redux/sale/saleSlice";
-import { formatDateTime, hp, wp } from "../../../utils";
 import { tintColorDark } from "../../../constants/Colors";
 import { useGetSalesMutation } from "../../../redux/sale/saleApiSlice";
 import { formatDateTime, hp, wp } from "../../../utils";

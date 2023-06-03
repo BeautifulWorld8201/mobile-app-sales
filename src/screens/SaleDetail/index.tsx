@@ -44,19 +44,6 @@ export default function SaleDetail(props: any) {
 		refetch();
 	}, []);
 
-	const getSaleDetailApi = async () => {
-		const saleId = props?.route?.params?.sale?.id;
-		try {
-			const resp = await getSaleDetail(saleId);
-			// console.log("resp--->", resp?.data);
-			setClientDetail(resp?.data?.businessInfo);
-
-			setSaleDetail(resp?.data?.sale);
-		} catch (error) {
-			console.log('error--->', error);
-		}
-	};
-
 	const getResendPaymentRequest = async () => {
 		try {
 			const resp = await resendPaymentRequest(saleDetail?.id);
@@ -91,7 +78,6 @@ export default function SaleDetail(props: any) {
 					duration: Toast.durations.LONG,
 					position: Toast.positions.BOTTOM,
 				});
-				getSaleDetailApi();
 				refetch();
 			}
 		} catch (error) {
