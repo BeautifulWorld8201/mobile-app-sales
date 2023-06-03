@@ -1,3 +1,6 @@
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { useEffect, useState } from "react";
+import Button from "../../../components/Button";
 import {
   StyleSheet,
   FlatList,
@@ -6,8 +9,6 @@ import {
 } from "react-native";
 import { Text, View } from "../../../components/Themed";
 import { useSelector, useDispatch } from "react-redux";
-
-import { useEffect, useState } from "react";
 
 import {
   // useGetSalesMutation,
@@ -18,8 +19,8 @@ import Header from "../../../components/Header";
 import { setCurrentSales } from "../../../redux/sale/saleSlice";
 import { formatDateTime, hp, wp } from "../../../utils";
 import { tintColorDark } from "../../../constants/Colors";
-import Button from "../../../components/Button";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { useGetSalesMutation } from "../../../redux/sale/saleApiSlice";
+import { formatDateTime, hp, wp } from "../../../utils";
 
 export default function MakeSale(props: any) {
   // const salesFromStore = useSelector((state) => state.sale.currentSales);
