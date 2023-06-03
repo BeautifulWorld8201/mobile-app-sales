@@ -19,6 +19,7 @@ import Payouts from "../screens/Payouts";
 import BankDetail from "../screens/BankDetail";
 
 import UserPayouts from "../screens/UserPayouts";
+import ChangeCurrency from "../screens/ChangeCurrency"
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -108,6 +109,7 @@ function AppStack() {
       <Stack.Screen name="UserPayouts" component={UserPayouts} />
       <Stack.Screen name="Payouts" component={Payouts} />
       <Stack.Screen name="BankDetail" component={BankDetail} />
+      <Stack.Screen name="ChangeCurrency" component={ChangeCurrency} />
     </Stack.Navigator>
   );
 }
