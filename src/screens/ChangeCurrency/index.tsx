@@ -32,33 +32,46 @@ export default function UserPayouts(props: any) {
 	const [updateCurrency, { isLoading }] = useUpdateUserCurrencyMutation();
 	const { data: currentUser, refetch: refetchUser } = useGetCurrentUserQuery();
 	function handleCurrencyChange(newCurrency: string) {
-		
-
-		Alert.alert('Change Currency', `Are you sure you want to change your currency to ${newCurrency}?`, [
-			{
-				text: 'Cancel',
-				style: 'cancel',
-			},
-			{
-				text: 'Yes',
-				onPress: async() => {
-
-					// update user currency
-					const newUser = await updateCurrency({ currency: newCurrency });
-					refetchUser();
-
-					Toast.show('Currency changed successfully', {
-						duration: Toast.durations.LONG,
-						position: Toast.positions.BOTTOM,
-						shadow: true,
-						animation: true,
-						hideOnPress: true,
-						delay: 0,
-					});
-					props?.navigation.navigate('Settings');
+		Alert.alert(
+			'Change Currency',
+			`Are you sure you want to change your currency to ${newCurrency}?`,
+			[
+				{
+					text: 'Cancel',
+					style: 'cancel',
 				},
-			},
-		]);
+				{
+					text: 'Yes',
+					onPress: async () => {
+						try {
+							// update user currency
+							await updateCurrency({ currency: newCurrency });
+							refetchUser();
+
+							Toast.show('Currency changed successfully', {
+								duration: Toast.durations.LONG,
+								position: Toast.positions.BOTTOM,
+								shadow: true,
+								animation: true,
+								hideOnPress: true,
+								delay: 0,
+							});
+						} catch (error) {
+							Toast.show('Error changing currency', {
+								duration: Toast.durations.LONG,
+								position: Toast.positions.BOTTOM,
+								shadow: true,
+								animation: true,
+								hideOnPress: true,
+								delay: 0,
+							});
+						} finally {
+							props?.navigation.navigate('Settings');
+						}
+					},
+				},
+			]
+		);
 	}
 
 	return (
