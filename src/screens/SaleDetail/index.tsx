@@ -18,6 +18,7 @@ import RNModal from 'react-native-modal';
 import Toast from 'react-native-root-toast';
 import { AirbnbRating } from 'react-native-ratings';
 import { useSelector } from 'react-redux';
+import { shortenString } from '../../helpers/misc';
 export default function SaleDetail(props: any) {
 	// const [getSaleDetail, { isLoading }] = useGetSaleDetailMutation();
 	const {
@@ -192,7 +193,7 @@ export default function SaleDetail(props: any) {
 						/>
 						<View style={styles.itemView}>
 							<Text style={styles.credsFont}>Client:</Text>
-							<Text style={styles.detailFont}>{saleDetail?.client?.name}</Text>
+							<Text style={styles.detailFont}>{shortenString(saleDetail?.client?.name)}</Text>
 						</View>
 
 						<View style={styles.itemView}>
@@ -353,9 +354,10 @@ const styles = StyleSheet.create({
 	},
 	detailFont: {
 		fontWeight: '700',
-		fontSize: hp(2),
+		fontSize: hp(1.8),
 		color: '#ccc',
 		marginBottom: hp(1),
+
 	},
 	credsFont: {
 		fontSize: hp(2),

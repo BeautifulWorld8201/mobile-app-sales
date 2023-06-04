@@ -19,6 +19,7 @@ import { logOut } from '../../../redux/auth/authSlice';
 import { hp, wp } from '../../../utils';
 import { useGetCurrentUserQuery, useGetPayoutMethodQuery } from '../../../redux/user/userApiSlice';
 import { useIsFocused } from '@react-navigation/native';
+import { apiSlice } from '../../../redux/api/apiSlice';
 
 export default function Settings(props: any) {
 	const focused = useIsFocused();
@@ -26,8 +27,7 @@ export default function Settings(props: any) {
 	const dispatch = useDispatch();
 	const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
 	const user = useSelector((state) => state?.auth?.loginUser);
-  const { data: currentUser, refetch: refetchUser } = useGetCurrentUserQuery();
-
+	const { data: currentUser, refetch: refetchUser } = useGetCurrentUserQuery();
 
 	const { data: payouts, isError, refetch } = useGetPayoutMethodQuery();
 
@@ -43,6 +43,7 @@ export default function Settings(props: any) {
 			const resp = await logoutUser(data);
 
 			dispatch(logOut());
+			dispatch(apiSlice.util.resetApiState());
 		} catch (error) {
 			console.log('---error--logout-', error);
 		}
@@ -112,8 +113,11 @@ export default function Settings(props: any) {
 							</View>
 							<Text style={styles.titleText}>Currency</Text>
 						</View>
-						<TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props?.navigation?.navigate('ChangeCurrency')}>
-							<Text style={styles.titleText}>{currentUser.currency}</Text>
+						<TouchableOpacity
+							style={{ flexDirection: 'row' }}
+							onPress={() => props?.navigation?.navigate('ChangeCurrency')}
+						>
+							<Text style={styles.titleText}>{currentUser?.currency}</Text>
 							<View style={styles.iconsView}>
 								<MIcons name="chevron-right" size={20} />
 							</View>
