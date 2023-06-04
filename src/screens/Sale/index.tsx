@@ -29,9 +29,13 @@ import { CountryPicker } from "react-native-country-codes-picker";
 import { setSelectedCards } from "../../../redux/sale/saleSlice";
 import { useDispatch } from "react-redux";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useGetCurrentUserQuery } from "../../../redux/user/userApiSlice";
+import { getCurrencySymbol } from "../../helpers/misc";
 
 // NfcManager.start();
 export default function Sale(props: any): JSX.Element {
+  const {data: currentUser} = useGetCurrentUserQuery();
+
   const RBSheetRef = useRef();
   const _formik = useRef();
   const dispatch = useDispatch();
@@ -46,8 +50,8 @@ export default function Sale(props: any): JSX.Element {
     {
       label: "1 Google Popcard",
       value: "1",
-      sub: "$49.00",
-      slashed: "$99.00",
+      sub: "49.00",
+      slashed: "99.00",
       icon: () => (
         <Image
           source={require("../../../assets/cards/card-1.jpeg")}
@@ -58,8 +62,8 @@ export default function Sale(props: any): JSX.Element {
     {
       label: "3 Google Popcards",
       value: "3",
-      sub: "$79.00",
-      slashed: "$161.00",
+      sub: "79.00",
+      slashed: "161.00",
       icon: () => (
         <Image
           source={require("../../../assets/cards/card-3.jpeg")}
@@ -70,8 +74,8 @@ export default function Sale(props: any): JSX.Element {
     {
       label: "5 Google Popcards",
       value: "5",
-      sub: "$99.00",
-      slashed: "$199.00",
+      sub: "99.00",
+      slashed: "199.00",
 
       icon: () => (
         <Image
@@ -83,8 +87,8 @@ export default function Sale(props: any): JSX.Element {
     {
       label: "10 Google Popcards",
       value: "10",
-      sub: "$149.00",
-      slashed: "$299.00",
+      sub: "149.00",
+      slashed: "299.00",
       icon: () => (
         <Image
           source={require("../../../assets/cards/card-10.jpeg")}
@@ -262,7 +266,7 @@ export default function Sale(props: any): JSX.Element {
                               style={{ flexDirection: "row", marginTop: 5 }}
                             >
                               <Text style={{ color: "green" }}>
-                                {item?.sub}
+                                {getCurrencySymbol(currentUser.currency)}{item?.sub}
                               </Text>
                               <Text
                                 style={{
@@ -271,7 +275,7 @@ export default function Sale(props: any): JSX.Element {
                                   color: "gray",
                                 }}
                               >
-                                {item?.slashed}
+                                {getCurrencySymbol(currentUser.currency)}{item?.slashed}
                               </Text>
                             </View>
                           </View>
