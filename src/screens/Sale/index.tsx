@@ -30,7 +30,7 @@ import { setSelectedCards } from "../../../redux/sale/saleSlice";
 import { useDispatch } from "react-redux";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useGetCurrentUserQuery } from "../../../redux/user/userApiSlice";
-import { getCurrencySymbol } from "../../helpers/misc";
+import { getCurrencySymbol, shortenString } from "../../helpers/misc";
 
 // NfcManager.start();
 export default function Sale(props: any): JSX.Element {
@@ -290,6 +290,7 @@ export default function Sale(props: any): JSX.Element {
                 <GooglePlacesAutocomplete
                   styles={googleInputStyles}
                   placeholder="Search for business"
+                  placeholderTextColor="#333"
                   onPress={(data, details = null) => {
                     setLocation({
                       name: data.structured_formatting.main_text,
@@ -297,13 +298,13 @@ export default function Sale(props: any): JSX.Element {
                     });
                     handleChange("place_id")(data.place_id);
                   }}
+                  autoFillOnNotFound={true}
                   query={{
                     key: MAPS_API_KEY,
                     language: "en",
                   }}
                   textInputProps={{
                     handleBlur: handleBlur("place_id"),
-                    value: location?.name,
                   }}
                 />
                 {errors.place_id && touched.place_id && (
@@ -384,7 +385,7 @@ export default function Sale(props: any): JSX.Element {
           loaderColor={styles.loaderColor}
         >
           <Text style={styles.buttonText}>
-            {`Create Sale${location.name ? ` for ${location.name}` : ""}`}
+            {`Create Sale${location.name ? ` for ${shortenString(location.name)}` : ""}`}
           </Text>
         </MyButton>
       </View>
