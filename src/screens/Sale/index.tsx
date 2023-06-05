@@ -290,7 +290,6 @@ export default function Sale(props: any): JSX.Element {
                 <GooglePlacesAutocomplete
                   styles={googleInputStyles}
                   placeholder="Search for business"
-                  placeholderTextColor="#333"
                   onPress={(data, details = null) => {
                     setLocation({
                       name: data.structured_formatting.main_text,
