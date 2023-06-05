@@ -115,7 +115,7 @@ android {
 
     namespace "com.popcardsalesmen"
     defaultConfig {
-        applicationId 'com.popcard'
+        applicationId 'com.popcardsalesmen'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

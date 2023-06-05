@@ -2,7 +2,7 @@
   "expo": {
     "name": "Popcard Salesmen",
     "slug": "popcard-salesmen",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
     "scheme": "myapp",
@@ -12,23 +12,19 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.popcard",
-      "buildNumber": "2"
+      "buildNumber": "6"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-logo.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.NFC"
-      ],
-      "package": "com.popcard"
+      "permissions": ["android.permission.NFC"],
+      "package": "com.popcardsalesmen"
     },
     "web": {
       "bundler": "metro",
