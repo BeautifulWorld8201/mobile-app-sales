@@ -148,7 +148,7 @@ export default function Settings(props: any) {
 
 					<View style={styles.divider} />
 
-					<TouchableOpacity style={styles.backgroundView}>
+					<TouchableOpacity style={styles.backgroundView} onPress={()=> props?.navigation?.navigate('Notifications')}>
 						<View style={styles.rowView}>
 							<View style={styles.iconView}>
 								<MIcons name="bell-outline" size={20} />
