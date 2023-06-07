@@ -113,15 +113,7 @@ export default function Settings(props: any) {
 							</View>
 							<Text style={styles.titleText}>Currency</Text>
 						</View>
-						<TouchableOpacity
-							style={{ flexDirection: 'row' }}
-							onPress={() => props?.navigation?.navigate('ChangeCurrency')}
-						>
-							<Text style={styles.titleText}>{currentUser?.currency}</Text>
-							<View style={styles.iconsView}>
-								<MIcons name="chevron-right" size={20} />
-							</View>
-						</TouchableOpacity>
+						<Text style={styles.titleText}>{currentUser?.currency}</Text>
 					</View>
 				</View>
 				<Text style={styles.textTitle}>Settings</Text>
