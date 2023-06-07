@@ -109,7 +109,7 @@ function AppStack() {
       <Stack.Screen name="UserPayouts" component={UserPayouts} />
       <Stack.Screen name="Payouts" component={Payouts} />
       <Stack.Screen name="BankDetail" component={BankDetail} />
-      <Stack.Screen name="ChangeCurrency" component={ChangeCurrency} />
+      {/* <Stack.Screen name="ChangeCurrency" component={ChangeCurrency} /> */}
     </Stack.Navigator>
   );
 }

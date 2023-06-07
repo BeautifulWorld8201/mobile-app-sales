@@ -290,7 +290,7 @@ export default function Sale(props: any): JSX.Element {
                   }}
                   autoFillOnNotFound={true}
                   query={{
-                    key: MAPS_API_KEY,
+                    key: "AIzaSyAijbifioHwNKlvdAyBirgqdR82-Xiy84I",
                     language: "en",
                   }}
                   textInputProps={{
