@@ -26,7 +26,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { logOut } from '../../../redux/auth/authSlice';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import CountrySelector from 'react-native-country-picker-modal';
-import { getCurrencyByCountry } from '../../helpers/misc';
+import { getCurrencyByCountry, getFlagEmoji } from '../../helpers/misc';
 
 export default function IdentityVerification(props: any) {
 	const focused = useIsFocused();
@@ -171,60 +171,40 @@ export default function IdentityVerification(props: any) {
 										</>
 									) : (
 										<>
-											<Text style={styles.credsFont}>
-												What’s your professional status?
+											<Text style={styles.credsFont}>Country</Text>
+											<Text
+												style={{
+													fontSize: 12,
+													color: '#aaa',
+													marginBottom: 6,
+												}}
+											>
+												Please select the country where you will make sales.
+												This can be different from your country of
+												nationality.
 											</Text>
-											<View style={{ zIndex: 100 }}>
-												<DropDownPicker
-													open={open}
-													value={value}
-													items={items}
-													setOpen={setOpen}
-													setValue={setValue}
-													setItems={setItems}
-													style={styles.dropDownContainer}
-													dropDownContainerStyle={
-														styles.dropDownContainerList
+											<CountrySelector
+												containerButtonStyle={{
+													...styles.inputField,
+													height: 'auto',
+												}}
+												withAlphaFilter
+												withCountryNameButton
+												withFilter
+												countryCode={country?.cca2}
+												onSelect={(c) => {
+													setCountry(c);
+													if (c.callingCode[0]) {
+														setCountryCode(`+${c.callingCode[0]}`);
+													} else {
+														setCountryCode('+1');
 													}
-													onChangeValue={(val) => {
-														if (val != 'other') {
-															setOtherValue('');
-														}
-													}}
-												/>
-											</View>
-											{value == 'other' && (
-												<>
-													<Text style={styles.credsFont}>
-														Please specify your status
-													</Text>
-													<Input
-														onChangeText={(text: string) =>
-															setOtherValue(text)
-														}
-														value={otherValue}
-														style={{
-															...styles.inputField,
-															marginBottom: hp(1),
-														}}
-														inputViewStyle={styles.inputViewStyle}
-														iconColor={'#ccc'}
-														autoCapitalize={'none'}
-														placeholder={'Other'}
-													/>
-												</>
-											)}
+													if (c.cca2) {
+														setCountryFlag(getFlagEmoji(c.cca2));
+													}
+												}}
+											/>
 											<Text style={styles.credsFont}>Phone number</Text>
-											{/* <Input
-                        onChangeText={(text: string) => setPhone(text)}
-                        value={phone}
-                        style={styles.inputField}
-                        inputViewStyle={styles.inputViewStyle}
-                        iconColor={"#ccc"}
-                        autoCapitalize={"none"}
-                        placeholder={"Phone"}
-                        keyboardType={"number-pad"}
-                      /> */}
 											<TouchableOpacity
 												style={styles.inputViewStyle}
 												onPress={() => setShow(true)}
@@ -261,27 +241,6 @@ export default function IdentityVerification(props: any) {
 													// onPressIn={() => setShow(true)}
 												/>
 											</TouchableOpacity>
-											<Text style={styles.credsFont}>Country</Text>
-											<Text
-												style={{
-													fontSize: 12,
-													color: '#aaa',
-													marginBottom: 6,
-												}}
-											>
-												Please select the country where you will make sales
-											</Text>
-											<CountrySelector
-												containerButtonStyle={{
-													...styles.inputField,
-													height: 'auto',
-												}}
-												withAlphaFilter
-												withCountryNameButton
-												withFilter
-												countryCode={country?.cca2}
-												onSelect={(c) => setCountry(c)}
-											/>
 											<MyButton
 												style={{ ...styles.button, marginTop: hp(2) }}
 												onPress={() => {
@@ -292,26 +251,13 @@ export default function IdentityVerification(props: any) {
 														});
 														return;
 													}
-													if (!value) {
-														Toast.show(
-															'Professional Status is required',
-															{
-																duration: Toast.durations.SHORT,
-																position: Toast.positions.BOTTOM,
-															}
-														);
-														return;
-													}
 
 													if (!country?.cca2) {
-														Toast.show(
-															'Please select a country',
-															{
-																duration: Toast.durations.SHORT,
-																position: Toast.positions.BOTTOM,
-															}
-														);
-                            return;
+														Toast.show('Please select a country', {
+															duration: Toast.durations.SHORT,
+															position: Toast.positions.BOTTOM,
+														});
+														return;
 													}
 
 													Inquiry.fromTemplate(
@@ -395,7 +341,8 @@ const styles = StyleSheet.create({
 		fontWeight: '700',
 		fontSize: hp(2),
 		color: 'black',
-		marginTop: hp(1),
+		marginTop: hp(2),
+		marginBottom: hp(1),
 	},
 	innerContainer: {
 		marginHorizontal: hp(2.5),

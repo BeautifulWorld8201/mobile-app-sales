@@ -30,6 +30,15 @@ export const getCurrencyByCountry = (country: {
 	return 'USD';
 };
 
+export function getFlagEmoji(countryCode: string): string {
+	if (!countryCode) return countryCode;
+	const codePoints = countryCode
+		.toUpperCase()
+		.split('')
+		.map((char) => 127397 + char.charCodeAt(0));
+	return String.fromCodePoint(...codePoints);
+}
+
 export function shortenString(str: string, maxLength: number = 22): string {
 	if (!str) return str;
 	if (str.length <= maxLength) {
