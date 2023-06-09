@@ -30,6 +30,15 @@ export const getCurrencyByCountry = (country: {
 	return 'USD';
 };
 
+// create a function that will display a big number with K 
+// if the number is bigger than 1000
+export const formatNumber = (number: number): string => {
+	if (number > 1000) {
+		return (number / 1000).toFixed(1) + 'k';
+	}
+	return number.toString();
+};
+
 export function shortenString(str: string, maxLength: number = 22): string {
 	if (!str) return str;
 	if (str.length <= maxLength) {

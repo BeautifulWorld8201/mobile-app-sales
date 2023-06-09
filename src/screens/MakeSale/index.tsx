@@ -20,8 +20,9 @@ import { setCurrentSales } from "../../../redux/sale/saleSlice";
 import { tintColorDark } from "../../../constants/Colors";
 import { useGetSalesMutation } from "../../../redux/sale/saleApiSlice";
 import { formatDateTime, hp, wp } from "../../../utils";
-import { shortenString } from "../../helpers/misc";
+import { formatNumber, getCurrencySymbol, shortenString } from "../../helpers/misc";
 import { tintColorLight } from "../../../constants/Colors";
+import { useGetCurrentUserQuery } from "../../../redux/user/userApiSlice";
 
 export default function MakeSale(props: any) {
   // const salesFromStore = useSelector((state) => state.sale.currentSales);
@@ -35,9 +36,10 @@ export default function MakeSale(props: any) {
     refetch,
     isFetching,
   } = useGetSalesQuery(props?.route?.params?.sale?.id);
+  const {data: currentUser} = useGetCurrentUserQuery();
 
   const [sales, setSales] = useState([]);
-  const [selectedPeriod, setSelectedPeriod] = useState("Today");
+  const [selectedPeriod, setSelectedPeriod] = useState("30 days");
 
   const periodSelectorData = [
     {
@@ -58,6 +60,12 @@ export default function MakeSale(props: any) {
         setSelectedPeriod("30 days");
       },
     },
+    {
+      label: "All Time",
+      onClick: () => {
+        setSelectedPeriod("All Time");
+      }
+    }
   ];
   console.log("saleData", saleData);
 
@@ -139,7 +147,6 @@ export default function MakeSale(props: any) {
     refetch();
   };
 
-  //Today 7 days 30 days
   return (
     <View style={styles.container}>
       <Header title={"Sale"} />
@@ -174,7 +181,7 @@ export default function MakeSale(props: any) {
           <View style={styles.salesDataPointsContainer}>
             <View style={styles.salesDataPointItem}>
               <Text style={styles.salesDataPointItemLabel}>Paid Sales</Text>
-              <Text style={styles.salesDataPointItemValue}>{`$100`}</Text>
+              <Text style={styles.salesDataPointItemValue}>{getCurrencySymbol(currentUser.currency)}{formatNumber(178154)}</Text>
             </View>
             <View style={styles.salesDataPointDivider} />
             <View style={styles.salesDataPointItem}>
@@ -184,7 +191,7 @@ export default function MakeSale(props: any) {
                   styles.salesDataPointItemValue,
                   styles.salesDataPointItemValueUnpaid,
                 ]}
-              >{`$100`}</Text>
+              >{getCurrencySymbol(currentUser.currency)}{formatNumber(15489)}</Text>
             </View>
           </View>
           <View style={styles.buttonView}>
@@ -229,7 +236,7 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   periodSelectorContainer: {
-    height: hp(7),
+    height: hp(4),
     marginBottom: hp(1),
     flexDirection: "row",
     alignItems: "center",
@@ -244,7 +251,7 @@ const styles = StyleSheet.create({
     // marginLeft: wp(5),
   },
   periodSelectorItemSelected: {
-    backgroundColor: tintColorLight,
+    backgroundColor: "#ffbf003c",
   },
   periodSelectorItemText: {
     color: tintColorDark,
@@ -252,14 +259,14 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   periodSelectorItemTextSelected: {
-    color: "white",
+    color: "#ff7b00",
   },
   salesDataPointsContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
     marginBottom: hp(2),
-    height: hp(10),
+    height: hp(6),
   },
   salesDataPointItem: {
     // backgroundColor: "pink",
@@ -267,20 +274,22 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   salesDataPointItemLabel: {
-    fontSize: hp(1.3),
-    fontWeight: "500",
+    fontSize: hp(1.2),
+    fontWeight: "600",
+    color: "#999",
+    textTransform: "uppercase",
   },
   salesDataPointItemValue: {
     fontSize: hp(4),
-    fontWeight: "600",
+    fontWeight: "500",
   },
   salesDataPointItemValueUnpaid: {
-    color: "red",
+    color: "#d50015",
   },
   salesDataPointDivider: {
-    backgroundColor: tintColorLight,
-    width: wp(0.5),
-    height: hp(5),
+    backgroundColor: "#ccc",
+    width: 1,
+    height: hp(4.5),
   },
 
   listItem: {
