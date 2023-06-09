@@ -37,7 +37,7 @@ const pricing: any = {
 			price: 149,
 		},
 		EUR: {
-			price: 250,
+			price: 200,
 		},
 		AED: {
 			price: 1250,
