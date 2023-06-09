@@ -20,7 +20,11 @@ import { setCurrentSales } from "../../../redux/sale/saleSlice";
 import { tintColorDark } from "../../../constants/Colors";
 import { useGetSalesMutation } from "../../../redux/sale/saleApiSlice";
 import { formatDateTime, hp, wp } from "../../../utils";
-import { formatNumber, getCurrencySymbol, shortenString } from "../../helpers/misc";
+import {
+  formatNumber,
+  getCurrencySymbol,
+  shortenString,
+} from "../../helpers/misc";
 import { tintColorLight } from "../../../constants/Colors";
 import { useGetCurrentUserQuery } from "../../../redux/user/userApiSlice";
 
@@ -28,46 +32,44 @@ export default function MakeSale(props: any) {
   // const salesFromStore = useSelector((state) => state.sale.currentSales);
 
   const dispatch = useDispatch();
+
+  const periodSelectorData = [
+    {
+      label: "Today",
+      value: "today",
+    },
+    {
+      label: "7 days",
+      value: "7d",
+    },
+    {
+      label: "30 days",
+      value: "30d",
+    },
+    {
+      label: "All Time",
+      value: "",
+    },
+  ];
+
   // const [getSales, { isLoading }] = useGetSalesMutation();
+  const [selectedPeriod, setSelectedPeriod] = useState(periodSelectorData[2]);
   const {
     data: saleData,
     isError,
     isLoading,
     refetch,
     isFetching,
-  } = useGetSalesQuery(props?.route?.params?.sale?.id);
-  const {data: currentUser} = useGetCurrentUserQuery();
+  } = useGetSalesQuery(selectedPeriod?.value);
+  const { data: currentUser } = useGetCurrentUserQuery();
 
   const [sales, setSales] = useState([]);
-  const [selectedPeriod, setSelectedPeriod] = useState("30 days");
 
-  const periodSelectorData = [
-    {
-      label: "Today",
-      onClick: () => {
-        setSelectedPeriod("Today");
-      },
-    },
-    {
-      label: "7 days",
-      onClick: () => {
-        setSelectedPeriod("7 days");
-      },
-    },
-    {
-      label: "30 days",
-      onClick: () => {
-        setSelectedPeriod("30 days");
-      },
-    },
-    {
-      label: "All Time",
-      onClick: () => {
-        setSelectedPeriod("All Time");
-      }
-    }
-  ];
-  console.log("saleData", saleData);
+  const onClickPeriod = (selectedPeriod) => {
+    setSelectedPeriod(selectedPeriod);
+  };
+
+  console.log(sales);
 
   useEffect(() => {
     setSales(saleData?.sales);
@@ -158,17 +160,17 @@ export default function MakeSale(props: any) {
               return (
                 <TouchableOpacity
                   key={index}
-                  onPress={item.onClick}
+                  onPress={() => onClickPeriod(item)}
                   style={[
                     styles.periodSelectorItem,
-                    selectedPeriod == item?.label &&
+                    selectedPeriod?.label == item?.label &&
                       styles.periodSelectorItemSelected,
                   ]}
                 >
                   <Text
                     style={[
                       styles.periodSelectorItemText,
-                      selectedPeriod == item?.label &&
+                      selectedPeriod?.label == item?.label &&
                         styles.periodSelectorItemTextSelected,
                     ]}
                   >
@@ -181,7 +183,10 @@ export default function MakeSale(props: any) {
           <View style={styles.salesDataPointsContainer}>
             <View style={styles.salesDataPointItem}>
               <Text style={styles.salesDataPointItemLabel}>Paid Sales</Text>
-              <Text style={styles.salesDataPointItemValue}>{getCurrencySymbol(currentUser.currency)}{formatNumber(178154)}</Text>
+              <Text style={styles.salesDataPointItemValue}>
+                {getCurrencySymbol(currentUser?.currency)}
+                {formatNumber(178154)}
+              </Text>
             </View>
             <View style={styles.salesDataPointDivider} />
             <View style={styles.salesDataPointItem}>
@@ -191,7 +196,10 @@ export default function MakeSale(props: any) {
                   styles.salesDataPointItemValue,
                   styles.salesDataPointItemValueUnpaid,
                 ]}
-              >{getCurrencySymbol(currentUser.currency)}{formatNumber(15489)}</Text>
+              >
+                {getCurrencySymbol(currentUser?.currency)}
+                {formatNumber(15489)}
+              </Text>
             </View>
           </View>
           <View style={styles.buttonView}>
