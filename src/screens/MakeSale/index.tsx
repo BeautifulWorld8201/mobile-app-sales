@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { Text, View } from "../../../components/Themed";
 import { useSelector, useDispatch } from "react-redux";
@@ -69,11 +70,12 @@ export default function MakeSale(props: any) {
     setSelectedPeriod(selectedPeriod);
   };
 
-  console.log(sales);
+  //   console.log(sales?.stats, "STATS");
 
   useEffect(() => {
-    setSales(saleData?.sales);
+    setSales(saleData);
   }, [saleData]);
+
   // const getSalesApi = async () => {
   //   setIsFetching(true);
   //   try {
@@ -155,79 +157,100 @@ export default function MakeSale(props: any) {
 
       <>
         <View style={styles.innerContainer}>
-          <View style={styles.periodSelectorContainer}>
-            {periodSelectorData?.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => onClickPeriod(item)}
-                  style={[
-                    styles.periodSelectorItem,
-                    selectedPeriod?.label == item?.label &&
-                      styles.periodSelectorItemSelected,
-                  ]}
-                >
+          {isFetching ? (
+            <View style={styles.indicator}>
+              <ActivityIndicator size="large" color={tintColorDark} />
+            </View>
+          ) : (
+            <>
+              <View style={styles.periodSelectorContainer}>
+                {periodSelectorData?.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => onClickPeriod(item)}
+                      style={[
+                        styles.periodSelectorItem,
+                        selectedPeriod?.label == item?.label &&
+                          styles.periodSelectorItemSelected,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.periodSelectorItemText,
+                          selectedPeriod?.label == item?.label &&
+                            styles.periodSelectorItemTextSelected,
+                        ]}
+                      >
+                        {item?.label}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+              <View style={styles.salesDataPointsContainer}>
+                <View style={styles.salesDataPointItem}>
+                  <Text style={styles.salesDataPointItemLabel}>Paid Sales</Text>
+                  <Text style={styles.salesDataPointItemValue}>
+                    {getCurrencySymbol(currentUser?.currency)}
+                    {formatNumber(sales?.stats?.paid?.amount ?? 0)}
+                  </Text>
+                </View>
+                <View style={styles.salesDataPointDivider} />
+                <View style={styles.salesDataPointItem}>
+                  <Text style={styles.salesDataPointItemLabel}>
+                    Unpaid Sales
+                  </Text>
                   <Text
                     style={[
-                      styles.periodSelectorItemText,
-                      selectedPeriod?.label == item?.label &&
-                        styles.periodSelectorItemTextSelected,
+                      styles.salesDataPointItemValue,
+                      styles.salesDataPointItemValueUnpaid,
                     ]}
                   >
-                    {item?.label}
+                    {getCurrencySymbol(currentUser?.currency)}
+                    {formatNumber(sales?.stats?.unpaid?.amount ?? 0)}
                   </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-          <View style={styles.salesDataPointsContainer}>
-            <View style={styles.salesDataPointItem}>
-              <Text style={styles.salesDataPointItemLabel}>Paid Sales</Text>
-              <Text style={styles.salesDataPointItemValue}>
-                {getCurrencySymbol(currentUser?.currency)}
-                {formatNumber(178154)}
-              </Text>
-            </View>
-            <View style={styles.salesDataPointDivider} />
-            <View style={styles.salesDataPointItem}>
-              <Text style={styles.salesDataPointItemLabel}>Unpaid Sales</Text>
-              <Text
-                style={[
-                  styles.salesDataPointItemValue,
-                  styles.salesDataPointItemValueUnpaid,
-                ]}
-              >
-                {getCurrencySymbol(currentUser?.currency)}
-                {formatNumber(15489)}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.buttonView}>
-            <Text style={styles.credsFont}>Recent Sales</Text>
-
-            <Button
-              onPress={() => props.navigation.navigate("Sale")}
-              style={styles.buttonBelow}
-            >
-              <Text style={styles.buttonText}>Make new Sale</Text>
-            </Button>
-          </View>
-
-          <FlatList
-            data={sales}
-            renderItem={({ item, index }) => renderItem(item, index)}
-            showsVerticalScrollIndicator={false}
-            style={{
-              marginBottom: hp(20),
-            }}
-            ListEmptyComponent={() => (
-              <View style={{ marginTop: 200, alignItems: "center" }}>
-                <Text>No Sales yet</Text>
+                </View>
               </View>
-            )}
-            refreshing={isFetching}
-            onRefresh={() => onRefresh()}
-          />
+              <View style={styles.buttonView}>
+                <Text style={styles.credsFont}>Recent Sales</Text>
+
+                <Button
+                  onPress={() => props.navigation.navigate("Sale")}
+                  style={styles.buttonBelow}
+                >
+                  <Text style={styles.buttonText}>Make new Sale</Text>
+                </Button>
+              </View>
+
+              <FlatList
+                data={sales?.sales}
+                renderItem={({ item, index }) => renderItem(item, index)}
+                showsVerticalScrollIndicator={false}
+                style={{
+                  marginBottom: hp(20),
+                }}
+                ListEmptyComponent={() => (
+                  <View style={{ marginTop: 200, alignItems: "center" }}>
+                    <Text>No Sales yet</Text>
+                  </View>
+                )}
+                // refreshing={isFetching}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={isFetching}
+                    onRefresh={() => onRefresh()}
+                    colors={["white"]}
+                    style={{ backgroundColor: "white" }}
+                    progressBackgroundColor="white"
+                    tintColor={"white"}
+                  />
+                }
+
+                // refreshing={isFetching}
+              />
+            </>
+          )}
         </View>
       </>
     </View>
@@ -242,6 +265,9 @@ const styles = StyleSheet.create({
   innerContainer: {
     marginHorizontal: hp(2.5),
     marginTop: hp(2),
+  },
+  indicator: {
+    marginTop: hp(30),
   },
   periodSelectorContainer: {
     height: hp(4),
@@ -277,9 +303,8 @@ const styles = StyleSheet.create({
     height: hp(6),
   },
   salesDataPointItem: {
-    // backgroundColor: "pink",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "center",
   },
   salesDataPointItemLabel: {
     fontSize: hp(1.2),
