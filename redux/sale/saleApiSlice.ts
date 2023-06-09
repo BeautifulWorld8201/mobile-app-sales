@@ -10,7 +10,7 @@ export const saleApiSlice = apiSlice.injectEndpoints({
     }),
     getSales: builder.query({
       query: (param) => ({
-        url: param == "" ? "/sales/" : `/sales/${param}`,
+        url: param == "" ? "/sales/" : `/sales?period=${param}/`,
         method: "GET",
         // body: { ...data },
       }),
