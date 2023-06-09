@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import NfcManager, { Ndef, NfcTech } from 'react-native-nfc-manager';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import googleLogo from '../../../assets/images/google.png';
 
 import { getCallingCode } from 'react-native-country-picker-modal';
 
@@ -284,6 +285,13 @@ export default function Sale(props: any): JSX.Element {
 								{errors.cards_amount && touched.cards_amount && (
 									<Text style={styles.errorText}>{errors.cards_amount}</Text>
 								)}
+
+								<View
+									style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4, marginBottom: 2 }}
+								>
+									<Image source={googleLogo} style={{ width: 18, height: 18 }} />
+									<Text style={{fontWeight: 500}}>Google Business</Text>
+								</View>
 								<GooglePlacesAutocomplete
 									styles={googleInputStyles}
 									placeholder="Search for business"
