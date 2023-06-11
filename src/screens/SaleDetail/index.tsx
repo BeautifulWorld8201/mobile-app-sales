@@ -26,7 +26,7 @@ export default function SaleDetail(props: any) {
 		isError,
 		isLoading,
 		refetch,
-	} = useGetSaleDetailQuery(props?.route?.params?.sale?.id);
+	} = useGetSaleDetailQuery(props?.route?.params?.sale?._id);
 	const user = useSelector((state) => state?.auth?.loginUser);
 
 	const [resendPaymentRequest, resendPaymentRequestResp] = useResendPaymentRequestMutation();

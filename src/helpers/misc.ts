@@ -30,6 +30,26 @@ export const getCurrencyByCountry = (country: {
 	return 'USD';
 };
 
+
+export function getFlagEmoji(countryCode: string): string {
+	if (!countryCode) return countryCode;
+	const codePoints = countryCode
+		.toUpperCase()
+		.split('')
+		.map((char) => 127397 + char.charCodeAt(0));
+	return String.fromCodePoint(...codePoints);
+}
+
+// create a function that will display a big number with K 
+// if the number is bigger than 1000
+export const formatNumber = (number: number): string => {
+	if (number > 1000) {
+		return (number / 1000).toFixed(1) + 'k';
+	}
+	return number.toString();
+};
+
+
 export function shortenString(str: string, maxLength: number = 22): string {
 	if (!str) return str;
 	if (str.length <= maxLength) {
