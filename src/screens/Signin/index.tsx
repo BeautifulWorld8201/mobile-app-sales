@@ -22,6 +22,7 @@ import {
 } from "../../../redux/auth/authSlice";
 import { setApplicationStatus } from "../../../redux/user/userSlice";
 import Toast from "react-native-root-toast";
+
 export default function Signin(props: any) {
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ export default function Signin(props: any) {
     try {
       const resp = await login(values);
       console.log("----resp--login---", resp?.data?.user);
+      console.log("data>>>",resp);
       if (resp?.error) {
         Toast.show(resp?.error?.data?.message, {
           duration: Toast.durations.LONG,
@@ -51,9 +53,9 @@ export default function Signin(props: any) {
         dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
         dispatch(setApplicationStatus(resp?.data?.user?.applicationStatus));
 
-        props.navigation.navigate("IdentityVerification", {
-          user: resp?.data?.user,
-        });
+        // props.navigation.navigate("IdentityVerification", {
+        //   user: resp?.data?.user,
+        // });
       } else {
         dispatch(setAccessToken(resp?.data?.tokens?.access));
         dispatch(setRefreshToken(resp?.data?.tokens?.refresh));

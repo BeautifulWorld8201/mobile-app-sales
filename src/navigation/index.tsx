@@ -20,6 +20,10 @@ import BankDetail from "../screens/BankDetail";
 
 import UserPayouts from "../screens/UserPayouts";
 import ChangeCurrency from "../screens/ChangeCurrency"
+import Partners from "../screens/Partners";
+import PartnerDetail from "../screens/PartnerDetail";
+import { useGetUserEmployeeQuery } from '../../redux/user/userApiSlice';
+
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -57,6 +61,7 @@ function TabBarIcon(props: {
 }
 
 function TabStack() {
+
   return (
     <Tab.Navigator
       screenOptions={({ route, navigation }) => ({
@@ -77,6 +82,57 @@ function TabStack() {
           tabBarActiveTintColor: "#f5c634",
         })}
       />
+       <Tab.Screen
+        name="Partners"
+        component={Partners}
+        options={({ route }) => ({
+          tabBarLabel: "Partners",
+          
+          tabBarIcon: ({ focused, color }) => (
+            <TabBarIcon name="users" color={color} />
+          ),
+          tabBarActiveTintColor: "#f5c634",
+        })}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={({ route }) => ({
+          tabBarLabel: "Settings",
+
+          tabBarIcon: ({ focused, color }) => (
+            <TabBarIcon name="gears" color={color} />
+          ),
+          tabBarActiveTintColor: "#f5c634",
+        })}
+      />
+    </Tab.Navigator>
+  );
+}
+
+function TabStackWithoutPartner() {
+  const employeeData = useGetUserEmployeeQuery();
+
+  return (
+    <Tab.Navigator
+      screenOptions={({ route, navigation }) => ({
+        headerShown: false,
+        gestureEnabled: true,
+        unmountOnBlur: false,
+      })}
+    >
+      <Tab.Screen
+        name="MakeSale"
+        component={MakeSale}
+        options={({ route }) => ({
+          tabBarLabel: "Home",
+
+          tabBarIcon: ({ focused, color }) => (
+            <TabBarIcon name="home" color={color} />
+          ),
+          tabBarActiveTintColor: "#f5c634",
+        })}
+      /> 
       <Tab.Screen
         name="Settings"
         component={Settings}
@@ -93,19 +149,24 @@ function TabStack() {
   );
 }
 function AppStack() {
+  const employeeData = useGetUserEmployeeQuery();
+
   return (
     <Stack.Navigator
-      initialRouteName="TabStack"
+      initialRouteName={employeeData?"TabStackWithoutPartner":"TabStack"}
       screenOptions={({ route, navigation }) => ({
         headerShown: false,
       })}
     >
-      <Stack.Screen name="TabStack" component={TabStack} />
+      {!employeeData? <Stack.Screen name="TabStackWithoutPartner" component={TabStackWithoutPartner} />: <Stack.Screen name="TabStack" component={TabStack} />}
+      {/* <Stack.Screen name="TabStack" component={TabStack} /> */}
       <Stack.Screen name="Sale" component={Sale} />
       <Stack.Screen name="TakePayment" component={TakePayment} />
       <Stack.Screen name="WriteCards" component={WriteCards} />
 
       <Stack.Screen name="SaleDetail" component={SaleDetail} />
+      <Stack.Screen name="Partners" component={Partners} />
+      <Stack.Screen name="PartnerDetail" component={PartnerDetail} />
       <Stack.Screen name="UserPayouts" component={UserPayouts} />
       <Stack.Screen name="Payouts" component={Payouts} />
       <Stack.Screen name="BankDetail" component={BankDetail} />
