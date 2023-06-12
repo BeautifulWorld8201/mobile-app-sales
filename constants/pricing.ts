@@ -4,7 +4,7 @@ const pricing: any = {
 			price: 49,
 		},
 		EUR: {
-			price: 60,
+			price: 100,
 		},
 		AED: {
 			price: 400,
@@ -15,7 +15,7 @@ const pricing: any = {
 			price: 79,
 		},
 		EUR: {
-			price: 120,
+			price: 200,
 		},
 		AED: {
 			price: 750,
@@ -26,7 +26,7 @@ const pricing: any = {
 			price: 99,
 		},
 		EUR: {
-			price: 150,
+			price: 250,
 		},
 		AED: {
 			price: 1000,
@@ -37,7 +37,7 @@ const pricing: any = {
 			price: 149,
 		},
 		EUR: {
-			price: 200,
+			price: 400,
 		},
 		AED: {
 			price: 1250,
