@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -61,6 +61,8 @@ function TabBarIcon(props: {
 }
 
 function TabStack() {
+  const { data: employeeData } = useGetUserEmployeeQuery();
+
 
   return (
     <Tab.Navigator
@@ -82,18 +84,18 @@ function TabStack() {
           tabBarActiveTintColor: "#f5c634",
         })}
       />
-       <Tab.Screen
+       {employeeData?.length ? <Tab.Screen
         name="Partners"
         component={Partners}
         options={({ route }) => ({
           tabBarLabel: "Partners",
           
           tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon name="users" color={color} />
+            <TabBarIcon name="group" color={color} />
           ),
           tabBarActiveTintColor: "#f5c634",
         })}
-      />
+      />: null}
       <Tab.Screen
         name="Settings"
         component={Settings}
@@ -149,17 +151,14 @@ function TabStackWithoutPartner() {
   );
 }
 function AppStack() {
-  const employeeData = useGetUserEmployeeQuery();
-
   return (
     <Stack.Navigator
-      initialRouteName={employeeData?"TabStackWithoutPartner":"TabStack"}
+      initialRouteName={"TabStack"}
       screenOptions={({ route, navigation }) => ({
         headerShown: false,
       })}
     >
-      {!employeeData? <Stack.Screen name="TabStackWithoutPartner" component={TabStackWithoutPartner} />: <Stack.Screen name="TabStack" component={TabStack} />}
-      {/* <Stack.Screen name="TabStack" component={TabStack} /> */}
+      <Stack.Screen name="TabStack" component={TabStack} />
       <Stack.Screen name="Sale" component={Sale} />
       <Stack.Screen name="TakePayment" component={TakePayment} />
       <Stack.Screen name="WriteCards" component={WriteCards} />

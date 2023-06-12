@@ -27,8 +27,7 @@ export default function Partners(props: any) {
 
     const isLoading = useGetUserEmployeeQuery();
 
-    const { data: employee } = useGetUserEmployeeQuery();
-    console.log(employee);
+    const { data: employee, refetch, isFetching } = useGetUserEmployeeQuery();
 
 
     const renderItem = (item: any, index: number) => {
@@ -46,7 +45,7 @@ export default function Partners(props: any) {
                     <Text style={{ color: '#ccc', fontSize: 12 }}>#{index + 1} </Text>
                 </View>
                 <View style={styles.listItemMiddle}>
-                    <Text style={{ fontWeight: '500', fontSize: 15, textTransform: "capitalize" }}>
+                    <Text style={{ fontWeight: '500', fontSize: 15 }}>
                         {shortenString(item?.username, 30)}
                     </Text>
                     <Text>
@@ -63,10 +62,6 @@ export default function Partners(props: any) {
         );
     };
 
-    const onRefresh = () => {
-        refetch();
-    };
-
     return (
         <View style={styles.container}>
             <Header title={'Partners'} />
@@ -75,6 +70,7 @@ export default function Partners(props: any) {
                 <ScrollView
                     style={styles.innerContainer}
                     showsVerticalScrollIndicator={false}
+                    refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
                 >
                     {!employee ? (
                         <View style={styles.indicator}>
