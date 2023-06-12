@@ -112,44 +112,6 @@ function TabStack() {
   );
 }
 
-function TabStackWithoutPartner() {
-  const employeeData = useGetUserEmployeeQuery();
-
-  return (
-    <Tab.Navigator
-      screenOptions={({ route, navigation }) => ({
-        headerShown: false,
-        gestureEnabled: true,
-        unmountOnBlur: false,
-      })}
-    >
-      <Tab.Screen
-        name="MakeSale"
-        component={MakeSale}
-        options={({ route }) => ({
-          tabBarLabel: "Home",
-
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon name="home" color={color} />
-          ),
-          tabBarActiveTintColor: "#f5c634",
-        })}
-      /> 
-      <Tab.Screen
-        name="Settings"
-        component={Settings}
-        options={({ route }) => ({
-          tabBarLabel: "Settings",
-
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon name="gears" color={color} />
-          ),
-          tabBarActiveTintColor: "#f5c634",
-        })}
-      />
-    </Tab.Navigator>
-  );
-}
 function AppStack() {
   return (
     <Stack.Navigator
