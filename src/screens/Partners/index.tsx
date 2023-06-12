@@ -72,12 +72,6 @@ export default function Partners(props: any) {
                     showsVerticalScrollIndicator={false}
                     refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
                 >
-                    {!employee ? (
-                        <View style={styles.indicator}>
-                            <ActivityIndicator size="large" color={tintColorDark} />
-                        </View>
-                    ) : (
-                        <>
                             <FlatList
                                 data={employee}
                                 renderItem={({ item, index }) => renderItem(item, index)}
@@ -91,8 +85,6 @@ export default function Partners(props: any) {
                                     </View>
                                 )}
                             />
-                        </>
-                    )}
                 </ScrollView>
             </>
         </View>
