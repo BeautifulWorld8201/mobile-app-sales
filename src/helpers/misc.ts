@@ -14,6 +14,7 @@ export const getCurrencySymbol = (currency: string): string => {
 };
 
 export const getPrice = (amount: number, currency: string): number => {
+	if (!pricing[amount]) return 0;
 	return pricing[amount][currency].price;
 };
 
