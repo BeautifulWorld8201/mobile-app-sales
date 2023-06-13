@@ -35,6 +35,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useGetCurrentUserQuery } from '../../../redux/user/userApiSlice';
 import { getCurrencySymbol, getFlagEmoji, getPrice, shortenString } from '../../helpers/misc';
 import { set } from 'react-native-reanimated';
+import { CheckBox, Switch } from '@rneui/base';
+import Toast from 'react-native-root-toast';
 
 // NfcManager.start();
 export default function Sale(props: any): JSX.Element {
@@ -50,6 +52,7 @@ export default function Sale(props: any): JSX.Element {
 	const [countryFlag, setCountryFlag] = useState('');
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState(null);
+	const [customPrice, setCustomPrice] = useState({checked: false, value: 0});
 	const [items, setItems] = useState([
 		{
 			label: '1 Google Popcard',
@@ -111,6 +114,7 @@ export default function Sale(props: any): JSX.Element {
 		phone: yup.string().required('Required'),
 		cards_amount: yup.number().required('Required'),
 		place_id: yup.string().required('Required'),
+		custom_price: yup.number()
 	});
 
 	const createSaleApi = async (values: any) => {
@@ -118,6 +122,7 @@ export default function Sale(props: any): JSX.Element {
 			...values,
 			business_name: location?.name,
 			phone: countryCode + values['phone'],
+			...(customPrice.checked && {custom_price: customPrice.value})
 		};
 		console.log('obj--->', obj);
 
@@ -134,11 +139,16 @@ export default function Sale(props: any): JSX.Element {
 			dispatch(setSelectedCards(arr));
 			if (resp?.data) {
 				props.navigation.navigate('TakePayment');
+			} else if (resp?.error) {
+				Toast.show(resp.error.data.message, {
+					duration: Toast.durations.LONG,
+					position: Toast.positions.BOTTOM,
+				  });
 			} else {
-				console.log('resp', resp);
+				console.log('error in sale bro')
 			}
 		} catch (error) {
-			console.log('error---in sale->', error);
+			console.log('error---in sale->', error);	
 		}
 	};
 	return (
@@ -285,6 +295,48 @@ export default function Sale(props: any): JSX.Element {
 								{errors.cards_amount && touched.cards_amount && (
 									<Text style={styles.errorText}>{errors.cards_amount}</Text>
 								)}
+
+								{currentUser.role === 'trustedSeller' && <View>
+									<View style={{flexDirection: 'row', alignItems: 'center'}}>
+										<Text style={{ fontWeight: '500' }}>
+											Custom Price 
+										</Text>
+										<CheckBox checked={customPrice.checked}
+										checkedColor={tintColorDark} 
+										size={20}
+										onPress={() => {
+											setCustomPrice({
+												...customPrice,
+												checked: !customPrice.checked,
+												value: getPrice(
+													_formik.current?.values.cards_amount,
+													currentUser?.currency
+												)
+											})
+										}} />
+									</View>
+									{customPrice.checked && (
+										<View>
+											<Input
+												onChangeText={(text) =>
+													setCustomPrice({
+														...customPrice,
+														value: text,
+													})
+												}
+												onBlur={handleBlur('cards_amount')}
+												value={String(customPrice.value)}
+												style={{...styles.inputField}}
+												inputViewStyle={styles.inputViewStyle}
+												iconColor={'#ccc'}
+												placeholder={'Enter custom price'}
+												keyboardType="number-pad"
+												rightText={currentUser?.currency}
+											/>
+										</View>
+									)}
+								</View>}
+								
 
 								<View
 									style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4, marginBottom: 2 }}

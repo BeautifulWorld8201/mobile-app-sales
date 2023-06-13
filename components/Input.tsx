@@ -22,9 +22,10 @@ export default function Input({
   keyboardType,
   multiline,
   onPressIn,
+  rightText
 }) {
   return (
-    <View style={icon && inputViewStyle}>
+    <View style={(icon || rightText) && inputViewStyle}>
       <TextInput
         onChangeText={onChangeText}
         onBlur={onBlur}
@@ -44,6 +45,7 @@ export default function Input({
         onPressIn={onPressIn}
       />
       {icon && <Icon name={iconName} color={iconColor} size={20} />}
+      {rightText && <Text style={{ color: "#777" }}>{rightText}</Text>}
     </View>
   );
 }
