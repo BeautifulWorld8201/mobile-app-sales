@@ -22,7 +22,12 @@ import {
 } from "../../../redux/auth/authSlice";
 import { setApplicationStatus } from "../../../redux/user/userSlice";
 import Toast from "react-native-root-toast";
+
+import { useTranslation } from "react-i18next";
+
 export default function Signin(props: any) {
+  const { t } = useTranslation();
+
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
   const _formik = useRef();
@@ -76,9 +81,9 @@ export default function Signin(props: any) {
         </View>
 
         <View style={styles.innerContainer}>
-          <Text style={styles.loginFont}>Login</Text>
+          <Text style={styles.loginFont}>{t("Login")}</Text>
           <Text style={styles.detailFont}>
-            Enter the details below to sign in to your account
+            {t("Enter the details below to sign in to your account")}
           </Text>
 
           <View>
@@ -101,7 +106,7 @@ export default function Signin(props: any) {
                 touched,
               }) => (
                 <View>
-                  <Text style={styles.credsFont}>Email</Text>
+                  <Text style={styles.credsFont}>{t("Email")}</Text>
                   <Input
                     onChangeText={(text) =>
                       handleChange("email")(text.replace(/\s/g, ""))
@@ -114,13 +119,13 @@ export default function Signin(props: any) {
                     inputViewStyle={styles.inputViewStyle}
                     iconColor={"#ccc"}
                     autoCapitalize={"none"}
-                    placeholder={"Enter your email address"}
+                    placeholder={t("Enter your email address")}
                   />
                   {errors.email && touched.email && (
-                    <Text style={styles.errorText}>{errors.email}</Text>
+                    <Text style={styles.errorText}>{t(errors.email)}</Text>
                   )}
                   <Text style={{ ...styles.credsFont, marginTop: 10 }}>
-                    Password
+                    {t("Password")}
                   </Text>
                   <Input
                     onChangeText={(text) =>
@@ -135,10 +140,10 @@ export default function Signin(props: any) {
                     inputViewStyle={styles.inputViewStyle}
                     iconColor={"#ccc"}
                     autoCapitalize={"none"}
-                    placeholder={"Enter password"}
+                    placeholder={t("Enter password")}
                   />
                   {errors.password && touched.password && (
-                    <Text style={styles.errorText}>{errors.password}</Text>
+                    <Text style={styles.errorText}>{t(errors.password)}</Text>
                   )}
                 </View>
               )}
@@ -153,7 +158,7 @@ export default function Signin(props: any) {
                 disabled={isLoading}
                 loaderColor={styles.loaderColor}
               >
-                <Text style={styles.buttonText}>Login</Text>
+                <Text style={styles.buttonText}>{t("Login")}</Text>
               </Button>
             </View>
             {/* <Text
@@ -167,13 +172,13 @@ export default function Signin(props: any) {
       </View>
 
       <View style={styles.signupView}>
-        <Text>Don't have an account? </Text>
+        <Text>{t("Don't have an account?")} </Text>
 
         <Text
           style={styles.signupText}
           onPress={() => props.navigation.navigate("Register")}
         >
-          Sign up
+          {t("Sign up")}
         </Text>
       </View>
     </KeyboardAwareScrollView>
