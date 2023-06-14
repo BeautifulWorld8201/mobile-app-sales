@@ -1,121 +1,123 @@
-en,
-Home,tab bar heading
-Login,login screen
-Enter the details below to sign in to your account,
-Email,
-Enter your email address,
-Password,
-Enter password,
-Don't have an account?,
-Sign up,
-Required,
-Please enter a valid email address,
-Register,register screen
-Enter the details below to register your account,
-User Name,
-Enter your user name,
-Already have an account?,
-Sign in,
-Name is required,
-Identity Verification,
-"We're sorry, your application was rejected.",identity screen
-Your application to become a verified seller has been successfully submitted. Please wait for our team to take a look at it.,
-"Before starting to sell, you need to submit an application to become a verified seller",
-Country,
-Please select the country where you will make sales. This can be different from your country of nationality.,
-Phone number,
-Phone number is required,
-Please select a country,
-Start Indentity Verification,
-Lets start,
-Logout,
-Sales,sales screen
-Today,
-7 days,
-30 days,
-All Time,
-Paid Sales,
-Unpaid Sales,
-Recent Sales,
-Make new Sale,
-No Sales yet,
-Paid,
-Not Paid,
-cards,
-Create Sale,create sale screen
-Email address of business,
-Phone number of business,
-Select card bundle,
-Custom Price,
-Enter custom price,
-Google Business,
-Search for business,
-Scan Complete,
-Ready to Scan,
-Done,
-Cancel,
-for,
-Sale Detail,Sale detail screen
-Client,
-Card amount,
-Price,
-Payment Status,
-Date,
-Address,
-Rating,
-Mark As paid,
-Resend Payment Request,
-Payment request sent!,
-Sale marked as paid!,
-Partners,Partners screen
-No Partners yet,
-Partner Details,Partner Details screen
-Paid (Cash),
-Settings,Settings Screen
-Account,
-Name,
-Role,
-Created,
-Currency,
-Payouts,
-Notifications,
-Miscellaneous,
-Become a verified Popcard seller today!,
-Share Popcard Salesmen,
-Google Play Store not found,
-App store not found,
-Rate Popcard Salesmen,
-Contact Us,
-Log Out,
-Set up payouts,Payouts Screen
-Let's add a payout method,
-"To start, let us know where you'd like us to send your money.",
-Billing country/region,
-How would you like to get paid?,
-PayPal in USD,
-1 business day,
-Paypal fees may apply,
-Please select country,
-Please select payment method,
-Continue,
-No fees,
-3-5 business days,
-Payout Methods,User Payouts Screen
-Delete payout method,
-Yes,
-Payout method deleted!,
-Bank Details,Bank Details Screen
-Account holder name,
-Bank name,
-SWIFT / BIC,
-IBAN,
-Routing Number,
-Account Number,
-PayPal email address,
-Take Payment,Take Payment Screen
-Success,
-Your client has received a secure payment request in their email. Please ask the client to check his email to complete the payment. Offer to assist them with any questions or concerns they may have during the payment process.,
-Cards written successfully!,
-Write Cards,Write Cards Screen
-Card,
-Write,
+"en",""
+"Home","tab bar heading"
+"Login","login screen"
+"Enter the details below to sign in to your account",""
+"Email",""
+"Enter your email address",""
+"Password",""
+"Enter password",""
+"Don't have an account?",""
+"Sign up",""
+"Required",""
+"Please enter a valid email address",""
+"Register","register screen"
+"Enter the details below to register your account",""
+"User Name",""
+"Enter your user name",""
+"Already have an account?",""
+"Sign in",""
+"Name is required",""
+"Identity Verification",""
+"We're sorry, your application was rejected.","identity screen"
+"Your application to become a verified seller has been successfully submitted. Please wait for our team to take a look at it.",""
+"Before starting to sell, you need to submit an application to become a verified seller",""
+"Country",""
+"Please select the country where you will make sales. This can be different from your country of nationality.",""
+"Phone number",""
+"Phone number is required",""
+"Please select a country",""
+"Start Indentity Verification",""
+"Lets start",""
+"Logout",""
+"Sales","sales screen"
+"Today",""
+"7 days",""
+"30 days",""
+"All Time",""
+"Paid Sales",""
+"Unpaid Sales",""
+"Recent Sales",""
+"Make new Sale",""
+"No Sales yet",""
+"Paid",""
+"Not Paid",""
+"cards",""
+"Create Sale","create sale screen"
+"Email address of business",""
+"Phone number of business",""
+"Select card bundle",""
+"Custom Price",""
+"Enter custom price",""
+"Google Business",""
+"Search for business",""
+"Scan Complete",""
+"Ready to Scan",""
+"Done",""
+"Cancel",""
+"for",""
+"Sale Detail","Sale detail screen"
+"Client",""
+"Card amount",""
+"Price",""
+"Payment Status",""
+"Date",""
+"Address",""
+"Rating",""
+"Mark As paid",""
+"Resend Payment Request",""
+"Payment request sent!",""
+"Sale marked as paid!",""
+"Partners","Partners screen"
+"No Partners yet",""
+"Partner Details","Partner Details screen"
+"Paid (Cash)",""
+"Settings","Settings Screen"
+"Account",""
+"Name",""
+"Role",""
+"Created",""
+"Currency",""
+"Payouts",""
+"Notifications",""
+"Change Language",""
+"Click on the language you want to change to",""
+"Miscellaneous",""
+"Become a verified Popcard seller today!",""
+"Share Popcard Salesmen",""
+"Google Play Store not found",""
+"App store not found",""
+"Rate Popcard Salesmen",""
+"Contact Us",""
+"Log Out",""
+"Set up payouts","Payouts Screen"
+"Let's add a payout method",""
+"To start, let us know where you'd like us to send your money.",""
+"Billing country/region",""
+"How would you like to get paid?",""
+"PayPal in USD",""
+"1 business day",""
+"Paypal fees may apply",""
+"Please select country",""
+"Please select payment method",""
+"Continue",""
+"No fees",""
+"3-5 business days",""
+"Payout Methods","User Payouts Screen"
+"Delete payout method",""
+"Yes",""
+"Payout method deleted!",""
+"Bank Details","Bank Details Screen"
+"Account holder name",""
+"Bank name",""
+"SWIFT / BIC",""
+"IBAN",""
+"Routing Number",""
+"Account Number",""
+"PayPal email address",""
+"Take Payment","Take Payment Screen"
+"Success",""
+"Your client has received a secure payment request in their email. Please ask the client to check his email to complete the payment. Offer to assist them with any questions or concerns they may have during the payment process.",""
+"Cards written successfully!",""
+"Write Cards","Write Cards Screen"
+"Card",""
+"Write",""

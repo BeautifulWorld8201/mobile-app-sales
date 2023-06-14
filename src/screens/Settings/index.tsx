@@ -6,8 +6,9 @@ import {
   Share,
   Platform,
   Alert,
+  FlatList,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import MIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import moment from "moment";
@@ -23,11 +24,72 @@ import {
 } from "../../../redux/user/userApiSlice";
 import { useIsFocused } from "@react-navigation/native";
 import { apiSlice } from "../../../redux/api/apiSlice";
+import RNModal from "react-native-modal";
 import { useTranslation } from "react-i18next";
+import { tintColorLight } from "../../../constants/Colors";
+
+const LangModal: React.FC<{
+  ModalRef: React.MutableRefObject<any>;
+  changeLang: Function;
+  t: Function;
+}> = ({ ModalRef, changeLang, t }) => {
+  const [visible, setvisible] = useState(false);
+
+  // add your languages here
+  const LangList = [{ label: "English", code: "en" }];
+
+  if (ModalRef) ModalRef.current = { visible, setvisible };
+
+  const renderItem: React.FC<{ item: { label: String; code: String } }> = ({
+    item,
+  }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          changeLang(item.code);
+          setvisible(false);
+        }}
+        style={styles.LangSingle}
+      >
+        <Text>{item.label}</Text>
+      </TouchableOpacity>
+    );
+  };
+  return (
+    <RNModal
+      isVisible={visible}
+      swipeDirection={["down"]}
+      onSwipeComplete={() => setvisible(false)}
+      onBackdropPress={() => setvisible(false)}
+      hasBackdrop
+      style={{ justifyContent: "flex-end", margin: 0 }}
+    >
+      <View style={styles.LangBody}>
+        <View style={styles.LangLine} />
+        <Text style={styles.LangHeader}>{t("Change Language")}</Text>
+        <Text style={styles.titleText}>
+          {t("Click on the language you want to change to")}
+        </Text>
+        <View style={{ marginTop: hp(2) }}>
+          <FlatList
+            data={LangList}
+            renderItem={renderItem}
+            keyExtractor={(e, id) => id.toString()}
+          />
+        </View>
+      </View>
+    </RNModal>
+  );
+};
 
 export default function Settings(props: any) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const focused = useIsFocused();
+
+  const LangModalRef = useRef<{
+    visible: boolean;
+    setvisible: React.Dispatch<React.SetStateAction<boolean>>;
+  } | null>(null);
 
   const dispatch = useDispatch();
   const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
@@ -61,6 +123,12 @@ export default function Settings(props: any) {
         style={styles.innerContainer}
         showsVerticalScrollIndicator={false}
       >
+        <LangModal
+          ModalRef={LangModalRef}
+          changeLang={i18n.changeLanguage}
+          t={t}
+        />
+
         <Text style={styles.textTitle}>{t("Account")}</Text>
 
         <View style={styles.mainContainer}>
@@ -154,6 +222,23 @@ export default function Settings(props: any) {
                 <MIcons name="bell-outline" size={20} />
               </View>
               <Text style={styles.titleText}>{t("Notifications")}</Text>
+            </View>
+            <View style={styles.iconsView}>
+              <MIcons name="chevron-right" size={20} />
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.divider} />
+
+          <TouchableOpacity
+            style={styles.backgroundView}
+            onPress={() => LangModalRef.current?.setvisible(true)}
+          >
+            <View style={styles.rowView}>
+              <View style={styles.iconView}>
+                <MIcons name="web" size={20} />
+              </View>
+              <Text style={styles.titleText}>{t("Change Language")}</Text>
             </View>
             <View style={styles.iconsView}>
               <MIcons name="chevron-right" size={20} />
@@ -333,5 +418,34 @@ const styles = StyleSheet.create({
   rowView: {
     flexDirection: "row",
     backgroundColor: "#F9F9F9",
+  },
+  LangBody: {
+    backgroundColor: "white",
+    height: hp(40),
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    alignItems: "center",
+    paddingTop: hp(2),
+  },
+  LangLine: {
+    backgroundColor: tintColorLight,
+    width: wp(40),
+    height: hp(0.8),
+    borderRadius: 25,
+  },
+  LangHeader: {
+    paddingTop: hp(2),
+    paddingBottom: hp(2),
+    fontWeight: "bold",
+    fontSize: 24,
+  },
+  LangSingle: {
+    marginTop: hp(2),
+    backgroundColor: tintColorLight,
+    width: wp(80),
+    height: hp(5),
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -38,7 +38,7 @@ const write = (data) => {
     (p, n) => p + `export { default as ${n} } from "./${n}.json";\n`,
     "",
   );
-  fs.writeFileSync("./locales/index.js", indexFile);
+  fs.writeFileSync("./locales/index.jsx", indexFile);
 };
 
 const excelFilePath = "locales.csv";
