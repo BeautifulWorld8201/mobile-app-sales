@@ -14,9 +14,15 @@ const saleSlice = createSlice({
     setCurrentSales: (state, action) => {
       state.currentSales = action.payload;
     },
+
+    clearSales: (state) => {
+      state.selectedCards = [];
+      state.currentSales = [];
+    },
   },
 });
 
-export const { setSelectedCards, setCurrentSales } = saleSlice.actions;
+export const { setSelectedCards, setCurrentSales, clearSales } =
+  saleSlice.actions;
 
 export default saleSlice.reducer;
