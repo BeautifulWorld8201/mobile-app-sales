@@ -111,10 +111,6 @@ export default function Sale(props: any): JSX.Element {
 		);
 	}, []);
 
-	useEffect(() => {
-		console.log('locations--->', locations);
-	}, [locations])
-
 	const validationSchema = yup.object().shape({
 		email: yup.string().required('Required').email('Please enter a valid email address'),
 		phone: yup.string().required('Required'),
@@ -128,7 +124,7 @@ export default function Sale(props: any): JSX.Element {
 			...values,
 			phone: countryCode + values['phone'],
 			...(customPrice.checked && {custom_price: customPrice.value}),
-			...(multipleLocations && {locations: locations.slice(0, values.cards_amount)})
+			locations: locations.slice(0, multipleLocations ? values.cards_amount : 1),
 		};
 		console.log('obj--->', obj);
 
