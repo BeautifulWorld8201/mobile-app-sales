@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -20,6 +20,10 @@ import BankDetail from "../screens/BankDetail";
 
 import UserPayouts from "../screens/UserPayouts";
 import ChangeCurrency from "../screens/ChangeCurrency"
+import Partners from "../screens/Partners";
+import PartnerDetail from "../screens/PartnerDetail";
+import { useGetUserEmployeeQuery } from '../../redux/user/userApiSlice';
+
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -57,6 +61,9 @@ function TabBarIcon(props: {
 }
 
 function TabStack() {
+  const { data: employeeData } = useGetUserEmployeeQuery();
+
+
   return (
     <Tab.Navigator
       screenOptions={({ route, navigation }) => ({
@@ -77,6 +84,18 @@ function TabStack() {
           tabBarActiveTintColor: "#f5c634",
         })}
       />
+       {employeeData?.length ? <Tab.Screen
+        name="Partners"
+        component={Partners}
+        options={({ route }) => ({
+          tabBarLabel: "Partners",
+          
+          tabBarIcon: ({ focused, color }) => (
+            <TabBarIcon name="group" color={color} />
+          ),
+          tabBarActiveTintColor: "#f5c634",
+        })}
+      />: null}
       <Tab.Screen
         name="Settings"
         component={Settings}
@@ -92,10 +111,11 @@ function TabStack() {
     </Tab.Navigator>
   );
 }
+
 function AppStack() {
   return (
     <Stack.Navigator
-      initialRouteName="TabStack"
+      initialRouteName={"TabStack"}
       screenOptions={({ route, navigation }) => ({
         headerShown: false,
       })}
@@ -106,6 +126,8 @@ function AppStack() {
       <Stack.Screen name="WriteCards" component={WriteCards} />
 
       <Stack.Screen name="SaleDetail" component={SaleDetail} />
+      <Stack.Screen name="Partners" component={Partners} />
+      <Stack.Screen name="PartnerDetail" component={PartnerDetail} />
       <Stack.Screen name="UserPayouts" component={UserPayouts} />
       <Stack.Screen name="Payouts" component={Payouts} />
       <Stack.Screen name="BankDetail" component={BankDetail} />
