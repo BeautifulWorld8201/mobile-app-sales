@@ -96,7 +96,7 @@ export default function Sale(props: any): JSX.Element {
 			),
 		},
 	]);
-	const [location, setLocation] = useState<[{
+	const [locations, setLocations] = useState<[{
 		name: string | undefined;
 		place_id: string | undefined;
 	}]>([{ name: undefined, place_id: undefined }]);
@@ -111,20 +111,24 @@ export default function Sale(props: any): JSX.Element {
 		);
 	}, []);
 
+	useEffect(() => {
+		console.log('locations--->', locations);
+	}, [locations])
+
 	const validationSchema = yup.object().shape({
 		email: yup.string().required('Required').email('Please enter a valid email address'),
 		phone: yup.string().required('Required'),
 		cards_amount: yup.number().required('Required'),
-		place_id: yup.string().required('Required'),
+		locations: yup.array(),
 		custom_price: yup.number()
 	});
 
 	const createSaleApi = async (values: any) => {
 		let obj = {
 			...values,
-			business_name: location?.name,
 			phone: countryCode + values['phone'],
-			...(customPrice.checked && {custom_price: customPrice.value})
+			...(customPrice.checked && {custom_price: customPrice.value}),
+			...(multipleLocations && {locations: locations.slice(0, values.cards_amount)})
 		};
 		console.log('obj--->', obj);
 
@@ -165,8 +169,7 @@ export default function Sale(props: any): JSX.Element {
 						initialValues={{
 							email: '',
 							phone: '',
-							cards_amount: '',
-							place_id: '',
+							cards_amount: ''
 						}}
 						onSubmit={(values) => createSaleApi(values)}
 					>
@@ -339,7 +342,7 @@ export default function Sale(props: any): JSX.Element {
 									)}
 								</View>}
 								
-								{currentUser.role === 'trustedSeller' && <View>
+								{currentUser.role === 'trustedSeller' && values.cards_amount > 1 && <View>
 									<View style={{flexDirection: 'row', alignItems: 'center'}}>
 										<Text style={{ fontWeight: '500', width: 125 }}>
 											Multiple locations 
@@ -361,7 +364,10 @@ export default function Sale(props: any): JSX.Element {
 									<Image source={googleLogo} style={{ width: 18, height: 18 }} />
 									<Text style={{fontWeight: '500'}}>Google Business</Text>
 								</View>
-								<GoogleInput handleBlur={handleBlur} errors={errors} handleChange={handleChange} setLocation={setLocation} touched={touched}  />
+								{[...Array(multipleLocations && _formik?.current?.values.cards_amount ? _formik?.current?.values.cards_amount : 1)].map((_, i) => (
+									<GoogleInput handleBlur={handleBlur} locations={locations} errors={errors} handleChange={handleChange} setLocations={setLocations} touched={touched} index={i}  />
+								))}
+								
 								
 							</>
 						)}
@@ -437,7 +443,7 @@ export default function Sale(props: any): JSX.Element {
 				>
 					<Text style={styles.buttonText}>
 						{`Create Sale${
-							location.name ? ` for ${shortenString(location.name)}` : ''
+							locations[0].name ? ` for ${shortenString(locations[0].name)}` : ''
 						}`}
 					</Text>
 				</MyButton>
