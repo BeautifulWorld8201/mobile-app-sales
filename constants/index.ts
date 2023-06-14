@@ -1,1 +1,1 @@
-export const baseUrl = "http://localhost:3000/v1";
+export const baseUrl = "https://popcard-backend.herokuapp.com/v1";
