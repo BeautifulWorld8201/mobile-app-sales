@@ -38,7 +38,7 @@ export default function WriteCards(props: any) {
     }
   }, [selectedCards]);
 
-  async function writeGoogleLinkOnNFC(link: string, index: any) {
+  async function writeGoogleLinkOnNFC(link: {name: string, url: string}, index: any) {
     if (Platform.OS === "android") {
       setTimeout(() => {
         RBSheetRef?.current?.open();
@@ -46,7 +46,7 @@ export default function WriteCards(props: any) {
     }
 
     // const reviewLink = `https://search.google.com/local/writereview?placeid=${place_id}`;
-    const reviewLink = link;
+    const reviewLink = link.url;
 
     let result = false;
 
@@ -75,7 +75,7 @@ export default function WriteCards(props: any) {
         dispatch(setSelectedCards(tempCards));
       }
     } catch (ex) {
-      console.log(JSON.stringify(ex));
+      console.log(ex);
     } finally {
       NfcManager.cancelTechnologyRequest();
     }
@@ -94,7 +94,8 @@ export default function WriteCards(props: any) {
             alignItems: "center",
           }}
         >
-          <Text style={styles.cardText}>Card {index + 1}</Text>
+         <View style={{flexDirection: 'row', gap: 16}}><Text style={{color: "#888", minWidth: 16}}>{index + 1}</Text>
+          <Text>{item.link.name}</Text></View>
           {item?.checked ? (
             <Icon name={"check-circle"} color={"green"} size={25} />
           ) : (
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
   writeBtn: {
     backgroundColor: tintColorDark,
     height: hp(3.5),
-    width: wp(18),
+    paddingHorizontal: hp(2),
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",

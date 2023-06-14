@@ -37,6 +37,7 @@ import { getCurrencySymbol, getFlagEmoji, getPrice, shortenString } from '../../
 import { set } from 'react-native-reanimated';
 import { CheckBox, Switch } from '@rneui/base';
 import Toast from 'react-native-root-toast';
+import GoogleInput from './GoogleInput';
 
 // NfcManager.start();
 export default function Sale(props: any): JSX.Element {
@@ -95,10 +96,11 @@ export default function Sale(props: any): JSX.Element {
 			),
 		},
 	]);
-	const [location, setLocation] = useState<{
+	const [locations, setLocations] = useState<[{
 		name: string | undefined;
 		place_id: string | undefined;
-	}>({ name: undefined, place_id: undefined });
+	}]>([{ name: undefined, place_id: undefined }]);
+	const [multipleLocations, setMultipleLocations] = useState(false);
 
 	useEffect(() => {
 		setCountryFlag(getFlagEmoji(currentUser?.idVerification?.fields?.address?.country));
@@ -113,16 +115,16 @@ export default function Sale(props: any): JSX.Element {
 		email: yup.string().required('Required').email('Please enter a valid email address'),
 		phone: yup.string().required('Required'),
 		cards_amount: yup.number().required('Required'),
-		place_id: yup.string().required('Required'),
+		locations: yup.array(),
 		custom_price: yup.number()
 	});
 
 	const createSaleApi = async (values: any) => {
 		let obj = {
 			...values,
-			business_name: location?.name,
 			phone: countryCode + values['phone'],
-			...(customPrice.checked && {custom_price: customPrice.value})
+			...(customPrice.checked && {custom_price: customPrice.value}),
+			locations: locations.slice(0, multipleLocations ? values.cards_amount : 1),
 		};
 		console.log('obj--->', obj);
 
@@ -163,8 +165,7 @@ export default function Sale(props: any): JSX.Element {
 						initialValues={{
 							email: '',
 							phone: '',
-							cards_amount: '',
-							place_id: '',
+							cards_amount: ''
 						}}
 						onSubmit={(values) => createSaleApi(values)}
 					>
@@ -298,7 +299,7 @@ export default function Sale(props: any): JSX.Element {
 
 								{currentUser.role === 'trustedSeller' && <View>
 									<View style={{flexDirection: 'row', alignItems: 'center'}}>
-										<Text style={{ fontWeight: '500' }}>
+										<Text style={{ fontWeight: '500', width: 125 }}>
 											Custom Price 
 										</Text>
 										<CheckBox checked={customPrice.checked}
@@ -318,7 +319,7 @@ export default function Sale(props: any): JSX.Element {
 									{customPrice.checked && (
 										<View>
 											<Input
-												onChangeText={(text) =>
+												onChangeText={(text: number) =>
 													setCustomPrice({
 														...customPrice,
 														value: text,
@@ -337,35 +338,33 @@ export default function Sale(props: any): JSX.Element {
 									)}
 								</View>}
 								
+								{currentUser.role === 'trustedSeller' && values.cards_amount > 1 && <View>
+									<View style={{flexDirection: 'row', alignItems: 'center'}}>
+										<Text style={{ fontWeight: '500', width: 125 }}>
+											Multiple locations 
+										</Text>
+										<CheckBox checked={multipleLocations}
+										checkedColor={tintColorDark} 
+										size={20}
+										onPress={() => {
+											setMultipleLocations(!multipleLocations)
+										}} />
+									</View>
+								</View>}
+										
+								
 
 								<View
 									style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4, marginBottom: 2 }}
 								>
 									<Image source={googleLogo} style={{ width: 18, height: 18 }} />
-									<Text style={{fontWeight: 500}}>Google Business</Text>
+									<Text style={{fontWeight: '500'}}>Google Business</Text>
 								</View>
-								<GooglePlacesAutocomplete
-									styles={googleInputStyles}
-									placeholder="Search for business"
-									onPress={(data, details = null) => {
-										setLocation({
-											name: data.structured_formatting.main_text,
-											place_id: data.place_id,
-										});
-										handleChange('place_id')(data.place_id);
-									}}
-									autoFillOnNotFound={true}
-									query={{
-										key: 'AIzaSyAijbifioHwNKlvdAyBirgqdR82-Xiy84I',
-										language: 'en',
-									}}
-									textInputProps={{
-										handleBlur: handleBlur('place_id'),
-									}}
-								/>
-								{errors.place_id && touched.place_id && (
-									<Text style={styles.errorText}>{errors.place_id}</Text>
-								)}
+								{[...Array(multipleLocations && _formik?.current?.values.cards_amount ? _formik?.current?.values.cards_amount : 1)].map((_, i) => (
+									<GoogleInput handleBlur={handleBlur} locations={locations} errors={errors} handleChange={handleChange} setLocations={setLocations} touched={touched} index={i}  />
+								))}
+								
+								
 							</>
 						)}
 					</Formik>
@@ -440,7 +439,7 @@ export default function Sale(props: any): JSX.Element {
 				>
 					<Text style={styles.buttonText}>
 						{`Create Sale${
-							location.name ? ` for ${shortenString(location.name)}` : ''
+							locations[0].name ? ` for ${shortenString(locations[0].name)}` : ''
 						}`}
 					</Text>
 				</MyButton>
@@ -554,19 +553,3 @@ const styles = StyleSheet.create({
 	listItem: { height: hp(8), padding: 5 },
 });
 
-const googleInputStyles = {
-	container: {
-		// marginHorizontal: hp(2.5),
-	},
-	textInput: {
-		height: hp(6),
-		color: '#5d5d5d',
-		fontSize: 14,
-		backgroundColor: '#f9f9f9',
-		// fontStyle: "italic",
-		borderRadius: 10,
-	},
-	predefinedPlacesDescription: {
-		color: '#1faadb',
-	},
-};
