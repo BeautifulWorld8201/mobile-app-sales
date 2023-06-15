@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import { shortenString } from "../../helpers/misc";
 
 import { useTranslation } from "react-i18next";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function SaleDetail(props: any) {
   const { t } = useTranslation();
@@ -91,92 +92,6 @@ export default function SaleDetail(props: any) {
     }
   };
 
-  const getClientDetail = async () => {
-    try {
-      const resp = await getClientInfo(saleDetail?.id);
-      if (resp?.data) {
-        setClientDetail(resp?.data?.businessInfo);
-        setIsVisible(true);
-      }
-
-      console.log("resp----client info", resp);
-    } catch (error) {
-      console.log("error in get client", error);
-    }
-  };
-  const renderModal = () => {
-    return (
-      <RNModal
-        isVisible={isVisible}
-        onBackButtonPress={() => {
-          setIsVisible(false);
-        }}
-        onBackdropPress={() => {
-          setIsVisible(false);
-        }}
-        onRequestClose={() => {
-          setIsVisible(false);
-        }}
-        hasBackdrop
-        backdropOpacity={0.5}
-        backdropColor="#000"
-      >
-        <View style={styles.rnModalBody}>
-          <Image
-            source={{
-              uri:
-                clientDetail?.image ||
-                "https://orbis-alliance.com/wp-content/themes/consultix/images/no-image-found-360x260.png",
-            }}
-            style={{
-              width: "100%",
-              height: hp(20),
-              borderRadius: 10,
-              marginBottom: hp(2),
-            }}
-          />
-          <View style={styles.itemView}>
-            <Text style={styles.credsFont}>Name:</Text>
-            <Text style={styles.detailFont}>{clientDetail?.name}</Text>
-          </View>
-          <View style={styles.itemView}>
-            <Text style={styles.credsFont}>Address:</Text>
-            <Text
-              style={{
-                ...styles.detailFont,
-                textAlign: "right",
-                width: wp(50),
-              }}
-              numberOfLines={2}
-            >
-              {clientDetail?.formatted_address}
-            </Text>
-          </View>
-          <View style={styles.itemView}>
-            <Text style={styles.credsFont}>Rating:</Text>
-
-            <View style={{ ...styles.itemView, alignItems: "center" }}>
-              <AirbnbRating
-                defaultRating={clientDetail?.rating}
-                isDisabled
-                size={18}
-                showRating={false}
-                starContainerStyle={{ bottom: 5 }}
-              />
-              <Text
-                style={{
-                  ...styles.detailFont,
-                  fontSize: hp(1.5),
-                }}
-              >
-                ({clientDetail?.user_ratings_total})
-              </Text>
-            </View>
-          </View>
-        </View>
-      </RNModal>
-    );
-  };
   return (
     <>
       <View style={styles.container}>
@@ -189,7 +104,7 @@ export default function SaleDetail(props: any) {
             <ActivityIndicator size="large" color={tintColorDark} />
           </View>
         ) : (
-          <View style={styles.innerContainer}>
+          <ScrollView style={styles.innerContainer} showsVerticalScrollIndicator={false}>
             <Image
               source={{
                 uri:
@@ -207,6 +122,20 @@ export default function SaleDetail(props: any) {
               <Text style={styles.credsFont}>{t("Client")}:</Text>
               <Text style={styles.detailFont}>
                 {shortenString(saleDetail?.client?.name)}
+              </Text>
+            </View>
+
+            <View style={styles.itemView}>
+              <Text style={styles.credsFont}>{t("Email address")}:</Text>
+              <Text style={styles.detailFont}>
+                {shortenString(saleDetail?.client?.email)}
+              </Text>
+            </View>
+
+            <View style={styles.itemView}>
+              <Text style={styles.credsFont}>{t("Phone number")}:</Text>
+              <Text style={styles.detailFont}>
+                {shortenString(saleDetail?.client?.phone)}
               </Text>
             </View>
 
@@ -294,7 +223,7 @@ export default function SaleDetail(props: any) {
               </View>
             )}
             {/* {renderModal()} */}
-          </View>
+          </ScrollView>
         )}
         <>
           {user?.role == "trustedSeller" &&
