@@ -26,7 +26,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { apiSlice } from "../../../redux/api/apiSlice";
 import RNModal from "react-native-modal";
 import { useTranslation } from "react-i18next";
-import { tintColorLight } from "../../../constants/Colors";
+import { tintColorDark, tintColorLight } from "../../../constants/Colors";
 
 const LangModal: React.FC<{
   ModalRef: React.MutableRefObject<any>;
@@ -36,7 +36,7 @@ const LangModal: React.FC<{
   const [visible, setvisible] = useState(false);
 
   // add your languages here
-  const LangList = [{ label: "English", code: "en" }];
+  const LangList = [{ label: "English", code: "en" }, { label: "Français", code: "fr"}, { label: "Nederlands", code: "nl"}];
 
   if (ModalRef) ModalRef.current = { visible, setvisible };
 
@@ -238,9 +238,10 @@ export default function Settings(props: any) {
               <View style={styles.iconView}>
                 <MIcons name="web" size={20} />
               </View>
-              <Text style={styles.titleText}>{t("Change Language")}</Text>
+              <Text style={styles.titleText}>{t("Language")}</Text>
             </View>
-            <View style={styles.iconsView}>
+            <View style={{...styles.iconsView, flexDirection: 'row', alignItems: 'center'}}>
+            <Text>{i18n.language}</Text>
               <MIcons name="chevron-right" size={20} />
             </View>
           </TouchableOpacity>
@@ -441,7 +442,7 @@ const styles = StyleSheet.create({
   },
   LangSingle: {
     marginTop: hp(2),
-    backgroundColor: tintColorLight,
+    backgroundColor: tintColorDark,
     width: wp(80),
     height: hp(5),
     borderRadius: 20,
