@@ -5,17 +5,19 @@ import { apiSlice } from "./api/apiSlice";
 import authReducer from "./auth/authSlice";
 import userReducer from "./user/userSlice";
 import saleReducer from "./sale/saleSlice";
+import languageReducer from "./language/languageSlice";
 const rootReduer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   auth: authReducer,
   user: userReducer,
   sale: saleReducer,
+  language: languageReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["auth", "sale"],
+  whitelist: ["auth", "sale", "language"],
   blacklist: [],
 };
 

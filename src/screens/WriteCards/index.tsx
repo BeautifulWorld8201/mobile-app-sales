@@ -15,7 +15,10 @@ import RNModal from "react-native-modal";
 
 NfcManager.start();
 
+import { useTranslation } from "react-i18next";
+
 export default function WriteCards(props: any) {
+  const { t } = useTranslation();
   const RBSheetRef = useRef();
   const dispatch = useDispatch();
   const selectedCards = useSelector((state) => state.sale.selectedCards);
@@ -103,7 +106,7 @@ export default function WriteCards(props: any) {
               style={styles.writeBtn}
               onPress={() => writeGoogleLinkOnNFC(item.link, index)}
             >
-              <Text style={styles.writeText}>Write</Text>
+              <Text style={styles.writeText}>{t("Write")}</Text>
             </Button>
           )}
         </View>
@@ -132,7 +135,7 @@ export default function WriteCards(props: any) {
         backdropColor="#000"
       >
         <View style={styles.rnModalBody}>
-          <Text style={styles.statusText}>Success!</Text>
+          <Text style={styles.statusText}>{"Success"}!</Text>
           <Image
             source={require("../../../assets/images/check.png")}
             style={styles.image}
@@ -144,7 +147,7 @@ export default function WriteCards(props: any) {
   return (
     <View style={styles.container}>
       <Header
-        title={"Write Cards"}
+        title={t("Write Cards")}
         leftButton={() => props.navigation.goBack()}
       />
       <View style={styles.innerContainer}>
@@ -171,7 +174,7 @@ export default function WriteCards(props: any) {
         }}
       >
         <Text style={{ fontSize: hp(2.75), color: "#ccc" }}>
-          {isScanned ? "Scan Complete" : "Ready to Scan"}
+          {t(isScanned ? "Scan Complete" : "Ready to Scan")}
         </Text>
         <Image
           source={
@@ -197,7 +200,9 @@ export default function WriteCards(props: any) {
             // }
           }}
         >
-          <Text style={styles.buttonText}>{isScanned ? "Done" : "Cancel"}</Text>
+          <Text style={styles.buttonText}>
+            {t(isScanned ? "Done" : "Cancel")}
+          </Text>
         </Button>
       </RBSheet>
     </View>

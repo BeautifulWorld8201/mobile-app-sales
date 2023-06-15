@@ -19,10 +19,10 @@ import Payouts from "../screens/Payouts";
 import BankDetail from "../screens/BankDetail";
 
 import UserPayouts from "../screens/UserPayouts";
-import ChangeCurrency from "../screens/ChangeCurrency"
+import ChangeCurrency from "../screens/ChangeCurrency";
 import Partners from "../screens/Partners";
 import PartnerDetail from "../screens/PartnerDetail";
-import { useGetUserEmployeeQuery } from '../../redux/user/userApiSlice';
+import { useGetUserEmployeeQuery } from "../../redux/user/userApiSlice";
 
 const Stack = createStackNavigator();
 
@@ -59,10 +59,11 @@ function TabBarIcon(props: {
 }) {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
+import { useTranslation } from "react-i18next";
 
 function TabStack() {
   const { data: employeeData } = useGetUserEmployeeQuery();
-
+  const { t } = useTranslation();
 
   return (
     <Tab.Navigator
@@ -76,7 +77,7 @@ function TabStack() {
         name="MakeSale"
         component={MakeSale}
         options={({ route }) => ({
-          tabBarLabel: "Home",
+          tabBarLabel: t("Home"),
 
           tabBarIcon: ({ focused, color }) => (
             <TabBarIcon name="home" color={color} />
@@ -84,23 +85,25 @@ function TabStack() {
           tabBarActiveTintColor: "#f5c634",
         })}
       />
-       {employeeData?.length ? <Tab.Screen
-        name="Partners"
-        component={Partners}
-        options={({ route }) => ({
-          tabBarLabel: "Partners",
-          
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon name="group" color={color} />
-          ),
-          tabBarActiveTintColor: "#f5c634",
-        })}
-      />: null}
+      {employeeData?.length ? (
+        <Tab.Screen
+          name="Partners"
+          component={Partners}
+          options={({ route }) => ({
+            tabBarLabel: t("Partners"),
+
+            tabBarIcon: ({ focused, color }) => (
+              <TabBarIcon name="group" color={color} />
+            ),
+            tabBarActiveTintColor: "#f5c634",
+          })}
+        />
+      ) : null}
       <Tab.Screen
         name="Settings"
         component={Settings}
         options={({ route }) => ({
-          tabBarLabel: "Settings",
+          tabBarLabel: t("Settings"),
 
           tabBarIcon: ({ focused, color }) => (
             <TabBarIcon name="gears" color={color} />
