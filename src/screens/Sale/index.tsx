@@ -19,94 +19,91 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MAPS_API_KEY } from "@env";
 import Input from "../../../components/Input";
-
-import RBSheet from "react-native-raw-bottom-sheet";
-import MyButton from "../../../components/Button";
-import Header from "../../../components/Header";
-import { hp, wp } from "../../../utils";
-import { Formik, useFormik } from "formik";
-import * as yup from "yup";
-import { tintColorDark } from "../../../constants/Colors";
-import { useCreateSaleMutation } from "../../../redux/sale/saleApiSlice";
-import { CountryPicker } from "react-native-country-codes-picker";
-import { setSelectedCards } from "../../../redux/sale/saleSlice";
-import { useDispatch } from "react-redux";
-import DropDownPicker from "react-native-dropdown-picker";
-import { useGetCurrentUserQuery } from "../../../redux/user/userApiSlice";
-import {
-  getCurrencySymbol,
-  getFlagEmoji,
-  getPrice,
-  shortenString,
-} from "../../helpers/misc";
-import { set } from "react-native-reanimated";
-import { CheckBox, Switch } from "@rneui/base";
-import Toast from "react-native-root-toast";
-
+import RBSheet from 'react-native-raw-bottom-sheet';
+import MyButton from '../../../components/Button';
+import Header from '../../../components/Header';
+import { hp, wp } from '../../../utils';
+import { Formik, useFormik } from 'formik';
+import * as yup from 'yup';
+import { tintColorDark } from '../../../constants/Colors';
+import { useCreateSaleMutation } from '../../../redux/sale/saleApiSlice';
+import { CountryPicker } from 'react-native-country-codes-picker';
+import { setSelectedCards } from '../../../redux/sale/saleSlice';
+import { useDispatch } from 'react-redux';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { useGetCurrentUserQuery } from '../../../redux/user/userApiSlice';
+import { getCurrencySymbol, getFlagEmoji, getPrice, shortenString } from '../../helpers/misc';
+import { set } from 'react-native-reanimated';
+import { CheckBox, Switch } from '@rneui/base';
+import Toast from 'react-native-root-toast';
+import GoogleInput from './GoogleInput';
+        
 import { useTranslation } from "react-i18next";
+
 
 // NfcManager.start();
 export default function Sale(props: any): JSX.Element {
   const { t } = useTranslation();
   const { data: currentUser } = useGetCurrentUserQuery();
 
-  const RBSheetRef = useRef();
-  const _formik = useRef();
-  const dispatch = useDispatch();
-  const [createSale, { isLoading }] = useCreateSaleMutation();
-  const [isScanned, setIsScanned] = useState(false);
-  const [show, setShow] = useState(false);
-  const [countryCode, setCountryCode] = useState("");
-  const [countryFlag, setCountryFlag] = useState("");
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [customPrice, setCustomPrice] = useState({ checked: false, value: 0 });
-  const [items, setItems] = useState([
-    {
-      label: "1 Google Popcard",
-      value: 1,
-      icon: () => (
-        <Image
-          source={require("../../../assets/cards/card-1.jpeg")}
-          style={{ height: 50, width: 50 }}
-        />
-      ),
-    },
-    {
-      label: "3 Google Popcards",
-      value: 3,
-      icon: () => (
-        <Image
-          source={require("../../../assets/cards/card-3.jpeg")}
-          style={{ height: 50, width: 50 }}
-        />
-      ),
-    },
-    {
-      label: "5 Google Popcards",
-      value: 5,
-      icon: () => (
-        <Image
-          source={require("../../../assets/cards/card-5.jpeg")}
-          style={{ height: 50, width: 50 }}
-        />
-      ),
-    },
-    {
-      label: "10 Google Popcards",
-      value: 10,
-      icon: () => (
-        <Image
-          source={require("../../../assets/cards/card-10.jpeg")}
-          style={{ height: 50, width: 50 }}
-        />
-      ),
-    },
-  ]);
-  const [location, setLocation] = useState<{
-    name: string | undefined;
-    place_id: string | undefined;
-  }>({ name: undefined, place_id: undefined });
+	const RBSheetRef = useRef();
+	const _formik = useRef();
+	const dispatch = useDispatch();
+	const [createSale, { isLoading }] = useCreateSaleMutation();
+	const [isScanned, setIsScanned] = useState(false);
+	const [show, setShow] = useState(false);
+	const [countryCode, setCountryCode] = useState('');
+	const [countryFlag, setCountryFlag] = useState('');
+	const [open, setOpen] = useState(false);
+	const [value, setValue] = useState(null);
+	const [customPrice, setCustomPrice] = useState({checked: false, value: 0});
+	const [items, setItems] = useState([
+		{
+			label: '1 Google Popcard',
+			value: 1,
+			icon: () => (
+				<Image
+					source={require('../../../assets/cards/card-1.jpeg')}
+					style={{ height: 50, width: 50 }}
+				/>
+			),
+		},
+		{
+			label: '3 Google Popcards',
+			value: 3,
+			icon: () => (
+				<Image
+					source={require('../../../assets/cards/card-3.jpeg')}
+					style={{ height: 50, width: 50 }}
+				/>
+			),
+		},
+		{
+			label: '5 Google Popcards',
+			value: 5,
+			icon: () => (
+				<Image
+					source={require('../../../assets/cards/card-5.jpeg')}
+					style={{ height: 50, width: 50 }}
+				/>
+			),
+		},
+		{
+			label: '10 Google Popcards',
+			value: 10,
+			icon: () => (
+				<Image
+					source={require('../../../assets/cards/card-10.jpeg')}
+					style={{ height: 50, width: 50 }}
+				/>
+			),
+		},
+	]);
+	const [locations, setLocations] = useState<[{
+		name: string | undefined;
+		place_id: string | undefined;
+	}]>([{ name: undefined, place_id: undefined }]);
+	const [multipleLocations, setMultipleLocations] = useState(false);
 
   useEffect(() => {
     setCountryFlag(
@@ -119,25 +116,22 @@ export default function Sale(props: any): JSX.Element {
     );
   }, []);
 
-  const validationSchema = yup.object().shape({
-    email: yup
-      .string()
-      .required("Required")
-      .email("Please enter a valid email address"),
-    phone: yup.string().required("Required"),
-    cards_amount: yup.number().required("Required"),
-    place_id: yup.string().required("Required"),
-    custom_price: yup.number(),
-  });
+	const validationSchema = yup.object().shape({
+		email: yup.string().required('Required').email('Please enter a valid email address'),
+		phone: yup.string().required('Required'),
+		cards_amount: yup.number().required('Required'),
+		locations: yup.array(),
+		custom_price: yup.number()
+	});
 
-  const createSaleApi = async (values: any) => {
-    let obj = {
-      ...values,
-      business_name: location?.name,
-      phone: countryCode + values["phone"],
-      ...(customPrice.checked && { custom_price: customPrice.value }),
-    };
-    console.log("obj--->", obj);
+	const createSaleApi = async (values: any) => {
+		let obj = {
+			...values,
+			phone: countryCode + values['phone'],
+			...(customPrice.checked && {custom_price: customPrice.value}),
+			locations: locations.slice(0, multipleLocations ? values.cards_amount : 1),
+		};
+		console.log('obj--->', obj);
 
     let arr: any = [];
     try {
@@ -180,7 +174,6 @@ export default function Sale(props: any): JSX.Element {
               email: "",
               phone: "",
               cards_amount: "",
-              place_id: "",
             }}
             onSubmit={(values) => createSaleApi(values)}
           >
@@ -308,96 +301,76 @@ export default function Sale(props: any): JSX.Element {
                   <Text style={styles.errorText}>{errors.cards_amount}</Text>
                 )}
 
-                {currentUser.role === "trustedSeller" && (
-                  <View>
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Text style={{ fontWeight: "500" }}>
-                        {t("Custom Price")}
-                      </Text>
-                      <CheckBox
-                        checked={customPrice.checked}
-                        checkedColor={tintColorDark}
-                        size={20}
-                        onPress={() => {
-                          setCustomPrice({
-                            ...customPrice,
-                            checked: !customPrice.checked,
-                            value: getPrice(
-                              _formik.current?.values.cards_amount,
-                              currentUser?.currency,
-                            ),
-                          });
-                        }}
-                      />
-                    </View>
-                    {customPrice.checked && (
-                      <View>
-                        <Input
-                          onChangeText={(text) =>
-                            setCustomPrice({
-                              ...customPrice,
-                              value: text,
-                            })
-                          }
-                          onBlur={handleBlur("cards_amount")}
-                          value={String(customPrice.value)}
-                          style={{ ...styles.inputField }}
-                          inputViewStyle={styles.inputViewStyle}
-                          iconColor={"#ccc"}
-                          placeholder={t("Enter custom price")}
-                          keyboardType="number-pad"
-                          rightText={currentUser?.currency}
-                        />
-                      </View>
-                    )}
-                  </View>
-                )}
+								{currentUser.role === 'trustedSeller' && <View>
+									<View style={{flexDirection: 'row', alignItems: 'center'}}>
+										<Text style={{ fontWeight: '500', width: 125 }}>
+											 {t("Custom Price")}
+										</Text>
+										<CheckBox checked={customPrice.checked}
+										checkedColor={tintColorDark} 
+										size={20}
+										onPress={() => {
+											setCustomPrice({
+												...customPrice,
+												checked: !customPrice.checked,
+												value: getPrice(
+													_formik.current?.values.cards_amount,
+													currentUser?.currency
+												)
+											})
+										}} />
+									</View>
+									{customPrice.checked && (
+										<View>
+											<Input
+												onChangeText={(text: number) =>
+													setCustomPrice({
+														...customPrice,
+														value: text,
+													})
+												}
+												onBlur={handleBlur('cards_amount')}
+												value={String(customPrice.value)}
+												style={{...styles.inputField}}
+												inputViewStyle={styles.inputViewStyle}
+												iconColor={'#ccc'}
+												placeholder={t("Enter custom price")}
+												keyboardType="number-pad"
+												rightText={currentUser?.currency}
+											/>
+										</View>
+									)}
+								</View>}
+								
+								{currentUser.role === 'trustedSeller' && values.cards_amount > 1 && <View>
+									<View style={{flexDirection: 'row', alignItems: 'center'}}>
+										<Text style={{ fontWeight: '500', width: 125 }}>
+											Multiple locations 
+										</Text>
+										<CheckBox checked={multipleLocations}
+										checkedColor={tintColorDark} 
+										size={20}
+										onPress={() => {
+											setMultipleLocations(!multipleLocations)
+										}} />
+									</View>
+								</View>}
+										
+								
 
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 6,
-                    marginTop: 4,
-                    marginBottom: 2,
-                  }}
-                >
-                  <Image
-                    source={googleLogo}
-                    style={{ width: 18, height: 18 }}
-                  />
-                  <Text style={{ fontWeight: 500 }}>
-                    {t("Google Business")}
-                  </Text>
-                </View>
-                <GooglePlacesAutocomplete
-                  styles={googleInputStyles}
-                  placeholder={t("Search for business")}
-                  onPress={(data, details = null) => {
-                    setLocation({
-                      name: data.structured_formatting.main_text,
-                      place_id: data.place_id,
-                    });
-                    handleChange("place_id")(data.place_id);
-                  }}
-                  autoFillOnNotFound={true}
-                  query={{
-                    key: "AIzaSyAijbifioHwNKlvdAyBirgqdR82-Xiy84I",
-                    language: "en",
-                  }}
-                  textInputProps={{
-                    handleBlur: handleBlur("place_id"),
-                  }}
-                />
-                {errors.place_id && touched.place_id && (
-                  <Text style={styles.errorText}>{errors.place_id}</Text>
-                )}
-              </>
-            )}
-          </Formik>
-        </View>
+								<View
+									style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4, marginBottom: 2 }}
+								>
+									<Image source={googleLogo} style={{ width: 18, height: 18 }} />
+									<Text style={{fontWeight: '500'}}>{t("Google Business")}</Text>
+								</View>
+								{[...Array(multipleLocations && _formik?.current?.values.cards_amount ? _formik?.current?.values.cards_amount : 1)].map((_, i) => (
+									<GoogleInput handleBlur={handleBlur} locations={locations} errors={errors} handleChange={handleChange} setLocations={setLocations} touched={touched} index={i}  />
+								))}
+							</>
+						)}
+					</Formik>
+				</View>
 
         <RBSheet
           ref={RBSheetRef}
@@ -469,16 +442,13 @@ export default function Sale(props: any): JSX.Element {
           loaderColor={styles.loaderColor}
         >
           <Text style={styles.buttonText}>
-            {`${t("Create Sale")}${
-              location.name
-                ? ` ${t("for")} ${shortenString(location.name)}`
-                : ""
-            }`}
+            {t("Create Sale")}
           </Text>
         </MyButton>
       </View>
     </View>
   );
+
 }
 
 const styles = StyleSheet.create({
@@ -585,20 +555,3 @@ const styles = StyleSheet.create({
   },
   listItem: { height: hp(8), padding: 5 },
 });
-
-const googleInputStyles = {
-  container: {
-    // marginHorizontal: hp(2.5),
-  },
-  textInput: {
-    height: hp(6),
-    color: "#5d5d5d",
-    fontSize: 14,
-    backgroundColor: "#f9f9f9",
-    // fontStyle: "italic",
-    borderRadius: 10,
-  },
-  predefinedPlacesDescription: {
-    color: "#1faadb",
-  },
-};
