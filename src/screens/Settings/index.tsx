@@ -255,7 +255,7 @@ export default function Settings(props: any) {
                 alignItems: "center",
               }}
             >
-              <Text>{i18n.language}</Text>
+              <Text style={{textTransform: 'uppercase'}}>{i18n.language}</Text>
               <MIcons name="chevron-right" size={20} />
             </View>
           </TouchableOpacity>
