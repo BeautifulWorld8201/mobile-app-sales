@@ -133,7 +133,7 @@ export default function MakeSale(props: any) {
             <View
               style={{
                 ...styles?.paidCard,
-                width: item?.payment_link?.paid ? 42 : 66,
+                paddingHorizontal: 8,
                 backgroundColor: item?.payment_link?.paid
                   ? `#2fbc362b`
                   : `#d300152b`,

@@ -249,10 +249,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   salesDataPointItemLabel: {
-    fontSize: hp(1.5),
+    fontSize: hp(1.3),
     fontWeight: "600",
     color: "#999",
-    textTransform: "capitalize",
+    textTransform: "uppercase",
   },
   salesDataPointItemValue: {
     fontSize: hp(4),
