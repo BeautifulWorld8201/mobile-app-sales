@@ -27,16 +27,22 @@ import { apiSlice } from "../../../redux/api/apiSlice";
 import RNModal from "react-native-modal";
 import { useTranslation } from "react-i18next";
 import { tintColorDark, tintColorLight } from "../../../constants/Colors";
+import { setLanguage } from "../../../redux/language/languageSlice";
 
 const LangModal: React.FC<{
   ModalRef: React.MutableRefObject<any>;
   changeLang: Function;
   t: Function;
-}> = ({ ModalRef, changeLang, t }) => {
+  dispatch: Function;
+}> = ({ ModalRef, changeLang, t, dispatch }) => {
   const [visible, setvisible] = useState(false);
 
   // add your languages here
-  const LangList = [{ label: "English", code: "en" }, { label: "Français", code: "fr"}, { label: "Nederlands", code: "nl"}];
+  const LangList = [
+    { label: "English", code: "en" },
+    { label: "Français", code: "fr" },
+    { label: "Nederlands", code: "nl" },
+  ];
 
   if (ModalRef) ModalRef.current = { visible, setvisible };
 
@@ -47,6 +53,7 @@ const LangModal: React.FC<{
       <TouchableOpacity
         onPress={() => {
           changeLang(item.code);
+          dispatch(setLanguage(item.code));
           setvisible(false);
         }}
         style={styles.LangSingle}
@@ -127,6 +134,7 @@ export default function Settings(props: any) {
           ModalRef={LangModalRef}
           changeLang={i18n.changeLanguage}
           t={t}
+          dispatch={dispatch}
         />
 
         <Text style={styles.textTitle}>{t("Account")}</Text>
@@ -240,8 +248,14 @@ export default function Settings(props: any) {
               </View>
               <Text style={styles.titleText}>{t("Language")}</Text>
             </View>
-            <View style={{...styles.iconsView, flexDirection: 'row', alignItems: 'center'}}>
-            <Text>{i18n.language}</Text>
+            <View
+              style={{
+                ...styles.iconsView,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text>{i18n.language}</Text>
               <MIcons name="chevron-right" size={20} />
             </View>
           </TouchableOpacity>

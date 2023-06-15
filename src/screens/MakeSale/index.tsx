@@ -33,9 +33,15 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 
 export default function MakeSale(props: any) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // const salesFromStore = useSelector((state) => state.sale.currentSales);
+
+  const language = useSelector((state: { language: string }) => state.language);
+
+  useEffect(() => {
+    if (language !== i18n.language) i18n.changeLanguage(language);
+  }, [language]);
 
   const dispatch = useDispatch();
 
