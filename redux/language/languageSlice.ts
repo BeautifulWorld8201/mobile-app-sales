@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getLocales } from "expo-localization";
+// import { getLocales } from "expo-localization";
 
 const languageSlice = createSlice({
   name: "language",
-  initialState: getLocales()[0].languageCode,
+  // initialState: getLocales()[0].languageCode,
+  initialState: "en",
   reducers: {
     setLanguage: (state, action) => {
       return action.payload;
