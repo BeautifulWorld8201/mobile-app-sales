@@ -9,7 +9,7 @@
 	"Don't have an account?": "Heb je geen account?",
 	"Sign up": "Account aanmaken",
 	"Forgot password": "Wachtwoord vergeten",
-	"recovery password": "Password recovery link has been sent to your email",
+	"Password recovery link has been sent to your email": "Wachtwoordherstel link is verzonden naar uw e-mail",
 	"Provide your account email for which you want to reset your password": "Geef het e-mailadres van uw account op waarvoor u uw wachtwoord opnieuw wilt instellen",
 	"Recover Password": "Wachtwoord herstellen",
 	"Required": "Verplicht",
@@ -126,6 +126,5 @@
 	"Write Cards": "Kaarten schrijven",
 	"Card": "Kaart",
 	"Write": "Schrijven",
-	"Email address": "E-mailadres",
-	"Password recovery link has been sent to your email": "Wachtwoordherstel link is verzonden naar uw e-mail"
+	"Email address": "E-mailadres"
 }

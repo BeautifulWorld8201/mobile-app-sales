@@ -9,7 +9,7 @@
 	"Don't have an account?": "Don't have an account?",
 	"Sign up": "Sign up",
 	"Forgot password": "Forgot password",
-	"recovery password": "Password recovery link has been sent to your email",
+	"Password recovery link has been sent to your email": "Password recovery link has been sent to your email",
 	"Provide your account email for which you want to reset your password": "Provide your account email for which you want to reset your password",
 	"Recover Password": "Recover Password",
 	"Required": "Required",
@@ -126,6 +126,5 @@
 	"Write Cards": "Write Cards",
 	"Card": "Card",
 	"Write": "Write",
-	"Email address": "Email address",
-	"Password recovery link has been sent to your email": "Password recovery link has been sent to your email"
+	"Email address": "Email address"
 }

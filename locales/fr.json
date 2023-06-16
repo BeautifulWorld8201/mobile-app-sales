@@ -9,7 +9,7 @@
 	"Don't have an account?": "Vous n'avez pas de compte?",
 	"Sign up": "S'inscrire",
 	"Forgot password": "Mot de passe oublié",
-	"recovery password": "Le lien de récupération du mot de passe a été envoyé à votre adresse e-mail",
+	"Password recovery link has been sent to your email": "Le lien de récupération du mot de passe a été envoyé à votre adresse e-mail",
 	"Provide your account email for which you want to reset your password": "Indiquez l'email de votre compte pour lequel vous souhaitez réinitialiser votre mot de passe",
 	"Recover Password": "Récupérer mot de passe",
 	"Required": "Obligatoire",
@@ -126,6 +126,5 @@
 	"Write Cards": "Programmer les cartes",
 	"Card": "Carte",
 	"Write": "Programmer",
-	"Email address": "Adresse e-mail",
-	"Password recovery link has been sent to your email": "Le lien de récupération du mot de passe a été envoyé à votre adresse e-mail"
+	"Email address": "Adresse e-mail"
 }
