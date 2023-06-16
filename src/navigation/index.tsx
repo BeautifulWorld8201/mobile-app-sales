@@ -44,6 +44,7 @@ function AuthStack() {
         <>
           <Stack.Screen name="Signin" component={Signin} />
           <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         </>
       )}
       <Stack.Screen
@@ -60,6 +61,7 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 import { useTranslation } from "react-i18next";
+import ForgotPassword from "../screens/ForgotPassword";
 
 function TabStack() {
   const { data: employeeData } = useGetUserEmployeeQuery();
