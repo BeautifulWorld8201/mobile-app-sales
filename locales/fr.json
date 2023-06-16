@@ -126,5 +126,6 @@
 	"Write Cards": "Programmer les cartes",
 	"Card": "Carte",
 	"Write": "Programmer",
-	"Email address": "Adresse e-mail"
+	"Email address": "Adresse e-mail",
+	"Password recovery link has been sent to your email": "Le lien de récupération du mot de passe a été envoyé à votre adresse e-mail"
 }

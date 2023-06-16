@@ -40,10 +40,11 @@ export default function ForgotPassword(props: any) {
           position: Toast.positions.BOTTOM,
         });
       } else {
-        Toast.show("Password recovery link has been sent to your email", {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.BOTTOM,
+        Toast.show(t("Password recovery link has been sent to your email"), {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.CENTER,
         });
+        props.navigation.navigate('Signin');
       }
     } catch (err) {
       console.log("forgot password error", err);
