@@ -14,8 +14,10 @@ import Header from "../../../components/Header";
 import { hp, wp } from "../../../utils";
 import Toast from "react-native-root-toast";
 import { tintColorDark } from "../../../constants/Colors";
+import { useTranslation } from "react-i18next";
 
 const Payouts = (props: any) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("europe");
   const [selectedIndex, setIndex] = useState(null);
@@ -29,30 +31,30 @@ const Payouts = (props: any) => {
     {
       id: 1,
       title: `Bank account in ${value == "europe" ? "EUR" : "USD"}`,
-      fee: "• No fees",
-      days: "• 3-5 business days",
+      fee: `• ${t("No fees")}`,
+      days: `• ${t("3-5 business days")}`,
       image: require("../../../assets/images/bank.png"),
     },
     {
       id: 2,
       title: `PayPal in ${value == "europe" ? "EUR" : "USD"}`,
-      fee: "• Paypal fees may apply",
-      days: "• 1 business day",
+      fee: `• ${t("Paypal fees may apply")}`,
+      days: `• ${t("1 business day")}`,
       image: require("../../../assets/images/paypal.png"),
     },
   ];
   return (
     <View style={styles.container}>
       <Header
-        title={"Set up payouts"}
+        title={t("Set up payouts")}
         leftButton={() => props.navigation.goBack()}
       />
       <ScrollView style={styles.innerContainer}>
-        <Text style={styles.textMain}>Let's add a payout method</Text>
+        <Text style={styles.textMain}>{t("Let's add a payout method")}</Text>
         <Text style={styles.textintro}>
-          To start, let us know where you'd like us to send your money.
+          {t("To start, let us know where you'd like us to send your money.")}
         </Text>
-        <Text style={styles.textTitle}>Billing country/region</Text>
+        <Text style={styles.textTitle}>{t("Billing country/region")}</Text>
 
         <View style={{ zIndex: 100 }}>
           <DropDownPicker
@@ -71,7 +73,9 @@ const Payouts = (props: any) => {
           />
         </View>
 
-        <Text style={styles.textTitle}>How would you like to get paid?</Text>
+        <Text style={styles.textTitle}>
+          {t("How would you like to get paid?")}
+        </Text>
 
         <>
           {value == "other" ? (
@@ -86,9 +90,11 @@ const Payouts = (props: any) => {
                 source={require("../../../assets/images/paypal.png")}
               />
               <View style={{ width: wp(55) }}>
-                <Text style={styles.textBank}>PayPal in USD</Text>
-                <Text style={styles.fadeIcon}>• 1 business day</Text>
-                <Text style={styles.fadeIcon}>• Paypal fees may apply</Text>
+                <Text style={styles.textBank}>{t("PayPal in USD")}</Text>
+                <Text style={styles.fadeIcon}>• {t("1 business day")}</Text>
+                <Text style={styles.fadeIcon}>
+                  • {t("Paypal fees may apply")}
+                </Text>
               </View>
               <CheckBox
                 checked={selectedIndex === 3}
@@ -141,12 +147,12 @@ const Payouts = (props: any) => {
         style={styles.button}
         onPress={() => {
           if (value == null) {
-            Toast.show("Please select country", {
+            Toast.show(t("Please select country"), {
               duration: Toast.durations.LONG,
               position: Toast.positions.BOTTOM,
             });
           } else if (selectedIndex == null) {
-            Toast.show("Please select payment method ", {
+            Toast.show(t("Please select payment method"), {
               duration: Toast.durations.LONG,
               position: Toast.positions.BOTTOM,
             });
@@ -166,7 +172,7 @@ const Payouts = (props: any) => {
         }}
         // loaderColor={styles.loaderColor}
       >
-        <Text style={styles.buttonText}>Continue</Text>
+        <Text style={styles.buttonText}>{t("Continue")}</Text>
       </Button>
     </View>
   );

@@ -15,7 +15,10 @@ import RNModal from "react-native-modal";
 
 NfcManager.start();
 
+import { useTranslation } from "react-i18next";
+
 export default function WriteCards(props: any) {
+  const { t } = useTranslation();
   const RBSheetRef = useRef();
   const dispatch = useDispatch();
   const selectedCards = useSelector((state) => state.sale.selectedCards);
@@ -38,7 +41,7 @@ export default function WriteCards(props: any) {
     }
   }, [selectedCards]);
 
-  async function writeGoogleLinkOnNFC(link: string, index: any) {
+  async function writeGoogleLinkOnNFC(link: {name: string, url: string}, index: any) {
     if (Platform.OS === "android") {
       setTimeout(() => {
         RBSheetRef?.current?.open();
@@ -46,7 +49,7 @@ export default function WriteCards(props: any) {
     }
 
     // const reviewLink = `https://search.google.com/local/writereview?placeid=${place_id}`;
-    const reviewLink = link;
+    const reviewLink = link.url;
 
     let result = false;
 
@@ -75,7 +78,7 @@ export default function WriteCards(props: any) {
         dispatch(setSelectedCards(tempCards));
       }
     } catch (ex) {
-      console.log(JSON.stringify(ex));
+      console.log(ex);
     } finally {
       NfcManager.cancelTechnologyRequest();
     }
@@ -94,7 +97,8 @@ export default function WriteCards(props: any) {
             alignItems: "center",
           }}
         >
-          <Text style={styles.cardText}>Card {index + 1}</Text>
+         <View style={{flexDirection: 'row', gap: 16}}><Text style={{color: "#888", minWidth: 16}}>{index + 1}</Text>
+          <Text>{item.link.name}</Text></View>
           {item?.checked ? (
             <Icon name={"check-circle"} color={"green"} size={25} />
           ) : (
@@ -102,7 +106,7 @@ export default function WriteCards(props: any) {
               style={styles.writeBtn}
               onPress={() => writeGoogleLinkOnNFC(item.link, index)}
             >
-              <Text style={styles.writeText}>Write</Text>
+              <Text style={styles.writeText}>{t("Write")}</Text>
             </Button>
           )}
         </View>
@@ -131,7 +135,7 @@ export default function WriteCards(props: any) {
         backdropColor="#000"
       >
         <View style={styles.rnModalBody}>
-          <Text style={styles.statusText}>Success!</Text>
+          <Text style={styles.statusText}>{"Success"}!</Text>
           <Image
             source={require("../../../assets/images/check.png")}
             style={styles.image}
@@ -143,7 +147,7 @@ export default function WriteCards(props: any) {
   return (
     <View style={styles.container}>
       <Header
-        title={"Write Cards"}
+        title={t("Write Cards")}
         leftButton={() => props.navigation.goBack()}
       />
       <View style={styles.innerContainer}>
@@ -170,7 +174,7 @@ export default function WriteCards(props: any) {
         }}
       >
         <Text style={{ fontSize: hp(2.75), color: "#ccc" }}>
-          {isScanned ? "Scan Complete" : "Ready to Scan"}
+          {t(isScanned ? "Scan Complete" : "Ready to Scan")}
         </Text>
         <Image
           source={
@@ -196,7 +200,9 @@ export default function WriteCards(props: any) {
             // }
           }}
         >
-          <Text style={styles.buttonText}>{isScanned ? "Done" : "Cancel"}</Text>
+          <Text style={styles.buttonText}>
+            {t(isScanned ? "Done" : "Cancel")}
+          </Text>
         </Button>
       </RBSheet>
     </View>
@@ -223,7 +229,7 @@ const styles = StyleSheet.create({
   writeBtn: {
     backgroundColor: tintColorDark,
     height: hp(3.5),
-    width: wp(18),
+    paddingHorizontal: hp(2),
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",

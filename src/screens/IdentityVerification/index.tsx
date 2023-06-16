@@ -30,7 +30,10 @@ import { getCurrencyByCountry, getFlagEmoji } from '../../helpers/misc';
 import { clearSales } from '../../../redux/sale/saleSlice';
 import { clearUser } from '../../../redux/user/userSlice';
 
+import { useTranslation } from 'react-i18next';
+
 export default function IdentityVerification(props: any) {
+	const { t } = useTranslation();
 	const focused = useIsFocused();
 	const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
 
@@ -128,7 +131,7 @@ export default function IdentityVerification(props: any) {
 		<>
 			<View style={styles.container}>
 				<Header
-					title={'Identity Verification'}
+					title={t('Identity Verification')}
 					// leftButton={() => props.navigation.goBack()}
 				/>
 				{isLoading ? (
@@ -141,9 +144,9 @@ export default function IdentityVerification(props: any) {
 							{applicationStatus == 'pending' ? (
 								<>
 									<Text style={styles.statusText}>
-										Your application to become a verified seller has been
-										successfully submitted. Please wait for our team to take a
-										look at it.
+										{t(
+											'Your application to become a verified seller has been successfully submitted. Please wait for our team to take a look at it.'
+										)}
 									</Text>
 									<Image
 										source={require('../../../assets/images/submit1.jpeg')}
@@ -153,7 +156,7 @@ export default function IdentityVerification(props: any) {
 							) : applicationStatus == 'rejected' ? (
 								<>
 									<Text style={styles.statusText}>
-										We're sorry, your application was rejected.
+										{t("We're sorry, your application was rejected.")}
 									</Text>
 									<Image
 										source={require('../../../assets/images/rejected.jpeg')}
@@ -165,8 +168,9 @@ export default function IdentityVerification(props: any) {
 									{buttonStatus == 'initial' ? (
 										<>
 											<Text style={styles.statusText}>
-												Before starting to sell, you need to submit an
-												application to become a verified seller
+												{t(
+													'Before starting to sell, you need to submit an application to become a verified seller'
+												)}
 											</Text>
 											<Image
 												source={require('../../../assets/images/getverified.jpeg')}
@@ -175,7 +179,7 @@ export default function IdentityVerification(props: any) {
 										</>
 									) : (
 										<>
-											<Text style={styles.credsFont}>Country</Text>
+											<Text style={styles.credsFont}>{t('Country')}</Text>
 											<Text
 												style={{
 													fontSize: 12,
@@ -183,9 +187,9 @@ export default function IdentityVerification(props: any) {
 													marginBottom: 6,
 												}}
 											>
-												Please select the country where you will make sales.
-												This can be different from your country of
-												nationality.
+												{t(
+													'Please select the country where you will make sales. This can be different from your country of nationality.'
+												)}
 											</Text>
 											<CountrySelector
 												containerButtonStyle={{
@@ -208,7 +212,9 @@ export default function IdentityVerification(props: any) {
 													}
 												}}
 											/>
-											<Text style={styles.credsFont}>Phone number</Text>
+											<Text style={styles.credsFont}>
+												{t('Phone number')}
+											</Text>
 											<TouchableOpacity
 												style={styles.inputViewStyle}
 												onPress={() => setShow(true)}
@@ -240,7 +246,7 @@ export default function IdentityVerification(props: any) {
 														width: countryCode ? '70%' : '80%',
 													}}
 													autoCapitalize={'none'}
-													placeholder={'Phone number'}
+													placeholder={t('Phone number')}
 													keyboardType="number-pad"
 													// onPressIn={() => setShow(true)}
 												/>
@@ -249,7 +255,7 @@ export default function IdentityVerification(props: any) {
 												style={{ ...styles.button, marginTop: hp(2) }}
 												onPress={() => {
 													if (!phone) {
-														Toast.show('Phone number is required', {
+														Toast.show(t('Phone number is required'), {
 															duration: Toast.durations.SHORT,
 															position: Toast.positions.BOTTOM,
 														});
@@ -257,7 +263,7 @@ export default function IdentityVerification(props: any) {
 													}
 
 													if (!country?.cca2) {
-														Toast.show('Please select a country', {
+														Toast.show(t('Please select a country'), {
 															duration: Toast.durations.SHORT,
 															position: Toast.positions.BOTTOM,
 														});
@@ -279,7 +285,7 @@ export default function IdentityVerification(props: any) {
 												}}
 											>
 												<Text style={styles.buttonText}>
-													Start Indentity Verification
+													{t('Start Indentity Verification')}
 												</Text>
 											</MyButton>
 										</>
@@ -325,9 +331,11 @@ export default function IdentityVerification(props: any) {
 					loaderColor={styles.loaderColor}
 				>
 					<Text style={styles.buttonText}>
-						{applicationStatus == 'required' && buttonStatus == 'initial'
-							? 'Lets start'
-							: 'Logout'}
+						{t(
+							applicationStatus == 'required' && buttonStatus == 'initial'
+								? 'Lets start'
+								: 'Logout'
+						)}
 					</Text>
 				</MyButton>
 			</View>

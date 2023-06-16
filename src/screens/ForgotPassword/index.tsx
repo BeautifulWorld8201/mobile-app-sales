@@ -1,72 +1,53 @@
-import React, { useRef, useState } from "react";
-
-import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, Image } from "react-native";
-
+import React, { useEffect, useRef } from "react";
+import { Image, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
-import { View } from "../../../components/Themed";
-import { hp, wp } from "../../../utils";
-import Text from "../../../components/Text";
-import Input from "../../../components/Input";
-import Button from "../../../components/Button";
-import { Formik, useFormik } from "formik";
-import * as yup from "yup";
-import { tintColorDark, tintColorLight } from "../../../constants/Colors";
-import { useLoginMutation } from "../../../redux/auth/authApiSlice";
+import { Formik } from "formik";
 import { useDispatch } from "react-redux";
-import {
-  setAccessToken,
-  setLoginUser,
-  setRefreshToken,
-} from "../../../redux/auth/authSlice";
-import { setApplicationStatus } from "../../../redux/user/userSlice";
+import * as yup from "yup";
+import Button from "../../../components/Button";
+import Input from "../../../components/Input";
+import Text from "../../../components/Text";
+import { View } from "../../../components/Themed";
+import { tintColorDark } from "../../../constants/Colors";
+import { useForgotPasswordMutation } from "../../../redux/auth/authApiSlice";
+import { hp, wp } from "../../../utils";
+import { useTranslation } from "react-i18next";
 import Toast from "react-native-root-toast";
 
-import { useTranslation } from "react-i18next";
-
-export default function Signin(props: any) {
+export default function ForgotPassword(props: any) {
   const { t } = useTranslation();
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [forgot, forResponse] = useForgotPasswordMutation();
   const dispatch = useDispatch();
   const _formik = useRef();
+
   const validationSchema = yup.object().shape({
     email: yup
-      .string("Required")
+      .string()
       .required("Required")
-      .email("Please enter a valid email address"),
-    password: yup.string("Required").required("Required"),
+      .email("Please enter a valid email address")
+      .matches(/@[^.]*\./, "Please enter a valid email address"),
   });
-  const onLogin = async (values: object) => {
+
+  const onForgot = async (values: object) => {
     try {
-      const resp = await login(values);
-      console.log("----resp--login---", resp?.data?.user);
+      const resp = await forgot(values);
+
+      console.log("resp", resp);
       if (resp?.error) {
         Toast.show(resp?.error?.data?.message, {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
         });
-      } else if (
-        "applicationStatus" in resp?.data?.user == false ||
-        resp?.data?.user?.applicationStatus == "pending" ||
-        resp?.data?.user?.applicationStatus == "rejected"
-      ) {
-        dispatch(setAccessToken(resp?.data?.tokens?.access));
-        dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
-        dispatch(setApplicationStatus(resp?.data?.user?.applicationStatus));
-
-        props.navigation.navigate("IdentityVerification", {
-          user: resp?.data?.user,
-        });
       } else {
-        dispatch(setAccessToken(resp?.data?.tokens?.access));
-        dispatch(setRefreshToken(resp?.data?.tokens?.refresh));
-        dispatch(setLoginUser(resp?.data?.user));
-        dispatch(setApplicationStatus(resp?.data?.user?.applicationStatus));
+        Toast.show(t("Password recovery link has been sent to your email"), {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.CENTER,
+        });
+        props.navigation.navigate('Signin');
       }
-    } catch (e) {
-      console.log("login error--->", e);
+    } catch (err) {
+      console.log("forgot password error", err);
     }
   };
   return (
@@ -81,9 +62,11 @@ export default function Signin(props: any) {
         </View>
 
         <View style={styles.innerContainer}>
-          <Text style={styles.loginFont}>{t("Login")}</Text>
+          <Text style={styles.forgotFont}>{t("Forgot password")}</Text>
           <Text style={styles.detailFont}>
-            {t("Enter the details below to sign in to your account")}
+            {t(
+              "Provide your account email for which you want to reset your password"
+            )}
           </Text>
 
           <View>
@@ -91,11 +74,10 @@ export default function Signin(props: any) {
               innerRef={_formik}
               initialValues={{
                 email: "",
-                password: "",
               }}
               validationSchema={validationSchema}
               validateOnBlur={false}
-              onSubmit={(values) => onLogin(values)}
+              onSubmit={(values) => onForgot(values)}
             >
               {({
                 handleChange,
@@ -124,64 +106,24 @@ export default function Signin(props: any) {
                   {errors.email && touched.email && (
                     <Text style={styles.errorText}>{t(errors.email)}</Text>
                   )}
-                  <Text style={{ ...styles.credsFont, marginTop: 10 }}>
-                    {t("Password")}
-                  </Text>
-                  <Input
-                    onChangeText={(text) =>
-                      handleChange("password")(text.replace(/\s/g, ""))
-                    }
-                    onBlur={handleBlur("pasword")}
-                    value={values.password}
-                    style={styles.inputField}
-                    secureTextEntry
-                    icon
-                    iconName="lock"
-                    inputViewStyle={styles.inputViewStyle}
-                    iconColor={"#ccc"}
-                    autoCapitalize={"none"}
-                    placeholder={t("Enter password")}
-                  />
-                  {errors.password && touched.password && (
-                    <Text style={styles.errorText}>{t(errors.password)}</Text>
-                  )}
                 </View>
               )}
             </Formik>
-
-            <Text
-              style={styles.forgotText}
-              onPress={() => props.navigation.navigate("ForgotPassword")}
-            >
-              {t("Forgot password")}?
-            </Text>
-
             <View style={styles.buttonContainer}>
               <Button
                 style={styles.button}
                 onPress={() => {
                   _formik.current.handleSubmit();
                 }}
-                isLoading={isLoading}
-                disabled={isLoading}
+                isLoading={forResponse.isLoading}
+                disabled={forResponse.isLoading}
                 loaderColor={styles.loaderColor}
               >
-                <Text style={styles.buttonText}>{t("Login")}</Text>
+                <Text style={styles.buttonText}>{t("Recover Password")}</Text>
               </Button>
             </View>
           </View>
         </View>
-      </View>
-
-      <View style={styles.signupView}>
-        <Text>{t("Don't have an account?")} </Text>
-
-        <Text
-          style={styles.signupText}
-          onPress={() => props.navigation.navigate("Register")}
-        >
-          {t("Sign up")}
-        </Text>
       </View>
     </KeyboardAwareScrollView>
   );
@@ -204,11 +146,12 @@ const styles = StyleSheet.create({
   innerContainer: {
     marginHorizontal: hp(2.5),
   },
-  loginFont: {
+  forgotFont: {
     fontWeight: "700",
     fontSize: hp(3),
     color: "black",
     marginBottom: hp(2),
+    textTransform: "capitalize",
   },
   detailFont: {
     // fontWeight: "500",
@@ -265,24 +208,5 @@ const styles = StyleSheet.create({
   },
   loaderColor: {
     color: "white",
-  },
-  forgotText: {
-    color: tintColorDark,
-    alignSelf: "flex-end",
-    fontWeight: "700",
-    marginTop: hp(2),
-  },
-  signupText: {
-    color: tintColorDark,
-    textDecorationLine: "underline",
-    alignSelf: "flex-end",
-    fontWeight: "700",
-  },
-  signupView: {
-    flexDirection: "row",
-    alignSelf: "center",
-
-    // marginBottom: hp(3),
-    marginTop: 20,
   },
 });

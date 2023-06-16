@@ -8,6 +8,9 @@ import { PersistGate } from "redux-persist/integration/react";
 import StackNavigator from "./src/navigation";
 import { store, persistor } from "./redux/store";
 import { RootSiblingParent } from "react-native-root-siblings";
+
+import "./i18n.config";
+
 const App = () => {
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
