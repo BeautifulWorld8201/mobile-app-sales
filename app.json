@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "jsEngine": "jsc",
     "ios": {
       "supportsTablet": true,
@@ -26,9 +24,7 @@
         "foregroundImage": "./assets/images/adaptive-logo.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.NFC"
-      ],
+      "permissions": ["android.permission.NFC"],
       "package": "com.popcardsalesmen"
     },
     "web": {
@@ -41,8 +37,7 @@
         {
           "includeNdefEntitlement": false
         }
-      ],
-      "expo-localization"
+      ]
     ],
     "extra": {
       "eas": {
