@@ -338,11 +338,13 @@ export default function Sale(props: any): JSX.Element {
 														setCustomPrice({
 															...customPrice,
 															checked: !customPrice.checked,
-															value: (getPrice(
-																_formik.current?.values
-																	.cards_amount,
-																currentUser?.currency
-															) * (discount ? 0.85 : 1)).toFixed(2),
+															value: (
+																getPrice(
+																	_formik.current?.values
+																		.cards_amount,
+																	currentUser?.currency
+																) * (discount ? 0.85 : 1)
+															).toFixed(2),
 														});
 													}}
 												/>
@@ -393,11 +395,13 @@ export default function Sale(props: any): JSX.Element {
 																setDiscount(15);
 																setCustomPrice({
 																	...customPrice,
-																	value: (getPrice(
-																		_formik.current?.values
-																			.cards_amount,
-																		currentUser?.currency
-																	) * 0.85).toFixed(2),
+																	value: (
+																		getPrice(
+																			_formik.current?.values
+																				.cards_amount,
+																			currentUser?.currency
+																		) * 0.85
+																	).toFixed(2),
 																});
 															}
 														}}
