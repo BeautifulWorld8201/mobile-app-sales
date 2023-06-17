@@ -5,24 +5,28 @@ import { hp, wp } from "../../../utils";
 import Text from "../../../components/Text";
 import { tintColorDark } from "../../../constants/Colors";
 import MyButton from "../../../components/Button";
+import { useTranslation } from "react-i18next";
 
 export default function TakePayment(props: any) {
+  const { t } = useTranslation();
   return (
     <>
       <View style={styles.container}>
         <Header
-          title={
+          title={t(
             props?.route?.params?.fromScreen == undefined
               ? "Take Payment"
-              : "Success"
-          }
+              : "Success",
+          )}
           leftButton={() => props.navigation.goBack()}
         />
         <View style={styles.innerContainer}>
           <Text style={styles.statusText}>
-            {props?.route?.params?.fromScreen == undefined
-              ? "Your client has received a secure payment request in their email. Please ask the client to check his email to complete the payment. Offer to assist them with any questions or concerns they may have during the payment process."
-              : "Cards written successfully!"}
+            {t(
+              props?.route?.params?.fromScreen == undefined
+                ? "Your client has received a secure payment request in their email. Please ask the client to check his email to complete the payment. Offer to assist them with any questions or concerns they may have during the payment process."
+                : "Cards written successfully!",
+            )}
           </Text>
           <Image
             source={
@@ -44,7 +48,7 @@ export default function TakePayment(props: any) {
               : props.navigation.navigate("MakeSale");
           }}
         >
-          <Text style={styles.buttonText}>Done</Text>
+          <Text style={styles.buttonText}>{t("Done")}</Text>
         </MyButton>
       </View>
     </>

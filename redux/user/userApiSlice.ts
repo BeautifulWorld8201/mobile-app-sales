@@ -14,6 +14,18 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				method: 'GET',
 			}),
 		}),
+		getUserEmployee: builder.query({
+			query: () => ({
+				url: `/users/employees`,
+				method: 'GET',
+			}),
+		}),
+		getUserEmployeeWithId: builder.query({
+			query: (id) => ({
+				url: `/users/employees/${id}`,
+				method: 'GET',
+			}),
+		}),
 		submitApplication: builder.mutation({
 			query: (data) => ({
 				url: `/users/submitApplication`,
@@ -27,6 +39,7 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				method: 'POST',
 				body: data,
 			}),
+			invalidatesTags: ['Payouts']
 		}),
 		deletePayoutMethod: builder.mutation({
 			query: (id) => ({
@@ -60,5 +73,7 @@ export const {
 	usePayoutMethodMutation,
 	useGetPayoutMethodQuery,
 	useDeletePayoutMethodMutation,
-  useUpdateUserCurrencyMutation
+	useUpdateUserCurrencyMutation,
+	useGetUserEmployeeQuery,
+	useGetUserEmployeeWithIdQuery,
 } = userSliceApi;

@@ -6,8 +6,9 @@ import {
 	Share,
 	Platform,
 	Alert,
+	FlatList,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import MIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
@@ -20,9 +21,77 @@ import { hp, wp } from '../../../utils';
 import { useGetCurrentUserQuery, useGetPayoutMethodQuery } from '../../../redux/user/userApiSlice';
 import { useIsFocused } from '@react-navigation/native';
 import { apiSlice } from '../../../redux/api/apiSlice';
+import RNModal from 'react-native-modal';
+import { useTranslation } from 'react-i18next';
+import { tintColorDark, tintColorLight } from '../../../constants/Colors';
+import { setLanguage } from '../../../redux/language/languageSlice';
+
+const LangModal: React.FC<{
+	ModalRef: React.MutableRefObject<any>;
+	changeLang: Function;
+	t: Function;
+	dispatch: Function;
+}> = ({ ModalRef, changeLang, t, dispatch }) => {
+	const [visible, setvisible] = useState(false);
+
+	// add your languages here
+	const LangList = [
+		{ label: 'English', code: 'en' },
+		{ label: 'Français', code: 'fr' },
+		{ label: 'Nederlands', code: 'nl' },
+	];
+
+	if (ModalRef) ModalRef.current = { visible, setvisible };
+
+	const renderItem: React.FC<{ item: { label: String; code: String } }> = ({ item }) => {
+		return (
+			<TouchableOpacity
+				onPress={() => {
+					changeLang(item.code);
+					dispatch(setLanguage(item.code));
+					setvisible(false);
+				}}
+				style={styles.LangSingle}
+			>
+				<Text>{item.label}</Text>
+			</TouchableOpacity>
+		);
+	};
+	return (
+		<RNModal
+			isVisible={visible}
+			swipeDirection={['down']}
+			onSwipeComplete={() => setvisible(false)}
+			onBackdropPress={() => setvisible(false)}
+			hasBackdrop
+			style={{ justifyContent: 'flex-end', margin: 0 }}
+		>
+			<View style={styles.LangBody}>
+				<View style={styles.LangLine} />
+				<Text style={styles.LangHeader}>{t('Change Language')}</Text>
+				<Text style={styles.titleText}>
+					{t('Click on the language you want to change to')}
+				</Text>
+				<View style={{ marginTop: hp(2) }}>
+					<FlatList
+						data={LangList}
+						renderItem={renderItem}
+						keyExtractor={(e, id) => id.toString()}
+					/>
+				</View>
+			</View>
+		</RNModal>
+	);
+};
 
 export default function Settings(props: any) {
+	const { t, i18n } = useTranslation();
 	const focused = useIsFocused();
+
+	const LangModalRef = useRef<{
+		visible: boolean;
+		setvisible: React.Dispatch<React.SetStateAction<boolean>>;
+	} | null>(null);
 
 	const dispatch = useDispatch();
 	const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
@@ -32,9 +101,7 @@ export default function Settings(props: any) {
 	const { data: payouts, isError, refetch } = useGetPayoutMethodQuery();
 
 	const [logoutUser, { isLoading }] = useLogoutUserMutation();
-	useEffect(() => {
-		if (focused) refetch();
-	}, [focused]);
+	
 	const logoutApi = async () => {
 		const data = {
 			refreshToken,
@@ -50,10 +117,17 @@ export default function Settings(props: any) {
 	};
 	return (
 		<View style={styles.container}>
-			<Header title={'Settings'} />
+			<Header title={t('Settings')} />
 
 			<ScrollView style={styles.innerContainer} showsVerticalScrollIndicator={false}>
-				<Text style={styles.textTitle}>Account</Text>
+				<LangModal
+					ModalRef={LangModalRef}
+					changeLang={i18n.changeLanguage}
+					t={t}
+					dispatch={dispatch}
+				/>
+
+				<Text style={styles.textTitle}>{t('Account')}</Text>
 
 				<View style={styles.mainContainer}>
 					<View style={styles.backgroundView}>
@@ -61,7 +135,7 @@ export default function Settings(props: any) {
 							<View style={styles.iconView}>
 								<MIcons name="account-outline" size={20} />
 							</View>
-							<Text style={styles.titleText}>Name</Text>
+							<Text style={styles.titleText}>{t('Name')}</Text>
 						</View>
 						<Text style={styles.titleText}>{user?.username}</Text>
 					</View>
@@ -73,7 +147,7 @@ export default function Settings(props: any) {
 							<View style={styles.iconView}>
 								<MIcons name="email-outline" size={20} />
 							</View>
-							<Text style={styles.titleText}>Email</Text>
+							<Text style={styles.titleText}>{t('Email')}</Text>
 						</View>
 						<Text style={styles.titleText}>{user?.email}</Text>
 					</View>
@@ -85,7 +159,7 @@ export default function Settings(props: any) {
 							<View style={styles.iconView}>
 								<MIcons name="flag-outline" size={20} />
 							</View>
-							<Text style={styles.titleText}>Role</Text>
+							<Text style={styles.titleText}>{t('Role')}</Text>
 						</View>
 						<Text style={styles.titleText}>{user?.role}</Text>
 					</View>
@@ -97,7 +171,7 @@ export default function Settings(props: any) {
 							<View style={styles.iconView}>
 								<MIcons name="calendar-blank-outline" size={20} />
 							</View>
-							<Text style={styles.titleText}>Created</Text>
+							<Text style={styles.titleText}>{t('Created')}</Text>
 						</View>
 						<Text style={styles.titleText}>
 							{moment(user?.createdAt).format('MMMM Do YYYY')}
@@ -111,20 +185,12 @@ export default function Settings(props: any) {
 							<View style={styles.iconView}>
 								<MIcons name="currency-usd" size={20} />
 							</View>
-							<Text style={styles.titleText}>Currency</Text>
+							<Text style={styles.titleText}>{t('Currency')}</Text>
 						</View>
-						<TouchableOpacity
-							style={{ flexDirection: 'row' }}
-							onPress={() => props?.navigation?.navigate('ChangeCurrency')}
-						>
-							<Text style={styles.titleText}>{currentUser?.currency}</Text>
-							<View style={styles.iconsView}>
-								<MIcons name="chevron-right" size={20} />
-							</View>
-						</TouchableOpacity>
+						<Text style={styles.titleText}>{currentUser?.currency}</Text>
 					</View>
 				</View>
-				<Text style={styles.textTitle}>Settings</Text>
+				<Text style={styles.textTitle}>{t('Settings')}</Text>
 
 				<View style={styles.mainContainer}>
 					<TouchableOpacity
@@ -139,7 +205,7 @@ export default function Settings(props: any) {
 							<View style={styles.iconView}>
 								<MIcons name="wallet-outline" size={20} />
 							</View>
-							<Text style={styles.titleText}>Payouts</Text>
+							<Text style={styles.titleText}>{t('Payouts')}</Text>
 						</View>
 						<View style={styles.iconsView}>
 							<MIcons name="chevron-right" size={20} />
@@ -153,14 +219,38 @@ export default function Settings(props: any) {
 							<View style={styles.iconView}>
 								<MIcons name="bell-outline" size={20} />
 							</View>
-							<Text style={styles.titleText}>Notifications</Text>
+							<Text style={styles.titleText}>{t('Notifications')}</Text>
 						</View>
 						<View style={styles.iconsView}>
 							<MIcons name="chevron-right" size={20} />
 						</View>
 					</TouchableOpacity>
+
+					<View style={styles.divider} />
+
+					<TouchableOpacity
+						style={styles.backgroundView}
+						onPress={() => LangModalRef.current?.setvisible(true)}
+					>
+						<View style={styles.rowView}>
+							<View style={styles.iconView}>
+								<MIcons name="web" size={20} />
+							</View>
+							<Text style={styles.titleText}>{t('Language')}</Text>
+						</View>
+						<View
+							style={{
+								...styles.iconsView,
+								flexDirection: 'row',
+								alignItems: 'center',
+							}}
+						>
+							<Text style={{ textTransform: 'uppercase' }}>{i18n.language}</Text>
+							<MIcons name="chevron-right" size={20} />
+						</View>
+					</TouchableOpacity>
 				</View>
-				<Text style={styles.textTitle}>Miscellaneous</Text>
+				<Text style={styles.textTitle}>{t('Miscellaneous')}</Text>
 
 				<View style={styles.mainContainer}>
 					<TouchableOpacity
@@ -186,7 +276,7 @@ export default function Settings(props: any) {
 									size={20}
 								/>
 							</View>
-							<Text style={styles.titleText}>Share Popcard Salesmen</Text>
+							<Text style={styles.titleText}>{t('Share Popcard Salesmen')}</Text>
 						</View>
 						<View style={styles.iconsView}>
 							<MIcons name="chevron-right" size={20} />
@@ -200,13 +290,13 @@ export default function Settings(props: any) {
 							if (Platform.OS != 'ios') {
 								//To open the Google Play Store
 								Linking.openURL(`market://details?id={GOOGLE_PACKAGE_NAME}`).catch(
-									(err) => alert('Google Play Store not found')
+									(err) => alert(t('Google Play Store not found'))
 								);
 							} else {
 								//To open the Apple App Store
 								Linking.openURL(
 									`itms-apps://itunes.apple.com/us/app/apple-store/id6448954487?mt=8`
-								).catch((err) => alert('App store not found'));
+								).catch((err) => alert(t('App store not found')));
 							}
 						}}
 						style={styles.backgroundView}
@@ -215,7 +305,7 @@ export default function Settings(props: any) {
 							<View style={styles.iconView}>
 								<MIcons name="star-outline" size={20} />
 							</View>
-							<Text style={styles.titleText}>Rate Popcard Salesmen</Text>
+							<Text style={styles.titleText}>{t('Rate Popcard Salesmen')}</Text>
 						</View>
 						<View style={styles.iconsView}>
 							<MIcons name="chevron-right" size={20} />
@@ -234,7 +324,7 @@ export default function Settings(props: any) {
 							<View style={styles.iconView}>
 								<MIcons name="phone-outline" size={20} />
 							</View>
-							<Text style={styles.titleText}>Contact Us</Text>
+							<Text style={styles.titleText}>{t('Contact Us')}</Text>
 						</View>
 						<View style={styles.iconsView}>
 							<MIcons name="chevron-right" size={20} />
@@ -242,7 +332,7 @@ export default function Settings(props: any) {
 					</TouchableOpacity>
 				</View>
 				<TouchableOpacity onPress={() => logoutApi()} style={styles.logoutView}>
-					<Text style={styles.logoutText}>Log Out</Text>
+					<Text style={styles.logoutText}>{t('Log Out')}</Text>
 				</TouchableOpacity>
 			</ScrollView>
 
@@ -331,5 +421,34 @@ const styles = StyleSheet.create({
 	rowView: {
 		flexDirection: 'row',
 		backgroundColor: '#F9F9F9',
+	},
+	LangBody: {
+		backgroundColor: 'white',
+		height: hp(40),
+		borderTopLeftRadius: 25,
+		borderTopRightRadius: 25,
+		alignItems: 'center',
+		paddingTop: hp(2),
+	},
+	LangLine: {
+		backgroundColor: tintColorLight,
+		width: wp(40),
+		height: hp(0.8),
+		borderRadius: 25,
+	},
+	LangHeader: {
+		paddingTop: hp(2),
+		paddingBottom: hp(2),
+		fontWeight: 'bold',
+		fontSize: 24,
+	},
+	LangSingle: {
+		marginTop: hp(2),
+		backgroundColor: tintColorDark,
+		width: wp(80),
+		height: hp(5),
+		borderRadius: 20,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });

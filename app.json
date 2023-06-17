@@ -2,7 +2,7 @@
   "expo": {
     "name": "Popcard Salesmen",
     "slug": "popcard-salesmen",
-    "version": "1.1.0",
+    "version": "1.6.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
     "scheme": "myapp",
@@ -13,10 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
+    "jsEngine": "jsc",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.popcard",
-      "buildNumber": "6"
+      "buildNumber": "12"
     },
     "android": {
       "adaptiveIcon": {

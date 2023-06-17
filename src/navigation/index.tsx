@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -21,6 +21,9 @@ import BankDetail from '../screens/BankDetail';
 import UserPayouts from '../screens/UserPayouts';
 import ChangeCurrency from '../screens/ChangeCurrency';
 import Notifications from '../screens/Notifications';
+import Partners from '../screens/Partners';
+import PartnerDetail from '../screens/PartnerDetail';
+import { useGetUserEmployeeQuery } from '../../redux/user/userApiSlice';
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -41,6 +44,7 @@ function AuthStack() {
 				<>
 					<Stack.Screen name="Signin" component={Signin} />
 					<Stack.Screen name="Register" component={Register} />
+					<Stack.Screen name="ForgotPassword" component={ForgotPassword} />
 				</>
 			)}
 			<Stack.Screen name="IdentityVerification" component={IdentityVerification} />
@@ -53,8 +57,12 @@ function TabBarIcon(props: {
 }) {
 	return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
+import { useTranslation } from 'react-i18next';
+import ForgotPassword from '../screens/ForgotPassword';
 
 function TabStack() {
+	const { data: employeeData } = useGetUserEmployeeQuery();
+	const { t } = useTranslation();
 	return (
 		<Tab.Navigator
 			screenOptions={({ route, navigation }) => ({
@@ -67,17 +75,31 @@ function TabStack() {
 				name="MakeSale"
 				component={MakeSale}
 				options={({ route }) => ({
-					tabBarLabel: 'Home',
+					tabBarLabel: t('Home'),
 
 					tabBarIcon: ({ focused, color }) => <TabBarIcon name="home" color={color} />,
 					tabBarActiveTintColor: '#f5c634',
 				})}
 			/>
+			{employeeData?.length ? (
+				<Tab.Screen
+					name="Partners"
+					component={Partners}
+					options={({ route }) => ({
+						tabBarLabel: t('Partners'),
+
+						tabBarIcon: ({ focused, color }) => (
+							<TabBarIcon name="group" color={color} />
+						),
+						tabBarActiveTintColor: '#f5c634',
+					})}
+				/>
+			) : null}
 			<Tab.Screen
 				name="Settings"
 				component={Settings}
 				options={({ route }) => ({
-					tabBarLabel: 'Settings',
+					tabBarLabel: t('Settings'),
 
 					tabBarIcon: ({ focused, color }) => <TabBarIcon name="gears" color={color} />,
 					tabBarActiveTintColor: '#f5c634',
@@ -86,10 +108,11 @@ function TabStack() {
 		</Tab.Navigator>
 	);
 }
+
 function AppStack() {
 	return (
 		<Stack.Navigator
-			initialRouteName="TabStack"
+			initialRouteName={'TabStack'}
 			screenOptions={({ route, navigation }) => ({
 				headerShown: false,
 			})}
@@ -100,11 +123,13 @@ function AppStack() {
 			<Stack.Screen name="WriteCards" component={WriteCards} />
 
 			<Stack.Screen name="SaleDetail" component={SaleDetail} />
+			<Stack.Screen name="Partners" component={Partners} />
+			<Stack.Screen name="PartnerDetail" component={PartnerDetail} />
 			<Stack.Screen name="UserPayouts" component={UserPayouts} />
 			<Stack.Screen name="Payouts" component={Payouts} />
 			<Stack.Screen name="BankDetail" component={BankDetail} />
-			<Stack.Screen name="ChangeCurrency" component={ChangeCurrency} />
-			<Stack.Screen name="Notifications" component={Notifications} />
+      <Stack.Screen name="Notifications" component={Notifications} />
+			{/* <Stack.Screen name="ChangeCurrency" component={ChangeCurrency} /> */}
 		</Stack.Navigator>
 	);
 }
