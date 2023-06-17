@@ -128,5 +128,7 @@
 	"Write": "Schrijven",
 	"Email address": "E-mailadres",
 	"-15% discount": "-15% korting",
-	"Recurring customer": "Terugkerende klant"
+	"Recurring customer": "Terugkerende klant",
+	"You need to add a payout method before starting to make sales": "U moet een uitbetalingsmethode toevoegen voordat u begint met verkopen",
+	"Add payout method": "Uitbetalingsmethode toevoegen"
 }

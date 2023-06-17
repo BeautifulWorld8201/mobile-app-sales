@@ -128,5 +128,7 @@
 	"Write": "Programmer",
 	"Email address": "Adresse e-mail",
 	"-15% discount": "-15% réduction",
-	"Recurring customer": "Client récurrent"
+	"Recurring customer": "Client récurrent",
+	"You need to add a payout method before starting to make sales": "Vous devez ajouter une méthode de paiement avant de commencer à vendre",
+	"Add payout method": "Ajouter une méthode de paiement"
 }
