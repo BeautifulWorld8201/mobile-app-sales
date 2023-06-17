@@ -128,5 +128,7 @@
 	"Write": "Write",
 	"Email address": "Email address",
 	"-15% discount": "-15% discount",
-	"Recurring customer": "Recurring customer"
+	"Recurring customer": "Recurring customer",
+	"You need to add a payout method before starting to make sales": "You need to add a payout method before starting to make sales",
+	"Add payout method": "Add payout method"
 }

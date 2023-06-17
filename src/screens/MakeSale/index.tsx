@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { Text, View } from "../../../components/Themed";
 import { useSelector, useDispatch } from "react-redux";
@@ -27,7 +28,7 @@ import {
   shortenString,
 } from "../../helpers/misc";
 import { tintColorLight } from "../../../constants/Colors";
-import { useGetCurrentUserQuery } from "../../../redux/user/userApiSlice";
+import { useGetCurrentUserQuery, useGetPayoutMethodQuery } from "../../../redux/user/userApiSlice";
 import { ScrollView } from "react-native-gesture-handler";
 
 import { useTranslation } from "react-i18next";
@@ -74,7 +75,7 @@ export default function MakeSale(props: any) {
     isFetching,
   } = useGetSalesQuery(selectedPeriod?.value);
   const { data: currentUser } = useGetCurrentUserQuery();
-
+  const { data: payoutMethod } = useGetPayoutMethodQuery();
   const [sales, setSales] = useState([]);
 
   const onClickPeriod = (selectedPeriod) => {
@@ -240,7 +241,22 @@ export default function MakeSale(props: any) {
                 <Text style={styles.credsFont}>{t("Recent Sales")}</Text>
 
                 <Button
-                  onPress={() => props.navigation.navigate("Sale")}
+                  onPress={() => {
+                    if (payoutMethod?.id) {
+                      props.navigation.navigate("Sale")
+                    } else {
+                      Alert.alert(t("You need to add a payout method before starting to make sales"), "", [
+                        {
+                          text: t("Cancel"),
+                          style: "cancel",
+                        },
+                        {
+                          text: t("Add payout method"),
+                          onPress: () => props.navigation.navigate("Payouts"),
+                        },
+                      ]);
+                    }
+                  }}
                   style={styles.buttonBelow}
                 >
                   <Text style={styles.buttonText}>{t("Make new Sale")}</Text>

@@ -101,9 +101,7 @@ export default function Settings(props: any) {
 	const { data: payouts, isError, refetch } = useGetPayoutMethodQuery();
 
 	const [logoutUser, { isLoading }] = useLogoutUserMutation();
-	useEffect(() => {
-		if (focused) refetch();
-	}, [focused]);
+	
 	const logoutApi = async () => {
 		const data = {
 			refreshToken,
