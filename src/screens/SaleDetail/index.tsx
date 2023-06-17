@@ -226,7 +226,7 @@ export default function SaleDetail(props: any) {
           </ScrollView>
         )}
         <>
-          {user?.role == "trustedSeller" &&
+          {(user?.role == "trustedSeller" || user?.role == "premiumSeller") &&
             saleDetail?.payment_link?.paid == false && (
               <View style={styles.buttonContainer}>
                 <Button
