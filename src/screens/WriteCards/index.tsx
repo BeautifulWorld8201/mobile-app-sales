@@ -16,6 +16,7 @@ import RNModal from "react-native-modal";
 NfcManager.start();
 
 import { useTranslation } from "react-i18next";
+import { shortenString } from "../../helpers/misc";
 
 export default function WriteCards(props: any) {
   const { t } = useTranslation();
@@ -98,7 +99,7 @@ export default function WriteCards(props: any) {
           }}
         >
          <View style={{flexDirection: 'row', gap: 16}}><Text style={{color: "#888", minWidth: 16}}>{index + 1}</Text>
-          <Text>{item.link.name}</Text></View>
+          <Text>{shortenString(item?.link?.name)}</Text></View>
           {item?.checked ? (
             <Icon name={"check-circle"} color={"green"} size={25} />
           ) : (
