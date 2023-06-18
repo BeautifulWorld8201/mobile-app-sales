@@ -62,11 +62,11 @@ const Referrals = (props: any) => {
 								style={{ padding: 4 }}
 								onPress={async () => {
 									Clipboard.setString(
-										`https://popcard.io/join/${referralData?.referralCode}`
+										`https://app.popcard.io/join/${referralData?.referralCode}`
 									);
 									if (
 										(await Clipboard.getString()) ===
-										`https://popcard.io/join/${referralData?.referralCode}`
+										`https://app.popcard.io/join/${referralData?.referralCode}`
 									) {
 										Toast.show(`✅ ${t('Copied to clipboard')}`, {
 											position: Toast.positions.CENTER,
@@ -83,7 +83,7 @@ const Referrals = (props: any) => {
 										message: `${t(
 											'Become a verified Popcard Seller today! Join using my code'
 										)}: ${referralData?.referralCode}`,
-										url: `https://popcard.io/join/${referralData?.referralCode}`,
+										url: `https://app.popcard.io/join/${referralData?.referralCode}`,
 									})
 								}
 							>
