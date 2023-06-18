@@ -10,8 +10,10 @@ import Button from "../../../components/Button";
 import { usePayoutMethodMutation } from "../../../redux/user/userApiSlice";
 import { tintColorDark } from "../../../constants/Colors";
 import Toast from "react-native-root-toast";
+import { useTranslation } from "react-i18next";
 
 const BankDetail = (props: any) => {
+  const { t } = useTranslation();
   const { country, paymentType } = props.route.params.data;
 
   const _formik = useRef();
@@ -94,7 +96,7 @@ const BankDetail = (props: any) => {
   return (
     <KeyboardAwareScrollView style={styles.container}>
       <Header
-        title={"Bank Details"}
+        title={t("Bank Details")}
         leftButton={() => props.navigation.goBack()}
       />
       <View style={styles.innerContainer}>
@@ -134,7 +136,7 @@ const BankDetail = (props: any) => {
             touched,
           }) => (
             <>
-              <Text style={styles.credsFont}>Account holder name</Text>
+              <Text style={styles.credsFont}>{t("Account holder name")}</Text>
               <Input
                 onChangeText={handleChange("accountHolderName")}
                 onBlur={handleBlur("accountHolderName")}
@@ -144,15 +146,17 @@ const BankDetail = (props: any) => {
                 inputViewStyle={styles.inputViewStyle}
                 iconColor={"#ccc"}
                 autoCapitalize={"none"}
-                placeholder={"Account holder name"}
+                placeholder={t("Account holder name")}
               />
               {errors.accountHolderName && touched.accountHolderName && (
-                <Text style={styles.errorText}>{errors.accountHolderName}</Text>
+                <Text style={styles.errorText}>
+                  {t(errors.accountHolderName)}
+                </Text>
               )}
               {country == "europe"
                 ? paymentType == "bank" && (
                     <>
-                      <Text style={styles.credsFont}>Bank name</Text>
+                      <Text style={styles.credsFont}>{t("Bank name")}</Text>
                       <Input
                         onChangeText={handleChange("bankName")}
                         onBlur={handleBlur("bankName")}
@@ -162,12 +166,14 @@ const BankDetail = (props: any) => {
                         inputViewStyle={styles.inputViewStyle}
                         iconColor={"#ccc"}
                         autoCapitalize={"none"}
-                        placeholder={"Bank name"}
+                        placeholder={t("Bank name")}
                       />
                       {errors.bankName && touched.bankName && (
-                        <Text style={styles.errorText}>{errors.bankName}</Text>
+                        <Text style={styles.errorText}>
+                          {t(errors.bankName)}
+                        </Text>
                       )}
-                      <Text style={styles.credsFont}>SWIFT / BIC</Text>
+                      <Text style={styles.credsFont}>{t("SWIFT / BIC")}</Text>
                       <Input
                         onChangeText={handleChange("routing")}
                         onBlur={handleBlur("routing")}
@@ -177,12 +183,14 @@ const BankDetail = (props: any) => {
                         inputViewStyle={styles.inputViewStyle}
                         iconColor={"#ccc"}
                         autoCapitalize={"none"}
-                        placeholder={"SWIFT / BIC"}
+                        placeholder={t("SWIFT / BIC")}
                       />
                       {errors.routing && touched.routing && (
-                        <Text style={styles.errorText}>{errors.routing}</Text>
+                        <Text style={styles.errorText}>
+                          {t(errors.routing)}
+                        </Text>
                       )}
-                      <Text style={styles.credsFont}>IBAN</Text>
+                      <Text style={styles.credsFont}>{t("IBAN")}</Text>
                       <Input
                         style={styles.inputField}
                         onChangeText={handleChange("iban")}
@@ -192,17 +200,19 @@ const BankDetail = (props: any) => {
                         inputViewStyle={styles.inputViewStyle}
                         iconColor={"#ccc"}
                         autoCapitalize={"none"}
-                        placeholder={"IBAN"}
+                        placeholder={t("IBAN")}
                       />
                       {errors.iban && touched.iban && (
-                        <Text style={styles.errorText}>{errors.iban}</Text>
+                        <Text style={styles.errorText}>{t(errors.iban)}</Text>
                       )}
                     </>
                   )
                 : country == "unitedstates"
                 ? paymentType == "bank" && (
                     <>
-                      <Text style={styles.credsFont}>Routing Number</Text>
+                      <Text style={styles.credsFont}>
+                        {t("Routing Number")}
+                      </Text>
                       <Input
                         onChangeText={handleChange("routingNumber")}
                         onBlur={handleBlur("routingNumber")}
@@ -213,14 +223,16 @@ const BankDetail = (props: any) => {
                         inputViewStyle={styles.inputViewStyle}
                         iconColor={"#ccc"}
                         autoCapitalize={"none"}
-                        placeholder={"Routing Number"}
+                        placeholder={t("Routing Number")}
                       />
                       {errors.routingNumber && touched.routingNumber && (
                         <Text style={styles.errorText}>
-                          {errors.routingNumber}
+                          {t(errors.routingNumber)}
                         </Text>
                       )}
-                      <Text style={styles.credsFont}>Account Number</Text>
+                      <Text style={styles.credsFont}>
+                        {t("Account Number")}
+                      </Text>
                       <Input
                         onChangeText={handleChange("account")}
                         onBlur={handleBlur("account")}
@@ -231,10 +243,12 @@ const BankDetail = (props: any) => {
                         inputViewStyle={styles.inputViewStyle}
                         iconColor={"#ccc"}
                         autoCapitalize={"none"}
-                        placeholder={"Account Number"}
+                        placeholder={t("Account Number")}
                       />
                       {errors.account && touched.account && (
-                        <Text style={styles.errorText}>{errors.account}</Text>
+                        <Text style={styles.errorText}>
+                          {t(errors.account)}
+                        </Text>
                       )}
                     </>
                   )
@@ -242,7 +256,9 @@ const BankDetail = (props: any) => {
 
               {paymentType == "paypal" && (
                 <>
-                  <Text style={styles.credsFont}>PayPal email address</Text>
+                  <Text style={styles.credsFont}>
+                    {t("PayPal email address")}
+                  </Text>
                   <Input
                     onChangeText={handleChange("email")}
                     onBlur={handleBlur("email")}
@@ -253,10 +269,10 @@ const BankDetail = (props: any) => {
                     inputViewStyle={styles.inputViewStyle}
                     iconColor={"#ccc"}
                     autoCapitalize={"none"}
-                    placeholder={"PayPal email address"}
+                    placeholder={t("PayPal email address")}
                   />
                   {errors.email && touched.email && (
-                    <Text style={styles.errorText}>{errors.email}</Text>
+                    <Text style={styles.errorText}>{t(errors.email)}</Text>
                   )}
                 </>
               )}
@@ -273,7 +289,7 @@ const BankDetail = (props: any) => {
           loaderColor={styles.loaderColor}
           isLoading={isLoading}
         >
-          <Text style={styles.buttonText}>Continue</Text>
+          <Text style={styles.buttonText}>{t("Continue")}</Text>
         </Button>
       </View>
     </KeyboardAwareScrollView>

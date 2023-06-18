@@ -39,6 +39,7 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				method: 'POST',
 				body: data,
 			}),
+			invalidatesTags: ['Payouts']
 		}),
 		deletePayoutMethod: builder.mutation({
 			query: (id) => ({

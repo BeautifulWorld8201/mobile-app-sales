@@ -22,7 +22,10 @@ import {
 import { useDispatch } from "react-redux";
 import Toast from "react-native-root-toast";
 
+import { useTranslation } from "react-i18next";
+
 export default function Register(props: any) {
+  const { t } = useTranslation();
   const [signUp, { isLoading }] = useSignUpMutation();
   const _formik = useRef();
   const dispatch = useDispatch();
@@ -69,9 +72,9 @@ export default function Register(props: any) {
         </View>
 
         <View style={styles.innerContainer}>
-          <Text style={styles.loginFont}>Register</Text>
+          <Text style={styles.loginFont}>{t("Register")}</Text>
           <Text style={styles.detailFont}>
-            Enter the details below to register your account
+            {t("Enter the details below to register your account")}
           </Text>
 
           <View>
@@ -95,7 +98,7 @@ export default function Register(props: any) {
                 touched,
               }) => (
                 <View>
-                  <Text style={styles.credsFont}>User Name</Text>
+                  <Text style={styles.credsFont}>{t("User Name")}</Text>
                   <Input
                     onChangeText={(text) =>
                       handleChange("username")(text.replace(/\s/g, ""))
@@ -108,10 +111,10 @@ export default function Register(props: any) {
                     inputViewStyle={styles.inputViewStyle}
                     iconColor={"#ccc"}
                     autoCapitalize={"none"}
-                    placeholder={"Enter your user name"}
+                    placeholder={t("Enter your user name")}
                   />
                   {errors.username && touched.username && (
-                    <Text style={styles.errorText}>{errors.username}</Text>
+                    <Text style={styles.errorText}>{t(errors.username)}</Text>
                   )}
                   <Text style={styles.credsFont}>Email</Text>
                   <Input
@@ -126,13 +129,13 @@ export default function Register(props: any) {
                     inputViewStyle={styles.inputViewStyle}
                     iconColor={"#ccc"}
                     autoCapitalize={"none"}
-                    placeholder={"Enter your email address"}
+                    placeholder={t("Enter your email address")}
                   />
                   {errors.email && touched.email && (
-                    <Text style={styles.errorText}>{errors.email}</Text>
+                    <Text style={styles.errorText}>{t(errors.email)}</Text>
                   )}
                   <Text style={{ ...styles.credsFont, marginTop: 10 }}>
-                    Password
+                    {t("Password")}
                   </Text>
                   <Input
                     onChangeText={(text) =>
@@ -147,10 +150,10 @@ export default function Register(props: any) {
                     inputViewStyle={styles.inputViewStyle}
                     iconColor={"#ccc"}
                     autoCapitalize={"none"}
-                    placeholder={"Enter password"}
+                    placeholder={t("Enter password")}
                   />
                   {errors.password && touched.password && (
-                    <Text style={styles.errorText}>{errors.password}</Text>
+                    <Text style={styles.errorText}>{t(errors.password)}</Text>
                   )}
                 </View>
               )}
@@ -165,7 +168,7 @@ export default function Register(props: any) {
                 disabled={isLoading}
                 loaderColor={styles.loaderColor}
               >
-                <Text style={styles.buttonText}>Register</Text>
+                <Text style={styles.buttonText}>{t("Register")}</Text>
               </Button>
             </View>
           </View>
@@ -173,13 +176,13 @@ export default function Register(props: any) {
       </View>
 
       <View style={styles.signupView}>
-        <Text>Already have an account?</Text>
+        <Text>{t("Already have an account?")} </Text>
 
         <Text
           style={styles.signupText}
           onPress={() => props.navigation.goBack()}
         >
-          Sign in
+          {t("Sign in")}
         </Text>
       </View>
     </KeyboardAwareScrollView>
