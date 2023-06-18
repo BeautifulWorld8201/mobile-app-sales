@@ -3,10 +3,10 @@ import Header from '../../../components/Header';
 import { t } from 'i18next';
 import { Share, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@rneui/base';
-import { shortenString } from '../../helpers/misc';
+import { formatNumber, getCurrencySymbol, shortenString } from '../../helpers/misc';
 import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Clipboard from '@react-native-community/clipboard';
-import { useGetReferralCodeQuery } from '../../../redux/user/userApiSlice';
+import { useGetCurrentUserQuery, useGetReferralCodeQuery } from '../../../redux/user/userApiSlice';
 import Loader from '../../../components/Loader';
 import Toast from 'react-native-root-toast';
 import { hp, wp } from '../../../utils';
@@ -38,6 +38,7 @@ const Referrals = (props: any) => {
 		isFetching,
 		refetch,
 	} = useGetReferralCodeQuery();
+	const { data: currentUser } = useGetCurrentUserQuery();
 
 	const [selectedPeriod, setSelectedPeriod] = useState(periodSelectorData[2]);
 
@@ -122,6 +123,57 @@ const Referrals = (props: any) => {
 								);
 							})}
 						</View>
+						<View style={styles.salesDataPointsContainer}>
+							<View style={styles.salesDataPointItem}>
+								<Text style={styles.salesDataPointItemLabel}>
+									{t('Users Referred')}
+								</Text>
+								<Text style={styles.salesDataPointItemValue}>
+									{formatNumber(referralData?.stats?.paid?.amount ?? 0)}
+								</Text>
+							</View>
+							<View style={styles.salesDataPointItem}>
+								<Text style={styles.salesDataPointItemLabel}>
+									{t('Pending Commission')}
+								</Text>
+								<Text
+									style={[
+										styles.salesDataPointItemValue,
+									]}
+								>
+									{getCurrencySymbol(currentUser?.currency)}
+									{formatNumber(referralData?.stats?.unpaid?.amount ?? 0)}
+								</Text>
+							</View>
+
+							<View style={styles.salesDataPointItem}>
+								<Text style={styles.salesDataPointItemLabel}>
+									{t('Earned Commission')}
+								</Text>
+								<Text
+									style={[
+										styles.salesDataPointItemValue,
+									]}
+								>
+									{getCurrencySymbol(currentUser?.currency)}
+									{formatNumber(referralData?.stats?.unpaid?.amount ?? 0)}
+								</Text>
+							</View>
+							<View style={styles.salesDataPointItem}>
+								<Text style={styles.salesDataPointItemLabel}>
+									{t('Pending Commission')}
+								</Text>
+								<Text
+									style={[
+										styles.salesDataPointItemValue,
+									]}
+								>
+									{getCurrencySymbol(currentUser?.currency)}
+									{formatNumber(referralData?.stats?.unpaid?.amount ?? 0)}
+								</Text>
+							</View>
+							
+						</View>
 					</ScrollView>
 				</>
 			)}
@@ -190,5 +242,40 @@ const styles = StyleSheet.create({
 	},
 	periodSelectorItemTextSelected: {
 		color: '#ff7b00',
+	},
+	salesDataPointsContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-around',
+		marginBottom: hp(2),
+		flexWrap: 'wrap'
+	},
+	salesDataPointItem: {
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		borderWidth: 1,
+		borderColor: '#ddd',
+		padding: 15,
+		borderRadius: 10,
+		marginBottom: hp(1),
+		minWidth: wp(40),
+	},
+	salesDataPointItemLabel: {
+		fontSize: hp(1.2),
+		fontWeight: '600',
+		color: '#999',
+		textTransform: 'uppercase',
+	},
+	salesDataPointItemValue: {
+		fontSize: hp(4),
+		fontWeight: '500',
+	},
+	salesDataPointItemValueUnpaid: {
+		color: '#d50015',
+	},
+	salesDataPointDivider: {
+		backgroundColor: '#ccc',
+		width: 1,
+		height: hp(4.5),
 	},
 });
