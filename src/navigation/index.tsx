@@ -13,6 +13,7 @@ import SaleDetail from '../screens/SaleDetail';
 import Settings from '../screens/Settings';
 import Sale from '../screens/Sale';
 import TakePayment from '../screens/TakePayment';
+import Referrals from '../screens/Referrals';
 
 import WriteCards from '../screens/WriteCards';
 import Payouts from '../screens/Payouts';
@@ -96,6 +97,16 @@ function TabStack() {
 					})}
 				/>
 			) : null}
+			<Tab.Screen
+				name="Referrals"
+				component={Referrals}
+				options={({ route }) => ({
+					tabBarLabel: t('Referrals'),
+
+					tabBarIcon: ({ focused, color }) => <TabBarIcon name="users" color={color} />,
+					tabBarActiveTintColor: '#f5c634',
+				})}
+			/>
 			<Tab.Screen
 				name="Settings"
 				component={Settings}
