@@ -51,7 +51,7 @@ const Referrals = (props: any) => {
 			) : (
 				<>
 					<Text style={styles.marketingText}>
-						{t('Refer someone and earn')} <Text>5%</Text> {t('on each sale they make')}
+						{t('Refer someone and earn')} <Text>5%</Text> {t('on each sale')}
 					</Text>
 					<View>
 						<View style={styles.box}>

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import MIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Signin from '../screens/Signin';
@@ -105,7 +106,7 @@ function TabStack() {
 				options={({ route }) => ({
 					tabBarLabel: t('Referrals'),
 
-					tabBarIcon: ({ focused, color }) => <TabBarIcon name="users" color={color} />,
+					tabBarIcon: ({ focused, color }) => <MIcons name="cash-multiple" color={color} size={28} style={{ marginBottom: -3 }} />,
 					tabBarActiveTintColor: '#f5c634',
 				})}
 			/>
