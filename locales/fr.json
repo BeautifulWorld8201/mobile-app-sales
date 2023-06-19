@@ -130,5 +130,13 @@
 	"-15% discount": "-15% réduction",
 	"Recurring customer": "Client récurrent",
 	"You need to add a payout method before starting to make sales": "Vous devez ajouter une méthode de paiement avant de commencer à vendre",
-	"Add payout method": "Ajouter une méthode de paiement"
+	"Add payout method": "Ajouter une méthode de paiement",
+	"Referrals": "Affiliés",
+	"Referral code": "Code de parrainage",
+	"No referral code is used": "Aucun code de parrainage n'est utilisé",
+	"Use referral code": "Utiliser un code de parrainage",
+	"Enter referral code": "Entrez un code de parrainage",
+	"Submit": "Soumettre",
+	"Remove": "Retirer",
+	"Are you sure ?": "Êtes-vous sûr ?"
 }

@@ -130,5 +130,13 @@
 	"-15% discount": "-15% korting",
 	"Recurring customer": "Terugkerende klant",
 	"You need to add a payout method before starting to make sales": "U moet een uitbetalingsmethode toevoegen voordat u begint met verkopen",
-	"Add payout method": "Uitbetalingsmethode toevoegen"
+	"Add payout method": "Uitbetalingsmethode toevoegen",
+	"Referrals": "Referrals",
+	"Referral code": "Referral code",
+	"No referral code is used": "Geen referral code wordt gebruikt",
+	"Use referral code": "Gebruik referral code",
+	"Enter referral code": "Voer referral code in",
+	"Submit": "Verzenden",
+	"Remove": "Verwijderen",
+	"Are you sure ?": "Weet je het zeker ?"
 }

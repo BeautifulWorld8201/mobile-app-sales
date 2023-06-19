@@ -81,7 +81,7 @@ export default function Register(props: any) {
 					<Text style={styles.detailFont}>
 						{referralCode ? (
 							<>
-								{t('You are using referral code')}{' '}
+								{t('Referral code')}{': '}
 								{shortenStringMiddle(referralCode)}
 								<TouchableOpacity
 									onPress={() => {
@@ -99,7 +99,7 @@ export default function Register(props: any) {
 										]);
 									}}
 								>
-									<Text style={styles.signupText}> Remove</Text>
+									<Text style={styles.signupText}> {t('Remove')}</Text>
 								</TouchableOpacity>
 							</>
 						) : (
@@ -127,7 +127,7 @@ export default function Register(props: any) {
 										]);
 									}}
 								>
-									<Text style={styles.signupText}> Use referral code</Text>
+									<Text style={styles.signupText}> {t('Use referral code')}</Text>
 								</TouchableOpacity>
 							</>
 						)}
