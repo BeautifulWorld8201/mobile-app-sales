@@ -43,7 +43,7 @@ export default function Register(props: any) {
 
   const onSignUp = async (values: object) => {
     try {
-      const resp = await signUp(values);
+      const resp = await signUp({...values,  ...(referralCode && {referralCode})});
 
       if (resp?.error) {
         Toast.show(resp?.error?.data?.message, {
