@@ -131,5 +131,9 @@
 	"Recurring customer": "Recurring customer",
 	"You need to add a payout method before starting to make sales": "You need to add a payout method before starting to make sales",
 	"Add payout method": "Add payout method",
-	"Referrals": "Referrals"
+	"Referrals": "Referrals",
+	"No referral code is used": "No referral code is used",
+	"Use referral code": "Use referral code",
+	"Enter referral code": "Enter referral code",
+	"Submit": "Submit"
 }

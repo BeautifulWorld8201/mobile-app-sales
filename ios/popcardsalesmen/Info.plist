@@ -25,7 +25,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>myapp</string>
+          <string>popcard</string>
           <string>com.popcard</string>
         </array>
       </dict>
@@ -36,6 +36,13 @@
         </array>
       </dict>
     </array>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <string>en</string>
+      <string>fr</string>
+      <string>nl</string>
+    </array>
+
     <key>NSCameraUsageDescription</key>
 	  <string>Popcard will use your camera to verify your ID</string>
 

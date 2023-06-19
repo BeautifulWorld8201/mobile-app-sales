@@ -186,6 +186,7 @@ export default Referrals;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		backgroundColor: '#fff',
 	},
 	marketingText: {
 		fontSize: 16,
