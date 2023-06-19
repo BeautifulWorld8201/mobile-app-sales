@@ -60,6 +60,8 @@ function TabBarIcon(props: {
 }
 import { useTranslation } from 'react-i18next';
 import ForgotPassword from '../screens/ForgotPassword';
+import { Linking } from 'react-native';
+import { setReferralCode } from '../../redux/auth/authSlice';
 
 function TabStack() {
 	const { data: employeeData } = useGetUserEmployeeQuery();
@@ -147,6 +149,27 @@ function AppStack() {
 
 export default function StackNavigator() {
 	const loginUser = useSelector((state) => state?.auth?.loginUser);
+
+	const dispatch = useDispatch();
+
+	React.useEffect(() => {
+		const handleDeepLink = ({ url }: { url: string }) => {
+			const route = url.replace(/.*?:\/\//g, '');
+
+			if (route?.startsWith('join')) {
+				console.log('route', route);
+				const referralCode = route.split('/')[1];
+				// set referral code to redux
+				dispatch(setReferralCode(referralCode));
+			}
+		};
+
+		Linking.addEventListener('url', handleDeepLink);
+
+		return () => {
+			Linking.removeAllListeners('url');
+		};
+	}, []);
 
 	return (
 		<Stack.Navigator

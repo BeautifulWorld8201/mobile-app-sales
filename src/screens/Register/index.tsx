@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, Image } from "react-native";
+import { Platform, StyleSheet, Image, Alert } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -18,11 +18,14 @@ import {
   setAccessToken,
   setRefreshToken,
   setLoginUser,
+  setReferralCode,
 } from "../../../redux/auth/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Toast from "react-native-root-toast";
 
 import { useTranslation } from "react-i18next";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { shortenStringMiddle } from "../../helpers/misc";
 
 export default function Register(props: any) {
   const { t } = useTranslation();
@@ -60,6 +63,8 @@ export default function Register(props: any) {
     }
   };
 
+  const referralCode = useSelector((state) => state?.auth?.referralCode);
+
   return (
     <KeyboardAwareScrollView style={styles.container}>
       <View style={{ flexGrow: 1 }}>
@@ -74,7 +79,28 @@ export default function Register(props: any) {
         <View style={styles.innerContainer}>
           <Text style={styles.loginFont}>{t("Register")}</Text>
           <Text style={styles.detailFont}>
-            {t("Enter the details below to register your account")}
+            {referralCode ? 
+            <>
+              {t('You are using referral code')} {shortenStringMiddle(referralCode)} 
+              <TouchableOpacity onPress={() => {
+                Alert.alert(t('Are you sure ?'), "", [
+                  {
+                    text: t('Cancel')!,
+                    style: 'cancel'
+                  },
+                  {
+                    text: t('Yes')!,
+                    onPress: () => {
+                      dispatch(setReferralCode(null));
+                    },
+                  },
+                ]);
+                
+              }}>
+               <Text style={styles.signupText}>  Remove</Text>
+              </TouchableOpacity>
+            </> 
+              : t("Enter the details below to register your account")} 
           </Text>
 
           <View>
@@ -213,7 +239,7 @@ const styles = StyleSheet.create({
   },
   detailFont: {
     // fontWeight: "500",
-    fontSize: hp(2),
+    fontSize: hp(1.8),
     marginBottom: hp(3),
   },
   credsFont: {

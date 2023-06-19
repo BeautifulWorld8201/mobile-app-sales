@@ -31,7 +31,6 @@ export const getCurrencyByCountry = (country: {
 	return 'USD';
 };
 
-
 export function getFlagEmoji(countryCode: string): string {
 	if (!countryCode) return countryCode;
 	const codePoints = countryCode
@@ -41,7 +40,7 @@ export function getFlagEmoji(countryCode: string): string {
 	return String.fromCodePoint(...codePoints);
 }
 
-// create a function that will display a big number with K 
+// create a function that will display a big number with K
 // if the number is bigger than 1000
 export const formatNumber = (number: number): string => {
 	if (number > 1000) {
@@ -50,7 +49,6 @@ export const formatNumber = (number: number): string => {
 	return number.toString();
 };
 
-
 export function shortenString(str: string, maxLength: number = 22): string {
 	if (!str) return str;
 	if (str.length <= maxLength) {
@@ -58,4 +56,17 @@ export function shortenString(str: string, maxLength: number = 22): string {
 	}
 
 	return str.substring(0, maxLength) + '...';
+}
+
+export function shortenStringMiddle(str: string, maxLength: number = 10): string {
+	// shorten string from the middle
+	if (!str) return str;
+	if (str.length <= maxLength) {
+		return str;
+	}
+
+	const mid = Math.floor(maxLength / 2);
+	return str.substring(0, mid) + '...' + str.substring(str.length - mid, str.length);
+
+
 }
