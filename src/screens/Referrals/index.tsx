@@ -32,15 +32,16 @@ const periodSelectorData = [
 ];
 
 const Referrals = (props: any) => {
+	const [selectedPeriod, setSelectedPeriod] = useState(periodSelectorData[2]);
+	const { data: currentUser } = useGetCurrentUserQuery();
 	const {
 		data: referralData,
 		isLoading: referralLoading,
 		isFetching,
 		refetch,
-	} = useGetReferralCodeQuery();
-	const { data: currentUser } = useGetCurrentUserQuery();
+	} = useGetReferralCodeQuery(selectedPeriod?.value);
 
-	const [selectedPeriod, setSelectedPeriod] = useState(periodSelectorData[2]);
+	console.log(referralData.stats);
 
 	return (
 		<View style={styles.container}>
@@ -103,7 +104,10 @@ const Referrals = (props: any) => {
 								return (
 									<TouchableOpacity
 										key={index}
-										onPress={() => setSelectedPeriod(item)}
+										onPress={() => {
+											setSelectedPeriod(item);
+											refetch();
+										}}
 										style={[
 											styles.periodSelectorItem,
 											selectedPeriod?.label == item?.label &&
@@ -129,50 +133,37 @@ const Referrals = (props: any) => {
 									{t('Users Referred')}
 								</Text>
 								<Text style={styles.salesDataPointItemValue}>
-									{formatNumber(referralData?.stats?.paid?.amount ?? 0)}
-								</Text>
-							</View>
-							<View style={styles.salesDataPointItem}>
-								<Text style={styles.salesDataPointItemLabel}>
-									{t('Pending Commission')}
-								</Text>
-								<Text
-									style={[
-										styles.salesDataPointItemValue,
-									]}
-								>
-									{getCurrencySymbol(currentUser?.currency)}
-									{formatNumber(referralData?.stats?.unpaid?.amount ?? 0)}
+									{formatNumber(referralData?.stats?.users_referred_count || 0)}
 								</Text>
 							</View>
 
-							<View style={styles.salesDataPointItem}>
-								<Text style={styles.salesDataPointItemLabel}>
-									{t('Earned Commission')}
-								</Text>
-								<Text
-									style={[
-										styles.salesDataPointItemValue,
-									]}
-								>
-									{getCurrencySymbol(currentUser?.currency)}
-									{formatNumber(referralData?.stats?.unpaid?.amount ?? 0)}
-								</Text>
-							</View>
-							<View style={styles.salesDataPointItem}>
-								<Text style={styles.salesDataPointItemLabel}>
-									{t('Pending Commission')}
-								</Text>
-								<Text
-									style={[
-										styles.salesDataPointItemValue,
-									]}
-								>
-									{getCurrencySymbol(currentUser?.currency)}
-									{formatNumber(referralData?.stats?.unpaid?.amount ?? 0)}
-								</Text>
-							</View>
-							
+							{referralData?.stats?.commission?.length ? (
+								<>
+									{referralData?.stats?.commission?.map((item, i) => {
+										return (
+											<View style={styles.salesDataPointItem}>
+												<Text style={styles.salesDataPointItemLabel}>
+													{t('Earned Commission')}
+												</Text>
+												<Text style={[styles.salesDataPointItemValue]}>
+													{getCurrencySymbol(item.currency)}
+													{formatNumber(item.commission)}
+												</Text>
+											</View>
+										);
+									})}
+								</>
+							) : (
+								<View style={styles.salesDataPointItem}>
+									<Text style={styles.salesDataPointItemLabel}>
+										{t('Earned Commission')}
+									</Text>
+									<Text style={[styles.salesDataPointItemValue]}>
+										{getCurrencySymbol(currentUser?.currency)}
+										{formatNumber(0)}
+									</Text>
+								</View>
+							)}
 						</View>
 					</ScrollView>
 				</>
@@ -249,7 +240,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-around',
 		marginBottom: hp(2),
-		flexWrap: 'wrap'
+		flexWrap: 'wrap',
 	},
 	salesDataPointItem: {
 		justifyContent: 'space-between',
@@ -268,7 +259,7 @@ const styles = StyleSheet.create({
 		textTransform: 'uppercase',
 	},
 	salesDataPointItemValue: {
-		fontSize: hp(4),
+		fontSize: hp(3),
 		fontWeight: '500',
 	},
 	salesDataPointItemValueUnpaid: {

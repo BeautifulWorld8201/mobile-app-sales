@@ -63,8 +63,8 @@ export const userSliceApi = apiSlice.injectEndpoints({
 			}),
 		}),
 		getReferralCode: builder.query({
-			query: () => ({
-				url: `/users/referral`,
+			query: (period) => ({
+				url: !period ? `/users/referral` : `/users/referral?period=${period}`,
 				method: 'GET',
 			}),
 		}),
@@ -82,5 +82,5 @@ export const {
 	useUpdateUserCurrencyMutation,
 	useGetUserEmployeeQuery,
 	useGetUserEmployeeWithIdQuery,
-	useGetReferralCodeQuery
+	useGetReferralCodeQuery,
 } = userSliceApi;
