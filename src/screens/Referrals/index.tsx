@@ -41,8 +41,6 @@ const Referrals = (props: any) => {
 		refetch,
 	} = useGetReferralCodeQuery(selectedPeriod?.value);
 
-	console.log(referralData.stats);
-
 	return (
 		<View style={styles.container}>
 			<Header title={t('Referrals')} />
