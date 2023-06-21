@@ -91,6 +91,8 @@ PODS:
     - expo-dev-menu/GestureHandler
     - expo-dev-menu/Reanimated
     - expo-dev-menu/SafeAreaView
+  - ExpoDevice (5.2.1):
+    - ExpoModulesCore
   - ExpoKeepAwake (12.0.1):
     - ExpoModulesCore
   - ExpoLocalization (14.1.1):
@@ -493,6 +495,7 @@ DEPENDENCIES:
   - expo-dev-launcher (from `../node_modules/expo-dev-launcher`)
   - expo-dev-menu (from `../node_modules/expo-dev-menu`)
   - expo-dev-menu-interface (from `../node_modules/expo-dev-menu-interface/ios`)
+  - ExpoDevice (from `../node_modules/expo-device/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
@@ -579,6 +582,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-dev-menu"
   expo-dev-menu-interface:
     :path: "../node_modules/expo-dev-menu-interface/ios"
+  ExpoDevice:
+    :path: "../node_modules/expo-device/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoLocalization:
@@ -691,6 +696,7 @@ SPEC CHECKSUMS:
   expo-dev-launcher: 5275974e9f825f70a33bb79301a8ab894179fa94
   expo-dev-menu: 3b67916b76bae0283adfe5a5c71e323196e6ad40
   expo-dev-menu-interface: 6c82ae323c4b8724dead4763ce3ff24a2108bdb1
+  ExpoDevice: e0bebf68f978b3d353377ce42e73c20c0a070215
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
   ExpoLocalization: f26cd431ad9ea3533c5b08c4fabd879176a794bb
   ExpoModulesCore: 653958063a301098b541ae4dfed1ac0b98db607b
