@@ -60,13 +60,9 @@ const Referrals = (props: any) => {
 							<TouchableOpacity
 								style={{ padding: 4 }}
 								onPress={async () => {
-									Clipboard.setString(
-										`https://app.popcard.io/join/${referralData?.referralCode}`
-									);
-									if (
-										(await Clipboard.getString()) ===
-										`https://app.popcard.io/join/${referralData?.referralCode}`
-									) {
+									const str = `https://app.popcard.io/join?code=${referralData?.referralCode}`;
+									Clipboard.setString(str);
+									if ((await Clipboard.getString()) === str) {
 										Toast.show(`✅ ${t('Copied to clipboard')}`, {
 											position: Toast.positions.CENTER,
 										});
@@ -82,7 +78,7 @@ const Referrals = (props: any) => {
 										message: `${t(
 											'Become a verified Popcard Seller today! Join using my code'
 										)}: ${referralData?.referralCode}`,
-										url: `https://app.popcard.io/join/${referralData?.referralCode}`,
+										url: `https://app.popcard.io/join?code=${referralData?.referralCode}`,
 									})
 								}
 							>
@@ -137,19 +133,21 @@ const Referrals = (props: any) => {
 
 							{referralData?.stats?.commission?.length ? (
 								<>
-									{referralData?.stats?.commission?.map((item, i) => {
-										return (
-											<View style={styles.salesDataPointItem}>
-												<Text style={styles.salesDataPointItemLabel}>
-													{t('Earned Commission')}
-												</Text>
-												<Text style={[styles.salesDataPointItemValue]}>
-													{getCurrencySymbol(item.currency)}
-													{formatNumber(item.commission)}
-												</Text>
-											</View>
-										);
-									})}
+									{referralData?.stats?.commission?.map(
+										(item: any, i: number) => {
+											return (
+												<View style={styles.salesDataPointItem} key={i}>
+													<Text style={styles.salesDataPointItemLabel}>
+														{t('Earned Commission')}
+													</Text>
+													<Text style={[styles.salesDataPointItemValue]}>
+														{getCurrencySymbol(item.currency)}
+														{formatNumber(item.commission)}
+													</Text>
+												</View>
+											);
+										}
+									)}
 								</>
 							) : (
 								<View style={styles.salesDataPointItem}>
