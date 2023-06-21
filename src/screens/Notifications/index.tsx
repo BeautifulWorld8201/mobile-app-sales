@@ -6,6 +6,7 @@ import Header from '../../../components/Header';
 import MIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
+import * as Notifications from 'expo-notifications';
 
 const NotificationElement = ({ title, icon, value, onPress }: any) => {
 	return (
@@ -26,9 +27,22 @@ const NotificationElement = ({ title, icon, value, onPress }: any) => {
 	);
 };
 
-export default function Notifications(props: any) {
+export default function NotificationScreen(props: any) {
 	const focused = useIsFocused();
-    
+	useEffect(() => {
+		(async () => {
+			// if permission for notification is not granted, request it again
+			const { status } = await Notifications.getPermissionsAsync();
+			if (status !== 'granted') {
+				await Notifications.requestPermissionsAsync();
+				console.log('Permission not granted');
+			}
+			// get the token that uniquely identifies this device
+			const token = (await Notifications.getExpoPushTokenAsync()).data;
+			console.log(token);
+		})();
+	}, []);
+
 	return (
 		<>
 			<View style={styles.container}>
