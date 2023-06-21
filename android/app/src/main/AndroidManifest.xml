@@ -30,6 +30,7 @@
         <data android:scheme="myapp"/>
         <data android:scheme="com.popcardsalesmen"/>
         <data android:scheme="exp+popcard-salesmen"/>
+        <data android:scheme="popcard"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

@@ -8,6 +8,7 @@ const authSlice = createSlice({
     accessToken: {},
     refreshToken: {},
     isTokenValid: false,
+    referralCode: null,
   },
   reducers: {
     setRefreshToken: (state, action) => {
@@ -21,6 +22,10 @@ const authSlice = createSlice({
     },
     setIsTokenValid: (state, action) => {
       state.isTokenValid = action?.payload;
+    },
+    setReferralCode: (state, action) => {
+      console.log('setting referral code to', action?.payload)
+      state.referralCode = action?.payload;
     },
     logOut: (state) => {
       state.accessToken = {};
@@ -36,6 +41,7 @@ export const {
   setAccessToken,
   setLoginUser,
   setIsTokenValid,
+  setReferralCode,
 } = authSlice.actions;
 
 export default authSlice.reducer;

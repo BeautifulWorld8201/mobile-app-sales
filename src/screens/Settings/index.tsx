@@ -260,7 +260,7 @@ export default function Settings(props: any) {
 								url:
 									Platform.OS != 'ios'
 										? 'market://details?id=${GOOGLE_PACKAGE_NAME}'
-										: 'https://apps.apple.com/be/app/popcard-salesmen/id6448954487',
+										: 'https://apps.apple.com/app/popcard-salesmen/id6448954487',
 							}).catch((e) => Alert.alert(e));
 						}}
 						style={styles.backgroundView}

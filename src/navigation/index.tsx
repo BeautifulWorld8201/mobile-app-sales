@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import MIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Signin from '../screens/Signin';
@@ -13,6 +14,7 @@ import SaleDetail from '../screens/SaleDetail';
 import Settings from '../screens/Settings';
 import Sale from '../screens/Sale';
 import TakePayment from '../screens/TakePayment';
+import Referrals from '../screens/Referrals';
 
 import WriteCards from '../screens/WriteCards';
 import Payouts from '../screens/Payouts';
@@ -59,6 +61,8 @@ function TabBarIcon(props: {
 }
 import { useTranslation } from 'react-i18next';
 import ForgotPassword from '../screens/ForgotPassword';
+import { Linking } from 'react-native';
+import { setReferralCode } from '../../redux/auth/authSlice';
 
 function TabStack() {
 	const { data: employeeData } = useGetUserEmployeeQuery();
@@ -96,6 +100,16 @@ function TabStack() {
 					})}
 				/>
 			) : null}
+			<Tab.Screen
+				name="Referrals"
+				component={Referrals}
+				options={({ route }) => ({
+					tabBarLabel: t('Referrals'),
+
+					tabBarIcon: ({ focused, color }) => <MIcons name="cash-multiple" color={color} size={28} style={{ marginBottom: -3 }} />,
+					tabBarActiveTintColor: '#f5c634',
+				})}
+			/>
 			<Tab.Screen
 				name="Settings"
 				component={Settings}
@@ -136,6 +150,27 @@ function AppStack() {
 
 export default function StackNavigator() {
 	const loginUser = useSelector((state) => state?.auth?.loginUser);
+
+	const dispatch = useDispatch();
+
+	React.useEffect(() => {
+		const handleDeepLink = ({ url }: { url: string }) => {
+			const route = url.replace(/.*?:\/\//g, '');
+
+			if (route?.startsWith('join')) {
+				console.log('route', route);
+				const referralCode = route.split('/')[1];
+				// set referral code to redux
+				dispatch(setReferralCode(referralCode));
+			}
+		};
+
+		Linking.addEventListener('url', handleDeepLink);
+
+		return () => {
+			Linking.removeAllListeners('url');
+		};
+	}, []);
 
 	return (
 		<Stack.Navigator

@@ -130,5 +130,20 @@
 	"-15% discount": "-15% discount",
 	"Recurring customer": "Recurring customer",
 	"You need to add a payout method before starting to make sales": "You need to add a payout method before starting to make sales",
-	"Add payout method": "Add payout method"
+	"Add payout method": "Add payout method",
+	"Referrals": "Referrals",
+	"Referral code": "Referral code",
+	"No referral code is used": "No referral code is used",
+	"Use referral code": "Use referral code",
+	"Enter referral code": "Enter referral code",
+	"Submit": "Submit",
+	"Remove": "Remove",
+	"Are you sure ?": "Are you sure ?",
+	"Refer someone and earn": "Refer someone and earn",
+	"on each sale": "on each sale",
+	"Become a verified Popcard Seller today! Join using my code": "Become a verified Popcard Seller today! Join using my code",
+	"Copied to clipboard": "Copied to clipboard",
+	"Users Referred": "Users Referred",
+	"Pending Commission": "Pending Commission",
+	"Earned Commission": "Earned Commission"
 }

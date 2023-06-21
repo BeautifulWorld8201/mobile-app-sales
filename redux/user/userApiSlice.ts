@@ -39,7 +39,7 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				method: 'POST',
 				body: data,
 			}),
-			invalidatesTags: ['Payouts']
+			invalidatesTags: ['Payouts'],
 		}),
 		deletePayoutMethod: builder.mutation({
 			query: (id) => ({
@@ -62,6 +62,12 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				body: data,
 			}),
 		}),
+		getReferralCode: builder.query({
+			query: (period) => ({
+				url: !period ? `/users/referral` : `/users/referral?period=${period}`,
+				method: 'GET',
+			}),
+		}),
 	}),
 	overrideExisting: true,
 });
@@ -76,4 +82,5 @@ export const {
 	useUpdateUserCurrencyMutation,
 	useGetUserEmployeeQuery,
 	useGetUserEmployeeWithIdQuery,
+	useGetReferralCodeQuery,
 } = userSliceApi;
