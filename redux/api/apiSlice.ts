@@ -35,6 +35,7 @@ const baseQueryWithReauth = async (
     if (!mutex.isLocked()) {
       const release = await mutex.acquire();
       try {
+        console.log('token expired, refreshing...')
         const refreshResult = await baseQuery(
           {
             url: "/auth/refresh-tokens",
