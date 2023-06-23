@@ -27,6 +27,8 @@ import { logOut } from '../../../redux/auth/authSlice';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import CountrySelector from 'react-native-country-picker-modal';
 import { getCurrencyByCountry, getFlagEmoji } from '../../helpers/misc';
+import { clearSales } from '../../../redux/sale/saleSlice';
+import { clearUser } from '../../../redux/user/userSlice';
 
 import { useTranslation } from 'react-i18next';
 
@@ -114,6 +116,8 @@ export default function IdentityVerification(props: any) {
 			const resp = await logoutUser(data);
 
 			dispatch(logOut());
+			dispatch(clearSales());
+			dispatch(clearUser());
 
 			props.navigation.reset({
 				index: 0,

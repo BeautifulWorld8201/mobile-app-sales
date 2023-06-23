@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React, { useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, LogBox } from "react-native";
 import { SafeAreaView } from "react-native";
 import { Provider } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
@@ -12,6 +12,10 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import "./i18n.config";
 
 const App = () => {
+  useEffect(() => {
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+  }, []);
+
   return (
     <RootSiblingParent>
       <Provider store={store}>

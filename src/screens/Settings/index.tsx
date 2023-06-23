@@ -21,6 +21,8 @@ import { hp, wp } from '../../../utils';
 import { useGetCurrentUserQuery, useGetPayoutMethodQuery } from '../../../redux/user/userApiSlice';
 import { useIsFocused } from '@react-navigation/native';
 import { apiSlice } from '../../../redux/api/apiSlice';
+import { clearSales } from '../../../redux/sale/saleSlice';
+import { clearUser } from '../../../redux/user/userSlice';
 import RNModal from 'react-native-modal';
 import { useTranslation } from 'react-i18next';
 import { tintColorDark, tintColorLight } from '../../../constants/Colors';
@@ -110,6 +112,8 @@ export default function Settings(props: any) {
 			const resp = await logoutUser(data);
 
 			dispatch(logOut());
+			dispatch(clearSales());
+			dispatch(clearUser());
 			dispatch(apiSlice.util.resetApiState());
 		} catch (error) {
 			console.log('---error--logout-', error);
