@@ -96,6 +96,7 @@ export default function Settings(props: any) {
 	const dispatch = useDispatch();
 	const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
 	const user = useSelector((state) => state?.auth?.loginUser);
+	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
 	const { data: currentUser, refetch: refetchUser } = useGetCurrentUserQuery();
 
 	const { data: payouts, isError, refetch } = useGetPayoutMethodQuery();
@@ -105,8 +106,12 @@ export default function Settings(props: any) {
 	const logoutApi = async () => {
 		const data = {
 			refreshToken,
+			expoPushToken
 		};
 		try {
+
+			console.log('logging outt --- data', data);
+
 			const resp = await logoutUser(data);
 
 			dispatch(logOut());

@@ -34,6 +34,7 @@ export default function IdentityVerification(props: any) {
 	const { t } = useTranslation();
 	const focused = useIsFocused();
 	const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
+	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
 
 	const { setTokens, checkTokenExpiry } = useCheckToken();
 	const [submitApplication] = useSubmitApplicationMutation();
@@ -109,6 +110,7 @@ export default function IdentityVerification(props: any) {
 	const logoutApi = async () => {
 		const data = {
 			refreshToken,
+			expoPushToken
 		};
 		try {
 			const resp = await logoutUser(data);
