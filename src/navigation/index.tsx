@@ -22,9 +22,14 @@ import BankDetail from '../screens/BankDetail';
 
 import UserPayouts from '../screens/UserPayouts';
 import ChangeCurrency from '../screens/ChangeCurrency';
+import NotificationScreen from '../screens/Notifications';
 import Partners from '../screens/Partners';
 import PartnerDetail from '../screens/PartnerDetail';
-import { useGetUserEmployeeQuery } from '../../redux/user/userApiSlice';
+import {
+	useGetUserEmployeeQuery,
+	useUpdateNotificationSettingsMutation,
+} from '../../redux/user/userApiSlice';
+import * as Notifications from 'expo-notifications';
 
 const Stack = createStackNavigator();
 
@@ -61,12 +66,81 @@ function TabBarIcon(props: {
 }
 import { useTranslation } from 'react-i18next';
 import ForgotPassword from '../screens/ForgotPassword';
+import { isDevice } from 'expo-device';
+import { Platform } from 'react-native';
+import { setExpoPushToken } from '../../redux/user/userSlice';
+import { useNavigation } from '@react-navigation/native';
 import { Linking } from 'react-native';
 import { setReferralCode } from '../../redux/auth/authSlice';
 
-function TabStack() {
-	const { data: employeeData } = useGetUserEmployeeQuery();
+function TabStack(props: any) {
 	const { t } = useTranslation();
+	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
+	const dispatch = useDispatch();
+	const navigation = useNavigation();
+	const { data: employeeData } = useGetUserEmployeeQuery();
+	const [updateNotificationSettings] = useUpdateNotificationSettingsMutation();
+
+	const responseListener = React.useRef<any>();
+
+	async function registerForPushNotificationsAsync() {
+		let token;
+		if (isDevice) {
+			const { status: existingStatus } = await Notifications.getPermissionsAsync();
+			let finalStatus = existingStatus;
+			if (existingStatus !== 'granted') {
+				const { status } = await Notifications.requestPermissionsAsync();
+				finalStatus = status;
+			}
+			if (finalStatus !== 'granted') {
+				return;
+			}
+			token = (await Notifications.getExpoPushTokenAsync()).data;
+			console.log(token);
+		} else {
+			alert('Must use physical device for Push Notifications');
+		}
+
+		if (Platform.OS === 'android') {
+			Notifications.setNotificationChannelAsync('default', {
+				name: 'default',
+				importance: Notifications.AndroidImportance.MAX,
+				vibrationPattern: [0, 250, 250, 250],
+				lightColor: '#FF231F7C',
+			});
+		}
+
+		return token;
+	}
+
+	useEffect(() => {
+		registerForPushNotificationsAsync().then(async (token) => {
+			if (!expoPushToken || expoPushToken !== token) {
+				try {
+					await updateNotificationSettings({ expoPushToken: token });
+					dispatch(setExpoPushToken(token));
+				} catch (error) {
+					console.log(error);
+				}
+			}
+		});
+		responseListener.current = Notifications.addNotificationResponseReceivedListener(
+			(response) => {
+				const data = response?.notification?.request?.content?.data;
+				if (!data) return;
+				if (data.type === 'clientPayment') {
+					// navigate to SaleDetail page and pass the sale
+					props.navigation.navigate('SaleDetail', { sale: data.sale });
+				} else if (data.type === 'userReferred') {
+					props.navigation.navigate('Referrals');
+				}
+			}
+		);
+
+		return () => {
+			Notifications.removeNotificationSubscription(responseListener.current);
+		};
+	}, []);
 
 	return (
 		<Tab.Navigator
@@ -143,6 +217,7 @@ function AppStack() {
 			<Stack.Screen name="UserPayouts" component={UserPayouts} />
 			<Stack.Screen name="Payouts" component={Payouts} />
 			<Stack.Screen name="BankDetail" component={BankDetail} />
+			<Stack.Screen name="Notifications" component={NotificationScreen} />
 			{/* <Stack.Screen name="ChangeCurrency" component={ChangeCurrency} /> */}
 		</Stack.Navigator>
 	);

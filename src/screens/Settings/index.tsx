@@ -25,6 +25,7 @@ import RNModal from 'react-native-modal';
 import { useTranslation } from 'react-i18next';
 import { tintColorDark, tintColorLight } from '../../../constants/Colors';
 import { setLanguage } from '../../../redux/language/languageSlice';
+import { setExpoPushToken } from '../../../redux/user/userSlice';
 
 const LangModal: React.FC<{
 	ModalRef: React.MutableRefObject<any>;
@@ -96,6 +97,7 @@ export default function Settings(props: any) {
 	const dispatch = useDispatch();
 	const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
 	const user = useSelector((state) => state?.auth?.loginUser);
+	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
 	const { data: currentUser, refetch: refetchUser } = useGetCurrentUserQuery();
 
 	const { data: payouts, isError, refetch } = useGetPayoutMethodQuery();
@@ -105,12 +107,17 @@ export default function Settings(props: any) {
 	const logoutApi = async () => {
 		const data = {
 			refreshToken,
+			expoPushToken
 		};
 		try {
+
+			console.log('logging outt --- data', data);
+
 			const resp = await logoutUser(data);
 
 			dispatch(logOut());
 			dispatch(apiSlice.util.resetApiState());
+			dispatch(setExpoPushToken(''));
 		} catch (error) {
 			console.log('---error--logout-', error);
 		}
@@ -214,7 +221,7 @@ export default function Settings(props: any) {
 
 					<View style={styles.divider} />
 
-					<TouchableOpacity style={styles.backgroundView}>
+					<TouchableOpacity style={styles.backgroundView} onPress={()=> props?.navigation?.navigate('Notifications')}>
 						<View style={styles.rowView}>
 							<View style={styles.iconView}>
 								<MIcons name="bell-outline" size={20} />
