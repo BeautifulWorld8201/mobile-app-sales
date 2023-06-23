@@ -23,7 +23,10 @@ import ChangeCurrency from '../screens/ChangeCurrency';
 import NotificationScreen from '../screens/Notifications';
 import Partners from '../screens/Partners';
 import PartnerDetail from '../screens/PartnerDetail';
-import { useGetUserEmployeeQuery, useUpdateNotificationSettingsMutation } from '../../redux/user/userApiSlice';
+import {
+	useGetUserEmployeeQuery,
+	useUpdateNotificationSettingsMutation,
+} from '../../redux/user/userApiSlice';
 import * as Notifications from 'expo-notifications';
 
 const Stack = createStackNavigator();
@@ -64,12 +67,13 @@ import ForgotPassword from '../screens/ForgotPassword';
 import { isDevice } from 'expo-device';
 import { Platform } from 'react-native';
 import { setExpoPushToken } from '../../redux/user/userSlice';
+import { useNavigation } from '@react-navigation/native';
 
-function TabStack() {
+function TabStack(props: any) {
 	const { t } = useTranslation();
 	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
 	const dispatch = useDispatch();
-
+	const navigation = useNavigation();
 	const { data: employeeData } = useGetUserEmployeeQuery();
 	const [updateNotificationSettings] = useUpdateNotificationSettingsMutation();
 
@@ -106,7 +110,7 @@ function TabStack() {
 	}
 
 	useEffect(() => {
-		registerForPushNotificationsAsync().then(async(token) => {
+		registerForPushNotificationsAsync().then(async (token) => {
 			if (!expoPushToken || expoPushToken !== token) {
 				try {
 					await updateNotificationSettings({ expoPushToken: token });
@@ -120,6 +124,12 @@ function TabStack() {
 			(response) => {
 				const data = response?.notification?.request?.content?.data;
 				if (!data) return;
+				if (data.type === 'clientPayment') {
+					// navigate to SaleDetail page and pass the sale
+					props.navigation.navigate('SaleDetail', { sale: data.sale });
+				} else if (data.type === 'userReferred') {
+					props.navigation.navigate('Referrals');
+				}
 			}
 		);
 

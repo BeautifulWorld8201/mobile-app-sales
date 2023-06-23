@@ -96,7 +96,6 @@ export default function NotificationScreen(props: any) {
 
 	useEffect(() => {
 		(async () => {
-			console.log(notificationSettings, expoPushToken);
 			if (notificationSettings == null) {
 				await updateNotificationSettings({ expoPushToken });
 			}
