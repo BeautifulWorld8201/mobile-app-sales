@@ -12,12 +12,8 @@ const userSlice = createSlice({
     setApplicationStatus: (state, action) => {
       state.applicationStatus = action.payload;
     },
-    clearUser: (state) => {
-      state.user = {};
-      state.applicationStatus = "";
-    },
   },
 });
-export const { setUser, setApplicationStatus, clearUser } = userSlice.actions;
+export const { setUser, setApplicationStatus } = userSlice.actions;
 
 export default userSlice.reducer;

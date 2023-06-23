@@ -1,47 +1,46 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import {
-	persistReducer,
-	persistStore,
-	FLUSH,
-	REHYDRATE,
-	PAUSE,
-	PERSIST,
-	PURGE,
-	REGISTER,
-} from 'redux-persist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { apiSlice } from './api/apiSlice';
-import authReducer from './auth/authSlice';
-import userReducer from './user/userSlice';
-import saleReducer from './sale/saleSlice';
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { persistReducer, persistStore } from "redux-persist";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apiSlice } from "./api/apiSlice";
+import authReducer from "./auth/authSlice";
+import userReducer from "./user/userSlice";
+import saleReducer from "./sale/saleSlice";
 import languageReducer from "./language/languageSlice";
-
-const persistConfig = {
-	key: 'root',
-	storage: AsyncStorage,
-	whitelist: ['auth', 'sale', 'language'],
-	blacklist: ['user'],
-};
-
 const rootReduer = combineReducers({
-	[apiSlice.reducerPath]: apiSlice.reducer,
-	auth: authReducer,
-	user: userReducer,
-	sale: saleReducer,
+  [apiSlice.reducerPath]: apiSlice.reducer,
+  auth: authReducer,
+  user: userReducer,
+  sale: saleReducer,
   language: languageReducer,
 });
 
+const persistConfig = {
+  key: "root",
+  storage: AsyncStorage,
+  whitelist: ["auth", "sale", "language"],
+  blacklist: [],
+};
+
 const persistedReducer = persistReducer(persistConfig, rootReduer);
 
+const root = (state, action) => {
+  if (action.type === "auth/logOut") {
+    return persistedReducer(state, action);
+
+    // AsyncStorage.removeItem("persist:root");
+    // return persistedReducer(undefined, action);
+  } else {
+    return persistedReducer(state, action);
+  }
+};
 export const store = configureStore({
-	reducer: persistedReducer,
+  reducer: root,
 
-	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware({
-			serializableCheck: {
-				ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-			},
-		}).concat(apiSlice.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(apiSlice.middleware),
+
+  // devTools: true
 });
-
 export const persistor = persistStore(store);
