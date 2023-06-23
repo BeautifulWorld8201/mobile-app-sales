@@ -68,6 +68,14 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				method: 'POST',
 				body: data,
 			}),
+			invalidatesTags: ['Notifications'],
+		}),
+		getNotificationSettings: builder.query({
+			query: (expoPushToken) => ({
+				url: `/users/notifications/${expoPushToken}`,
+				method: 'GET',
+			}),
+			providesTags: ['Notifications'],
 		}),
 	}),
 	overrideExisting: true,
@@ -84,4 +92,5 @@ export const {
 	useGetUserEmployeeQuery,
 	useGetUserEmployeeWithIdQuery,
 	useUpdateNotificationSettingsMutation,
+	useGetNotificationSettingsQuery,
 } = userSliceApi;

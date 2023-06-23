@@ -25,6 +25,7 @@ import RNModal from 'react-native-modal';
 import { useTranslation } from 'react-i18next';
 import { tintColorDark, tintColorLight } from '../../../constants/Colors';
 import { setLanguage } from '../../../redux/language/languageSlice';
+import { setExpoPushToken } from '../../../redux/user/userSlice';
 
 const LangModal: React.FC<{
 	ModalRef: React.MutableRefObject<any>;
@@ -116,6 +117,7 @@ export default function Settings(props: any) {
 
 			dispatch(logOut());
 			dispatch(apiSlice.util.resetApiState());
+			dispatch(setExpoPushToken(''));
 		} catch (error) {
 			console.log('---error--logout-', error);
 		}

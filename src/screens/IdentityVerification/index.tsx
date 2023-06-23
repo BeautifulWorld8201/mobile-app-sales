@@ -29,6 +29,7 @@ import CountrySelector from 'react-native-country-picker-modal';
 import { getCurrencyByCountry, getFlagEmoji } from '../../helpers/misc';
 
 import { useTranslation } from 'react-i18next';
+import { setExpoPushToken } from '../../../redux/user/userSlice';
 
 export default function IdentityVerification(props: any) {
 	const { t } = useTranslation();
@@ -116,6 +117,7 @@ export default function IdentityVerification(props: any) {
 			const resp = await logoutUser(data);
 
 			dispatch(logOut());
+			dispatch(setExpoPushToken(''));
 
 			props.navigation.reset({
 				index: 0,

@@ -19,21 +19,42 @@ import * as Notifications from 'expo-notifications';
 import Button from '../../../components/Button';
 import { tintColorDark } from '../../../constants/Colors';
 import { useDispatch, useSelector } from 'react-redux';
-import { useUpdateNotificationSettingsMutation } from '../../../redux/user/userApiSlice';
+import {
+	useGetNotificationSettingsQuery,
+	useUpdateNotificationSettingsMutation,
+} from '../../../redux/user/userApiSlice';
 import { setExpoPushToken } from '../../../redux/user/userSlice';
 
-const NotificationElement = ({ title, icon, value, onPress }: any) => {
+const NotificationElement = ({ title, icon, value, setValue, onPress, id }: any) => {
+	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
+	const [updateNotificationSettings] = useUpdateNotificationSettingsMutation();
+
+	const OnUpdateNotificationSettings = async (newValues: any) => {
+		try {
+			await updateNotificationSettings({ ...newValues, expoPushToken });
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<>
 			<TouchableOpacity onPress={onPress} style={styles.backgroundView}>
 				<View style={styles.rowView}>
 					<View style={styles.iconView}>
-						<MIcons name={'account-cash'} size={20} />
+						<MIcons name={icon} size={20} />
 					</View>
 					<Text style={styles.titleText}>{title}</Text>
 				</View>
 				<Text style={styles.titleText}>
-					<Switch value={value} />
+					<Switch
+						value={value}
+						onChange={() => {
+							setValue(!value);
+							OnUpdateNotificationSettings({ [id]: !value });
+						}}
+						trackColor={{ true: tintColorDark }}
+					/>
 				</Text>
 			</TouchableOpacity>
 			{/* display <View style={styles.divider} /> only if element is not latest */}
@@ -47,6 +68,7 @@ export default function NotificationScreen(props: any) {
 	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
 	// useUpdateNotificationSettingsMutation
 	const [updateNotificationSettings] = useUpdateNotificationSettingsMutation();
+	const { data: notificationSettings, refetch } = useGetNotificationSettingsQuery(expoPushToken);
 
 	const [notificationGranted, setNotificationGranted] = React.useState(true);
 
@@ -58,12 +80,11 @@ export default function NotificationScreen(props: any) {
 				await Notifications.requestPermissionsAsync();
 				setNotificationGranted(false);
 			}
-			// get the token that uniquely identifies this device
+			// get the token that uniquerly identifies this device
 			const token = (await Notifications.getExpoPushTokenAsync()).data;
-			console.log(expoPushToken, token);
 			if (!expoPushToken || expoPushToken !== token) {
 				try {
-					const res = await updateNotificationSettings({ expoPushToken: token });
+					await updateNotificationSettings({ expoPushToken: token });
 					// set expoPushToken in redux
 					dispatch(setExpoPushToken(token));
 				} catch (error) {
@@ -73,31 +94,61 @@ export default function NotificationScreen(props: any) {
 		})();
 	}, []);
 
+	useEffect(() => {
+		(async () => {
+			console.log(notificationSettings, expoPushToken);
+			if (notificationSettings == null) {
+				await updateNotificationSettings({ expoPushToken });
+			}
+			if (notificationSettings) {
+				setClientPaymentReceived(notificationSettings?.clientPayment ?? true);
+				setUserReferred(notificationSettings?.userReferred ?? true);
+				setSaleReminder(notificationSettings?.saleReminder ?? true);
+			}
+		})();
+	}, [notificationSettings, expoPushToken]);
+
+	const [clientPaymentReceived, setClientPaymentReceived] = React.useState(
+		notificationSettings?.clientPayment ?? true
+	);
+	const [userReferred, setUserReferred] = React.useState(
+		notificationSettings?.userReferred ?? true
+	);
+	const [saleReminder, setSaleReminder] = React.useState(
+		notificationSettings?.saleReminder ?? true
+	);
+
 	return (
 		<>
 			<View style={styles.container}>
 				<Header title={'Notifications'} leftButton={() => props.navigation.goBack()} />
-				{notificationGranted ? (
+				{notificationGranted && expoPushToken ? (
 					<ScrollView style={styles.innerContainer} showsVerticalScrollIndicator={false}>
 						<Text style={styles.textTitle}>Notifications</Text>
 
 						<View style={styles.mainContainer}>
 							<NotificationElement
 								title="Client Payment Received"
+								id="clientPayment"
 								icon="cash-check"
-								value={true}
+								value={clientPaymentReceived}
+								setValue={setClientPaymentReceived}
 							/>
 							<View style={styles.divider} />
 							<NotificationElement
 								title="User Referred"
+								id="userReferred"
 								icon="account-cash"
-								value={true}
+								value={userReferred}
+								setValue={setUserReferred}
 							/>
 							<View style={styles.divider} />
 							<NotificationElement
 								title="Sale Reminder"
-								icon="account-cash"
-								value={true}
+								id="saleReminder"
+								icon="bell"
+								value={saleReminder}
+								setValue={setSaleReminder}
 							/>
 						</View>
 					</ScrollView>
