@@ -1,4 +1,13 @@
-import { StyleSheet, View, Image, Alert, TouchableOpacity, Switch } from 'react-native';
+import {
+	StyleSheet,
+	View,
+	Image,
+	Alert,
+	TouchableOpacity,
+	Switch,
+	Linking,
+	Platform,
+} from 'react-native';
 import React, { useEffect } from 'react';
 import { hp, wp } from '../../../utils';
 import { Text } from '../../../components/Themed';
@@ -7,6 +16,8 @@ import MIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as Notifications from 'expo-notifications';
+import Button from '../../../components/Button';
+import { tintColorDark } from '../../../constants/Colors';
 
 const NotificationElement = ({ title, icon, value, onPress }: any) => {
 	return (
@@ -14,7 +25,7 @@ const NotificationElement = ({ title, icon, value, onPress }: any) => {
 			<TouchableOpacity onPress={onPress} style={styles.backgroundView}>
 				<View style={styles.rowView}>
 					<View style={styles.iconView}>
-						<MIcons name={icon} size={20} />
+						<MIcons name={'account-cash'} size={20} />
 					</View>
 					<Text style={styles.titleText}>{title}</Text>
 				</View>
@@ -22,20 +33,23 @@ const NotificationElement = ({ title, icon, value, onPress }: any) => {
 					<Switch value={value} />
 				</Text>
 			</TouchableOpacity>
-			<View style={styles.divider} />
+			{/* display <View style={styles.divider} /> only if element is not latest */}
 		</>
 	);
 };
 
 export default function NotificationScreen(props: any) {
 	const focused = useIsFocused();
+
+	const [notificationGranted, setNotificationGranted] = React.useState(true);
+
 	useEffect(() => {
 		(async () => {
 			// if permission for notification is not granted, request it again
 			const { status } = await Notifications.getPermissionsAsync();
 			if (status !== 'granted') {
 				await Notifications.requestPermissionsAsync();
-				console.log('Permission not granted');
+				setNotificationGranted(false);
 			}
 			// get the token that uniquely identifies this device
 			const token = (await Notifications.getExpoPushTokenAsync()).data;
@@ -47,84 +61,59 @@ export default function NotificationScreen(props: any) {
 		<>
 			<View style={styles.container}>
 				<Header title={'Notifications'} leftButton={() => props.navigation.goBack()} />
-				<ScrollView style={styles.innerContainer} showsVerticalScrollIndicator={false}>
-					<Text style={styles.textTitle}>Notifications</Text>
+				{notificationGranted ? (
+					<ScrollView style={styles.innerContainer} showsVerticalScrollIndicator={false}>
+						<Text style={styles.textTitle}>Notifications</Text>
 
-					<View style={styles.mainContainer}>
-						<NotificationElement
-							title="New Booking"
-							icon="calendar-blank-outline"
-							value={true}
-						/>
-						<View style={styles.backgroundView}>
-							<View style={styles.rowView}>
-								<View style={styles.iconView}>
-									<MIcons name="bank-check" size={20} />
-								</View>
-								<Text style={styles.titleText}>Client Payment</Text>
-							</View>
-							<Text style={styles.titleText}>
-								<Switch value={true} />
-							</Text>
+						<View style={styles.mainContainer}>
+							<NotificationElement
+								title="Client Payment Received"
+								icon="cash-check"
+								value={true}
+							/>
+							<View style={styles.divider} />
+							<NotificationElement
+								title="User Referred"
+								icon="account-cash"
+								value={true}
+							/>
+							<View style={styles.divider} />
+							<NotificationElement
+								title="Sale Reminder"
+								icon="account-cash"
+								value={true}
+							/>
 						</View>
-
-						<View style={styles.divider} />
-
-						<View style={styles.backgroundView}>
-							<View style={styles.rowView}>
-								<View style={styles.iconView}>
-									<MIcons name="email-outline" size={20} />
-								</View>
-								<Text style={styles.titleText}>Email</Text>
-							</View>
-							<Text style={styles.titleText}>sdfdsf</Text>
+					</ScrollView>
+				) : (
+					<View
+						style={{
+							...styles.innerContainer,
+							flex: 1,
+							alignItems: 'center',
+							justifyContent: 'center',
+							gap: hp(5),
+						}}
+					>
+						<View>
+							<Image
+								source={require('../../../assets/images/notification.png')}
+								style={{ width: wp(50), height: hp(20) }}
+							/>
 						</View>
-
-						<View style={styles.divider} />
-
-						<View style={styles.backgroundView}>
-							<View style={styles.rowView}>
-								<View style={styles.iconView}>
-									<MIcons name="flag-outline" size={20} />
-								</View>
-								<Text style={styles.titleText}>Role</Text>
-							</View>
-							<Text style={styles.titleText}>sdfdsfs</Text>
-						</View>
-
-						<View style={styles.divider} />
-
-						<View style={styles.backgroundView}>
-							<View style={styles.rowView}>
-								<View style={styles.iconView}>
-									<MIcons name="calendar-blank-outline" size={20} />
-								</View>
-								<Text style={styles.titleText}>Created</Text>
-							</View>
-							<Text style={styles.titleText}>dfsd</Text>
-						</View>
-
-						<View style={styles.divider} />
-
-						<View style={styles.backgroundView}>
-							<View style={styles.rowView}>
-								<View style={styles.iconView}>
-									<MIcons name="currency-usd" size={20} />
-								</View>
-								<Text style={styles.titleText}>Currency</Text>
-							</View>
-							<TouchableOpacity
-								style={{ flexDirection: 'row' }}
-								onPress={() => props?.navigation?.navigate('ChangeCurrency')}
-							>
-								<Text style={styles.titleText}>sdfdsf</Text>
-								<View style={styles.iconsView}>
-									<MIcons name="chevron-right" size={20} />
-								</View>
-							</TouchableOpacity>
-						</View>
+						<Text style={styles.titleText}>
+							We need your permission to send notifications
+						</Text>
+						<Button
+							style={styles.button}
+							onPress={() => {
+								Linking.openSettings();
+							}}
+						>
+							<Text style={styles.buttonText}>Allow Notifications</Text>
+						</Button>
 					</View>
-				</ScrollView>
+				)}
 			</View>
 		</>
 	);
@@ -200,10 +189,32 @@ const styles = StyleSheet.create({
 		height: wp(0.2),
 		width: '100%',
 		backgroundColor: '#DEDEDE',
-		marginVertical: hp(2),
+		marginVertical: hp(1.2),
 	},
 	rowView: {
 		flexDirection: 'row',
 		backgroundColor: '#F9F9F9',
+		alignItems: 'center',
+	},
+	button: {
+		backgroundColor: tintColorDark,
+		borderRadius: hp(5),
+		height: hp(7),
+		width: '100%',
+		justifyContent: 'center',
+		alignItems: 'center',
+
+		marginBottom: hp(3),
+	},
+	buttonText: {
+		color: 'white',
+		fontSize: hp(2),
+		fontWeight: '700',
+	},
+	buttonContainer: {
+		alignItems: 'center',
+		// bottom: 0,
+		backgroundColor: 'white',
+		paddingHorizontal: hp(2.5),
 	},
 });
