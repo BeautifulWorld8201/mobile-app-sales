@@ -55,7 +55,9 @@ const App = () => {
 	}
 
 	useEffect(() => {
-		// registerForPushNotificationsAsync().then((token) => console.log(token));
+		registerForPushNotificationsAsync().then((token) => {
+			console.log(token);
+		});
 		responseListener.current = Notifications.addNotificationResponseReceivedListener(
 			(response) => {
 				const data = response?.notification?.request?.content?.data;
