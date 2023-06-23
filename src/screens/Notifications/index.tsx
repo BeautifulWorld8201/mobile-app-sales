@@ -18,6 +18,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import * as Notifications from 'expo-notifications';
 import Button from '../../../components/Button';
 import { tintColorDark } from '../../../constants/Colors';
+import { useDispatch, useSelector } from 'react-redux';
+import { useUpdateNotificationSettingsMutation } from '../../../redux/user/userApiSlice';
+import { setExpoPushToken } from '../../../redux/user/userSlice';
 
 const NotificationElement = ({ title, icon, value, onPress }: any) => {
 	return (
@@ -40,6 +43,10 @@ const NotificationElement = ({ title, icon, value, onPress }: any) => {
 
 export default function NotificationScreen(props: any) {
 	const focused = useIsFocused();
+	const dispatch = useDispatch();
+	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
+	// useUpdateNotificationSettingsMutation
+	const [updateNotificationSettings] = useUpdateNotificationSettingsMutation();
 
 	const [notificationGranted, setNotificationGranted] = React.useState(true);
 
@@ -53,7 +60,16 @@ export default function NotificationScreen(props: any) {
 			}
 			// get the token that uniquely identifies this device
 			const token = (await Notifications.getExpoPushTokenAsync()).data;
-			console.log(token);
+			console.log(expoPushToken, token);
+			if (!expoPushToken || expoPushToken !== token) {
+				try {
+					const res = await updateNotificationSettings({ expoPushToken: token });
+					// set expoPushToken in redux
+					dispatch(setExpoPushToken(token));
+				} catch (error) {
+					console.log(error);
+				}
+			}
 		})();
 	}, []);
 

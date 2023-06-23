@@ -39,7 +39,7 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				method: 'POST',
 				body: data,
 			}),
-			invalidatesTags: ['Payouts']
+			invalidatesTags: ['Payouts'],
 		}),
 		deletePayoutMethod: builder.mutation({
 			query: (id) => ({
@@ -62,6 +62,13 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				body: data,
 			}),
 		}),
+		updateNotificationSettings: builder.mutation({
+			query: (data) => ({
+				url: `/users/notifications`,
+				method: 'POST',
+				body: data,
+			}),
+		}),
 	}),
 	overrideExisting: true,
 });
@@ -76,4 +83,5 @@ export const {
 	useUpdateUserCurrencyMutation,
 	useGetUserEmployeeQuery,
 	useGetUserEmployeeWithIdQuery,
+	useUpdateNotificationSettingsMutation,
 } = userSliceApi;
