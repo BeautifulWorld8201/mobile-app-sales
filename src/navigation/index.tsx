@@ -72,11 +72,15 @@ import { setExpoPushToken } from '../../redux/user/userSlice';
 import { useNavigation } from '@react-navigation/native';
 import { Linking } from 'react-native';
 import { setReferralCode } from '../../redux/auth/authSlice';
+import { scheduleSaleReminderNotification } from '../../utils/notifications';
 
 function TabStack(props: any) {
 	const { t } = useTranslation();
 	const { data: employeeData } = useGetUserEmployeeQuery();
-	
+
+	useEffect(() => {
+		scheduleSaleReminderNotification();
+	}, []);
 
 	return (
 		<Tab.Navigator
@@ -116,7 +120,14 @@ function TabStack(props: any) {
 				options={({ route }) => ({
 					tabBarLabel: t('Referrals'),
 
-					tabBarIcon: ({ focused, color }) => <MIcons name="cash-multiple" color={color} size={28} style={{ marginBottom: -3 }} />,
+					tabBarIcon: ({ focused, color }) => (
+						<MIcons
+							name="cash-multiple"
+							color={color}
+							size={28}
+							style={{ marginBottom: -3 }}
+						/>
+					),
 					tabBarActiveTintColor: '#f5c634',
 				})}
 			/>
@@ -230,8 +241,7 @@ export default function StackNavigator(props: any) {
 		return () => {
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
-	}, [])
-
+	}, []);
 
 	React.useEffect(() => {
 		const handleDeepLink = ({ url }: { url: string }) => {

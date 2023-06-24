@@ -39,6 +39,7 @@ import Toast from 'react-native-root-toast';
 import GoogleInput from './GoogleInput';
 
 import { useTranslation } from 'react-i18next';
+import { scheduleSaleReminderNotification } from '../../../utils/notifications';
 
 // NfcManager.start();
 export default function Sale(props: any): JSX.Element {
@@ -148,6 +149,7 @@ export default function Sale(props: any): JSX.Element {
 			dispatch(setSelectedCards(arr));
 			if (resp?.data) {
 				props.navigation.navigate('TakePayment');
+				scheduleSaleReminderNotification(true);
 			} else if (resp?.error) {
 				Toast.show(resp.error.data.message, {
 					duration: Toast.durations.LONG,
