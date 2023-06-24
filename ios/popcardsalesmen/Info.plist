@@ -53,7 +53,7 @@
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Popcard will use your gallery to verify your ID</string>
 		<key>CFBundleVersion</key>
-		<string>16</string>
+		<string>17</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
 		<key>NFCReaderUsageDescription</key>
