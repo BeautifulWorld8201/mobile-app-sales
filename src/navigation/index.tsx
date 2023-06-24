@@ -172,6 +172,7 @@ function AppStack() {
 
 export default function StackNavigator(props: any) {
 	const loginUser = useSelector((state) => state?.auth?.loginUser);
+	const refreshToken = useSelector((state) => state?.auth?.refreshToken);
 	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
 	const dispatch = useDispatch();
 
@@ -210,8 +211,10 @@ export default function StackNavigator(props: any) {
 	}
 
 	useEffect(() => {
-		if (loginUser?.id) {
+		if (refreshToken?.token) {
+			console.log('registering notification');
 			registerForPushNotificationsAsync().then(async (token) => {
+				console.log('token is', token);
 				if (!expoPushToken || expoPushToken !== token) {
 					try {
 						await updateNotificationSettings({ expoPushToken: token });
@@ -222,7 +225,7 @@ export default function StackNavigator(props: any) {
 				}
 			});
 		}
-	}, [loginUser?.id]);
+	}, [refreshToken?.token]);
 
 	useEffect(() => {
 		responseListener.current = Notifications.addNotificationResponseReceivedListener(
