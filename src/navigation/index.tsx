@@ -77,6 +77,26 @@ import { scheduleSaleReminderNotification } from '../../utils/notifications';
 function TabStack(props: any) {
 	const { t } = useTranslation();
 	const { data: employeeData } = useGetUserEmployeeQuery();
+	const responseListener = React.useRef<any>();
+
+	useEffect(() => {
+		responseListener.current = Notifications.addNotificationResponseReceivedListener(
+			(response) => {
+				const data = response?.notification?.request?.content?.data;
+				if (!data) return;
+				if (data.type === 'clientPayment') {
+					// navigate to SaleDetail page and pass the sale
+					props.navigation.navigate('SaleDetail', { sale: data.sale });
+				} else if (data.type === 'userReferred') {
+					props.navigation.navigate('Referrals');
+				}
+			}
+		);
+
+		return () => {
+			Notifications.removeNotificationSubscription(responseListener.current);
+		};
+	}, []);
 
 	useEffect(() => {
 		scheduleSaleReminderNotification();
@@ -178,8 +198,6 @@ export default function StackNavigator(props: any) {
 
 	const [updateNotificationSettings] = useUpdateNotificationSettingsMutation();
 
-	const responseListener = React.useRef<any>();
-
 	async function registerForPushNotificationsAsync() {
 		let token;
 		if (isDevice) {
@@ -226,25 +244,6 @@ export default function StackNavigator(props: any) {
 			});
 		}
 	}, [refreshToken?.token]);
-
-	useEffect(() => {
-		responseListener.current = Notifications.addNotificationResponseReceivedListener(
-			(response) => {
-				const data = response?.notification?.request?.content?.data;
-				if (!data) return;
-				if (data.type === 'clientPayment') {
-					// navigate to SaleDetail page and pass the sale
-					props.navigation.navigate('SaleDetail', { sale: data.sale });
-				} else if (data.type === 'userReferred') {
-					props.navigation.navigate('Referrals');
-				}
-			}
-		);
-
-		return () => {
-			Notifications.removeNotificationSubscription(responseListener.current);
-		};
-	}, []);
 
 	React.useEffect(() => {
 		const handleDeepLink = ({ url }: { url: string }) => {
