@@ -75,72 +75,8 @@ import { setReferralCode } from '../../redux/auth/authSlice';
 
 function TabStack(props: any) {
 	const { t } = useTranslation();
-	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
-	const dispatch = useDispatch();
-	const navigation = useNavigation();
 	const { data: employeeData } = useGetUserEmployeeQuery();
-	const [updateNotificationSettings] = useUpdateNotificationSettingsMutation();
-
-	const responseListener = React.useRef<any>();
-
-	async function registerForPushNotificationsAsync() {
-		let token;
-		if (isDevice) {
-			const { status: existingStatus } = await Notifications.getPermissionsAsync();
-			let finalStatus = existingStatus;
-			if (existingStatus !== 'granted') {
-				const { status } = await Notifications.requestPermissionsAsync();
-				finalStatus = status;
-			}
-			if (finalStatus !== 'granted') {
-				return;
-			}
-			token = (await Notifications.getExpoPushTokenAsync()).data;
-			console.log(token);
-		} else {
-			alert('Must use physical device for Push Notifications');
-		}
-
-		if (Platform.OS === 'android') {
-			Notifications.setNotificationChannelAsync('default', {
-				name: 'default',
-				importance: Notifications.AndroidImportance.MAX,
-				vibrationPattern: [0, 250, 250, 250],
-				lightColor: '#FF231F7C',
-			});
-		}
-
-		return token;
-	}
-
-	useEffect(() => {
-		registerForPushNotificationsAsync().then(async (token) => {
-			if (!expoPushToken || expoPushToken !== token) {
-				try {
-					await updateNotificationSettings({ expoPushToken: token });
-					dispatch(setExpoPushToken(token));
-				} catch (error) {
-					console.log(error);
-				}
-			}
-		});
-		responseListener.current = Notifications.addNotificationResponseReceivedListener(
-			(response) => {
-				const data = response?.notification?.request?.content?.data;
-				if (!data) return;
-				if (data.type === 'clientPayment') {
-					// navigate to SaleDetail page and pass the sale
-					props.navigation.navigate('SaleDetail', { sale: data.sale });
-				} else if (data.type === 'userReferred') {
-					props.navigation.navigate('Referrals');
-				}
-			}
-		);
-
-		return () => {
-			Notifications.removeNotificationSubscription(responseListener.current);
-		};
-	}, []);
+	
 
 	return (
 		<Tab.Navigator
@@ -223,10 +159,79 @@ function AppStack() {
 	);
 }
 
-export default function StackNavigator() {
+export default function StackNavigator(props: any) {
 	const loginUser = useSelector((state) => state?.auth?.loginUser);
-
+	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
 	const dispatch = useDispatch();
+
+	const [updateNotificationSettings] = useUpdateNotificationSettingsMutation();
+
+	const responseListener = React.useRef<any>();
+
+	async function registerForPushNotificationsAsync() {
+		let token;
+		if (isDevice) {
+			const { status: existingStatus } = await Notifications.getPermissionsAsync();
+			let finalStatus = existingStatus;
+			if (existingStatus !== 'granted') {
+				const { status } = await Notifications.requestPermissionsAsync();
+				finalStatus = status;
+			}
+			if (finalStatus !== 'granted') {
+				return;
+			}
+			token = (await Notifications.getExpoPushTokenAsync()).data;
+			console.log(token);
+		} else {
+			alert('Must use physical device for Push Notifications');
+		}
+
+		if (Platform.OS === 'android') {
+			Notifications.setNotificationChannelAsync('default', {
+				name: 'default',
+				importance: Notifications.AndroidImportance.MAX,
+				vibrationPattern: [0, 250, 250, 250],
+				lightColor: '#FF231F7C',
+			});
+		}
+
+		return token;
+	}
+
+	useEffect(() => {
+		if (loginUser?.id) {
+			registerForPushNotificationsAsync().then(async (token) => {
+				if (!expoPushToken || expoPushToken !== token) {
+					try {
+						await updateNotificationSettings({ expoPushToken: token });
+						dispatch(setExpoPushToken(token));
+					} catch (error) {
+						console.log(error);
+					}
+				}
+			});
+		}
+	}, [loginUser?.id]);
+
+	useEffect(() => {
+		responseListener.current = Notifications.addNotificationResponseReceivedListener(
+			(response) => {
+				const data = response?.notification?.request?.content?.data;
+				if (!data) return;
+				if (data.type === 'clientPayment') {
+					// navigate to SaleDetail page and pass the sale
+					props.navigation.navigate('SaleDetail', { sale: data.sale });
+				} else if (data.type === 'userReferred') {
+					props.navigation.navigate('Referrals');
+				}
+			}
+		);
+
+		return () => {
+			Notifications.removeNotificationSubscription(responseListener.current);
+		};
+	}, [])
+
 
 	React.useEffect(() => {
 		const handleDeepLink = ({ url }: { url: string }) => {
