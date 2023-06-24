@@ -29,11 +29,13 @@ import CountrySelector from 'react-native-country-picker-modal';
 import { getCurrencyByCountry, getFlagEmoji } from '../../helpers/misc';
 
 import { useTranslation } from 'react-i18next';
+import { setExpoPushToken } from '../../../redux/user/userSlice';
 
 export default function IdentityVerification(props: any) {
 	const { t } = useTranslation();
 	const focused = useIsFocused();
 	const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
+	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
 
 	const { setTokens, checkTokenExpiry } = useCheckToken();
 	const [submitApplication] = useSubmitApplicationMutation();
@@ -109,11 +111,13 @@ export default function IdentityVerification(props: any) {
 	const logoutApi = async () => {
 		const data = {
 			refreshToken,
+			expoPushToken
 		};
 		try {
 			const resp = await logoutUser(data);
 
 			dispatch(logOut());
+			dispatch(setExpoPushToken(''));
 
 			props.navigation.reset({
 				index: 0,

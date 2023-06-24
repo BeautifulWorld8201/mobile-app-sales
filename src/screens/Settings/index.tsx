@@ -25,6 +25,8 @@ import RNModal from 'react-native-modal';
 import { useTranslation } from 'react-i18next';
 import { tintColorDark, tintColorLight } from '../../../constants/Colors';
 import { setLanguage } from '../../../redux/language/languageSlice';
+import { setExpoPushToken } from '../../../redux/user/userSlice';
+import { cancelNotification } from '../../../utils/notifications';
 
 const LangModal: React.FC<{
 	ModalRef: React.MutableRefObject<any>;
@@ -96,6 +98,7 @@ export default function Settings(props: any) {
 	const dispatch = useDispatch();
 	const refreshToken = useSelector((state) => state?.auth?.refreshToken?.token);
 	const user = useSelector((state) => state?.auth?.loginUser);
+	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
 	const { data: currentUser, refetch: refetchUser } = useGetCurrentUserQuery();
 
 	const { data: payouts, isError, refetch } = useGetPayoutMethodQuery();
@@ -105,12 +108,18 @@ export default function Settings(props: any) {
 	const logoutApi = async () => {
 		const data = {
 			refreshToken,
+			expoPushToken
 		};
 		try {
+
+			console.log('logging outt --- data', data);
+
 			const resp = await logoutUser(data);
 
 			dispatch(logOut());
 			dispatch(apiSlice.util.resetApiState());
+			dispatch(setExpoPushToken(''));
+			cancelNotification('sale-reminder');
 		} catch (error) {
 			console.log('---error--logout-', error);
 		}
@@ -214,7 +223,7 @@ export default function Settings(props: any) {
 
 					<View style={styles.divider} />
 
-					<TouchableOpacity style={styles.backgroundView}>
+					<TouchableOpacity style={styles.backgroundView} onPress={()=> props?.navigation?.navigate('Notifications')}>
 						<View style={styles.rowView}>
 							<View style={styles.iconView}>
 								<MIcons name="bell-outline" size={20} />
@@ -260,7 +269,7 @@ export default function Settings(props: any) {
 								url:
 									Platform.OS != 'ios'
 										? 'market://details?id=${GOOGLE_PACKAGE_NAME}'
-										: 'https://apps.apple.com/be/app/popcard-salesmen/id6448954487',
+										: 'https://apps.apple.com/app/popcard-salesmen/id6448954487',
 							}).catch((e) => Alert.alert(e));
 						}}
 						style={styles.backgroundView}

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import MIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Signin from '../screens/Signin';
@@ -13,6 +14,7 @@ import SaleDetail from '../screens/SaleDetail';
 import Settings from '../screens/Settings';
 import Sale from '../screens/Sale';
 import TakePayment from '../screens/TakePayment';
+import Referrals from '../screens/Referrals';
 
 import WriteCards from '../screens/WriteCards';
 import Payouts from '../screens/Payouts';
@@ -20,9 +22,14 @@ import BankDetail from '../screens/BankDetail';
 
 import UserPayouts from '../screens/UserPayouts';
 import ChangeCurrency from '../screens/ChangeCurrency';
+import NotificationScreen from '../screens/Notifications';
 import Partners from '../screens/Partners';
 import PartnerDetail from '../screens/PartnerDetail';
-import { useGetUserEmployeeQuery } from '../../redux/user/userApiSlice';
+import {
+	useGetUserEmployeeQuery,
+	useUpdateNotificationSettingsMutation,
+} from '../../redux/user/userApiSlice';
+import * as Notifications from 'expo-notifications';
 
 const Stack = createStackNavigator();
 
@@ -59,10 +66,41 @@ function TabBarIcon(props: {
 }
 import { useTranslation } from 'react-i18next';
 import ForgotPassword from '../screens/ForgotPassword';
+import { isDevice } from 'expo-device';
+import { Platform } from 'react-native';
+import { setExpoPushToken } from '../../redux/user/userSlice';
+import { useNavigation } from '@react-navigation/native';
+import { Linking } from 'react-native';
+import { setReferralCode } from '../../redux/auth/authSlice';
+import { scheduleSaleReminderNotification } from '../../utils/notifications';
 
-function TabStack() {
-	const { data: employeeData } = useGetUserEmployeeQuery();
+function TabStack(props: any) {
 	const { t } = useTranslation();
+	const { data: employeeData } = useGetUserEmployeeQuery();
+	const responseListener = React.useRef<any>();
+
+	useEffect(() => {
+		responseListener.current = Notifications.addNotificationResponseReceivedListener(
+			(response) => {
+				const data = response?.notification?.request?.content?.data;
+				if (!data) return;
+				if (data.type === 'clientPayment') {
+					// navigate to SaleDetail page and pass the sale
+					props.navigation.navigate('SaleDetail', { sale: data.sale });
+				} else if (data.type === 'userReferred') {
+					props.navigation.navigate('Referrals');
+				}
+			}
+		);
+
+		return () => {
+			Notifications.removeNotificationSubscription(responseListener.current);
+		};
+	}, []);
+
+	useEffect(() => {
+		scheduleSaleReminderNotification();
+	}, []);
 
 	return (
 		<Tab.Navigator
@@ -97,6 +135,23 @@ function TabStack() {
 				/>
 			) : null}
 			<Tab.Screen
+				name="Referrals"
+				component={Referrals}
+				options={({ route }) => ({
+					tabBarLabel: t('Referrals'),
+
+					tabBarIcon: ({ focused, color }) => (
+						<MIcons
+							name="cash-multiple"
+							color={color}
+							size={28}
+							style={{ marginBottom: -3 }}
+						/>
+					),
+					tabBarActiveTintColor: '#f5c634',
+				})}
+			/>
+			<Tab.Screen
 				name="Settings"
 				component={Settings}
 				options={({ route }) => ({
@@ -129,13 +184,85 @@ function AppStack() {
 			<Stack.Screen name="UserPayouts" component={UserPayouts} />
 			<Stack.Screen name="Payouts" component={Payouts} />
 			<Stack.Screen name="BankDetail" component={BankDetail} />
+			<Stack.Screen name="Notifications" component={NotificationScreen} />
 			{/* <Stack.Screen name="ChangeCurrency" component={ChangeCurrency} /> */}
 		</Stack.Navigator>
 	);
 }
 
-export default function StackNavigator() {
+export default function StackNavigator(props: any) {
 	const loginUser = useSelector((state) => state?.auth?.loginUser);
+	const refreshToken = useSelector((state) => state?.auth?.refreshToken);
+	const expoPushToken = useSelector((state) => state?.user?.expoPushToken);
+	const dispatch = useDispatch();
+
+	const [updateNotificationSettings] = useUpdateNotificationSettingsMutation();
+
+	async function registerForPushNotificationsAsync() {
+		let token;
+		if (isDevice) {
+			const { status: existingStatus } = await Notifications.getPermissionsAsync();
+			let finalStatus = existingStatus;
+			if (existingStatus !== 'granted') {
+				const { status } = await Notifications.requestPermissionsAsync();
+				finalStatus = status;
+			}
+			if (finalStatus !== 'granted') {
+				return;
+			}
+			token = (await Notifications.getExpoPushTokenAsync()).data;
+			console.log(token);
+		} else {
+			alert('Must use physical device for Push Notifications');
+		}
+
+		if (Platform.OS === 'android') {
+			Notifications.setNotificationChannelAsync('default', {
+				name: 'default',
+				importance: Notifications.AndroidImportance.MAX,
+				vibrationPattern: [0, 250, 250, 250],
+				lightColor: '#FF231F7C',
+			});
+		}
+
+		return token;
+	}
+
+	useEffect(() => {
+		if (refreshToken?.token) {
+			console.log('registering notification');
+			registerForPushNotificationsAsync().then(async (token) => {
+				console.log('token is', token);
+				if (!expoPushToken || expoPushToken !== token) {
+					try {
+						await updateNotificationSettings({ expoPushToken: token });
+						dispatch(setExpoPushToken(token));
+					} catch (error) {
+						console.log(error);
+					}
+				}
+			});
+		}
+	}, [refreshToken?.token]);
+
+	React.useEffect(() => {
+		const handleDeepLink = ({ url }: { url: string }) => {
+			const route = url.replace(/.*?:\/\//g, '');
+
+			if (route?.startsWith('join')) {
+				console.log('route', route);
+				const referralCode = route.split('/')[1];
+				// set referral code to redux
+				dispatch(setReferralCode(referralCode));
+			}
+		};
+
+		Linking.addEventListener('url', handleDeepLink);
+
+		return () => {
+			Linking.removeAllListeners('url');
+		};
+	}, []);
 
 	return (
 		<Stack.Navigator

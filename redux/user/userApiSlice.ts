@@ -39,7 +39,7 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				method: 'POST',
 				body: data,
 			}),
-			invalidatesTags: ['Payouts']
+			invalidatesTags: ['Payouts'],
 		}),
 		deletePayoutMethod: builder.mutation({
 			query: (id) => ({
@@ -62,6 +62,27 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				body: data,
 			}),
 		}),
+		updateNotificationSettings: builder.mutation({
+			query: (data) => ({
+				url: `/users/notifications`,
+				method: 'POST',
+				body: data,
+			}),
+			invalidatesTags: ['Notifications'],
+		}),
+		getNotificationSettings: builder.query({
+			query: (expoPushToken) => ({
+				url: `/users/notifications/${expoPushToken}`,
+				method: 'GET',
+			}),
+			providesTags: ['Notifications'],
+		}),
+		getReferralCode: builder.query({
+			query: (period) => ({
+				url: !period ? `/users/referral` : `/users/referral?period=${period}`,
+				method: 'GET',
+			}),
+		}),
 	}),
 	overrideExisting: true,
 });
@@ -76,4 +97,7 @@ export const {
 	useUpdateUserCurrencyMutation,
 	useGetUserEmployeeQuery,
 	useGetUserEmployeeWithIdQuery,
+	useUpdateNotificationSettingsMutation,
+	useGetNotificationSettingsQuery,
+	useGetReferralCodeQuery,
 } = userSliceApi;
