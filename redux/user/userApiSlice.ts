@@ -76,6 +76,7 @@ export const userSliceApi = apiSlice.injectEndpoints({
 				method: 'GET',
 			}),
 			providesTags: ['Notifications'],
+		}),
 		getReferralCode: builder.query({
 			query: (period) => ({
 				url: !period ? `/users/referral` : `/users/referral?period=${period}`,
