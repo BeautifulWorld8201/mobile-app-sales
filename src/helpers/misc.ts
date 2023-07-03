@@ -27,6 +27,7 @@ export const getCurrencyByCountry = (country: {
 	subregion: string;
 }) => {
 	if (country.name == 'United Arab Emirates') return 'AED';
+	if (country.name == 'Morocco') return 'MAD';
 	if (country.region == 'Europe') return 'EUR';
 	return 'USD';
 };

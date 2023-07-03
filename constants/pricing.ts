@@ -9,6 +9,9 @@ const pricing: any = {
 		AED: {
 			price: 400,
 		},
+		MAD: {
+			price: 700,
+		}
 	},
 	3: {
 		USD: {
@@ -20,6 +23,9 @@ const pricing: any = {
 		AED: {
 			price: 750,
 		},
+		MAD: {
+			price: 1400,
+		}
 	},
 	5: {
 		USD: {
@@ -31,6 +37,9 @@ const pricing: any = {
 		AED: {
 			price: 1000,
 		},
+		MAD: {
+			price: 2000,
+		}
 	},
 	10: {
 		USD: {
@@ -42,6 +51,9 @@ const pricing: any = {
 		AED: {
 			price: 1250,
 		},
+		MAD: {
+			price: 3000,
+		}
 	},
 };
 
