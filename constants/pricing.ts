@@ -10,7 +10,7 @@ const pricing: any = {
 			price: 400,
 		},
 		MAD: {
-			price: 700,
+			price: 1000,
 		}
 	},
 	3: {
@@ -24,7 +24,7 @@ const pricing: any = {
 			price: 750,
 		},
 		MAD: {
-			price: 1400,
+			price: 3000,
 		}
 	},
 	5: {
@@ -38,7 +38,7 @@ const pricing: any = {
 			price: 1000,
 		},
 		MAD: {
-			price: 2000,
+			price: 5000,
 		}
 	},
 	10: {
@@ -52,7 +52,7 @@ const pricing: any = {
 			price: 1250,
 		},
 		MAD: {
-			price: 3000,
+			price: 10000,
 		}
 	},
 };
