@@ -1,5 +1,5 @@
 import { CheckBox } from "@rneui/base";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Image,
   ScrollView,
@@ -7,6 +7,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Modal,
+  TextInput
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import Button from "../../../components/Button";
@@ -16,7 +18,9 @@ import Toast from "react-native-root-toast";
 import { tintColorDark } from "../../../constants/Colors";
 import { useTranslation } from "react-i18next";
 
+
 const Payouts = (props: any) => {
+  const refRBSheet = useRef();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("europe");
@@ -24,9 +28,10 @@ const Payouts = (props: any) => {
   const [items, setItems] = useState([
     { label: "Europe (EEA)", value: "europe", id: 1 },
     { label: "United States", value: "unitedstates", id: 2 },
-    { label: "Other", value: "other", id: 3 },
+    { label: "United Arab Emirates (UAE)", value: "UAE", id: 3 },
+    { label: "Other", value: "other", id: 4 },
   ]);
-
+  
   const bankList = [
     {
       id: 1,
@@ -42,13 +47,26 @@ const Payouts = (props: any) => {
       days: `• ${t("1 business day")}`,
       image: require("../../../assets/images/paypal.png"),
     },
+    {
+      id: 3,
+      title: `Crypto in ${value == "europe" ? "EUR" : "USD"}`,
+      fee: `• ${t("Paypal fees may apply")}`,
+      days: `• ${t("1 business day")}`,
+      image: require("../../../assets/images/crypto.jpg"),
+    },
   ];
+
+ 
+
+
   return (
     <View style={styles.container}>
+    
       <Header
         title={t("Set up payouts")}
         leftButton={() => props.navigation.goBack()}
       />
+
       <ScrollView style={styles.innerContainer}>
         <Text style={styles.textMain}>{t("Let's add a payout method")}</Text>
         <Text style={styles.textintro}>
@@ -79,33 +97,38 @@ const Payouts = (props: any) => {
 
         <>
           {value == "other" ? (
-            <TouchableOpacity
-              onPress={() => {
-                setIndex(3);
-              }}
-              style={styles.payoutCard}
-            >
-              <Image
-                style={styles.bankIcon}
-                source={require("../../../assets/images/paypal.png")}
-              />
-              <View style={{ width: wp(55) }}>
-                <Text style={styles.textBank}>{t("PayPal in USD")}</Text>
-                <Text style={styles.fadeIcon}>• {t("1 business day")}</Text>
-                <Text style={styles.fadeIcon}>
-                  • {t("Paypal fees may apply")}
-                </Text>
-              </View>
-              <CheckBox
-                checked={selectedIndex === 3}
-                onPress={() => {
-                  setIndex(3);
-                }}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor={tintColorDark}
-              />
-            </TouchableOpacity>
+            bankList.map((item, index) => {
+              return (
+                <>
+                  <TouchableOpacity
+                    onPress={() => {
+                     
+                      setIndex(index);
+                    }}
+                    style={styles.payoutCard}
+                    key={index}
+                  >
+                    <Image style={styles.bankIcon} source={item.image} />
+                    <View style={{ width: wp(55) }}>
+                      <Text style={styles.textBank}>{item.title}</Text>
+                      <Text style={styles.fadeIcon}>{item.days}</Text>
+                      <Text style={styles.fadeIcon}>{item.fee}</Text>
+                    </View>
+                    <CheckBox
+                      checked={selectedIndex === index}
+                      onPress={() => {
+                       
+                        setIndex(index);
+                      }}
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checkedColor={tintColorDark}
+                    />
+                  </TouchableOpacity>
+                  <View style={styles.divider} />
+                </>
+              );
+            })
           ) : (
             <>
               {bankList.map((item, index) => {
@@ -113,6 +136,7 @@ const Payouts = (props: any) => {
                   <>
                     <TouchableOpacity
                       onPress={() => {
+                        
                         setIndex(index);
                       }}
                       style={styles.payoutCard}
@@ -127,6 +151,7 @@ const Payouts = (props: any) => {
                       <CheckBox
                         checked={selectedIndex === index}
                         onPress={() => {
+                        
                           setIndex(index);
                         }}
                         checkedIcon="dot-circle-o"
@@ -163,14 +188,15 @@ const Payouts = (props: any) => {
                 selectedIndex == 0
                   ? "bank"
                   : selectedIndex == 1
-                  ? "paypal"
-                  : "paypal",
+                    ? "paypal"
+                    : selectedIndex==2
+                    ?'crypto':'paypal',
             };
 
             props.navigation.navigate("BankDetail", { data });
           }
         }}
-        // loaderColor={styles.loaderColor}
+      // loaderColor={styles.loaderColor}
       >
         <Text style={styles.buttonText}>{t("Continue")}</Text>
       </Button>
@@ -197,6 +223,32 @@ const styles = StyleSheet.create({
     marginBottom: hp(3),
     marginTop: hp(1),
     width: wp(90),
+  },
+  chainTxt: {
+    color: 'black',
+    fontSize: 22,
+    marginVertical: 10,
+    alignSelf: 'center'
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContant: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    elevation: 20,
   },
   buttonText: {
     color: "white",

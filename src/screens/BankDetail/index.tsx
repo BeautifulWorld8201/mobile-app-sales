@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useRef } from "react";
+import { CheckBox } from "@rneui/base";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React, { useRef, useState } from "react";
 import Header from "../../../components/Header";
 import { hp, wp } from "../../../utils";
 import Input from "../../../components/Input";
@@ -11,10 +12,22 @@ import { usePayoutMethodMutation } from "../../../redux/user/userApiSlice";
 import { tintColorDark } from "../../../constants/Colors";
 import Toast from "react-native-root-toast";
 import { useTranslation } from "react-i18next";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const BankDetail = (props: any) => {
   const { t } = useTranslation();
   const { country, paymentType } = props.route.params.data;
+  const [selectedCoin, setCoin] = useState(null);
+  const [routing, setRouting] = useState('')
+  const [value, setValue] = useState("BSC (BEP20)");
+  const [coins, setCoins] = useState([
+    { id: 1, label: "BSC (BEP20)", value: 'BEP20' },
+    { id: 2, label: "Ethereum (ERC20)", value: 'ERC20' },
+    { id: 3, label: "Polygon", value: 'Polygon' },
+    { id: 4, label: "Solana", value: 'Solana' },
+    { id: 5, label: "Tron (TRC20)", value: 'TRC20' },
+  ])
+  const [open, setOpen] = useState(false);
 
   const _formik = useRef();
 
@@ -39,6 +52,10 @@ const BankDetail = (props: any) => {
     account: yup.string("Required").required("Required"),
   });
 
+  const validationSchemaCrypto = yup.object().shape({
+    routing: yup.string("Required").required("Required"),
+    account: yup.string("Required").required("Required"),
+  });
   const intialValuesUS = {
     routingNumber: "",
     account: "",
@@ -54,24 +71,31 @@ const BankDetail = (props: any) => {
     email: "",
     accountHolderName: "",
   };
-
+  const initialValuesCrypto = {
+    routing: "",
+    account: "",
+  };
   const [payoutMethod, { isLoading }] = usePayoutMethodMutation();
 
   const payoutMethodApi = async (values) => {
     let data = {};
     data["region"] =
-      country == "other" ? "Other" : country == "europe" ? "EEA" : "USA";
+    country === "other" ? "Other" : country === "UAE" ? "UAE" : country === "europe" ? "EEA" : "USA";
+
     data["method"] = paymentType;
-    data["accountHolder"] = values?.accountHolderName;
+    if (paymentType != "crypto") {
+      data["accountHolder"] = values?.accountHolderName;
+    }
     if (paymentType == "paypal") {
       data["email"] = values?.email;
     } else {
-      if (country == "europe") {
-        data["bankName"] = values?.bankName;
+      if (country == "europe" || country=='UAE') {
+        if (paymentType != 'crypto') {
+          data["bankName"] = values?.bankName;
+        }
       }
-      data["routing"] =
-        country == "europe" ? values.routing : values?.routingNumber;
-      data["account"] = country == "europe" ? values.iban : values?.account;
+      data["routing"] =paymentType=='crypto'?values.routing: country == "europe"|| country=='UAE' || country=="other" ? values.routing : values?.routingNumber;
+      data["account"] = paymentType == 'crypto' ? values.account : country == "europe"|| country=='UAE' || country=="other" ? values.iban : values?.account;
     }
 
     try {
@@ -102,27 +126,38 @@ const BankDetail = (props: any) => {
       <View style={styles.innerContainer}>
         <Formik
           innerRef={_formik}
+         
           initialValues={
-            country == "unitedstates"
-              ? paymentType == "bank"
-                ? intialValuesUS
-                : intialValuesPaypal
-              : country == "europe"
-              ? paymentType == "bank"
-                ? intialValuesEU
-                : intialValuesPaypal
-              : intialValuesPaypal
+            paymentType === "crypto"
+              ? initialValuesCrypto :
+              paymentType === "bank"
+                ? country === "unitedstates"
+                  ? intialValuesUS
+                  : country === "europe" || country=='UAE'|| country=="other" 
+                    ? intialValuesEU
+                    : intialValuesPaypal
+                : paymentType === "paypal"
+                  ? intialValuesPaypal
+                  : intialValuesPaypal
           }
+         
           validationSchema={
-            country == "unitedstates"
-              ? paymentType == "bank"
-                ? validationSchemaUS
-                : validationSchemaPaypal
-              : country == "europe"
-              ? paymentType == "bank"
-                ? validationSchemaEU
-                : validationSchemaPaypal
-              : validationSchemaPaypal
+            paymentType === "crypto" ?
+              validationSchemaCrypto :
+              country === "unitedstates"
+                ? paymentType === "bank"
+                  ? validationSchemaUS
+                  : paymentType === "paypal"
+                    ? validationSchemaPaypal
+
+                    : validationSchemaPaypal
+                : country === "europe" || country=='UAE' || country=="other"
+                  ? paymentType === "bank"
+                    ? validationSchemaEU
+                    : paymentType === "paypal"
+                      ? validationSchemaPaypal
+                      : validationSchemaPaypal
+                  : validationSchemaPaypal
           }
           validateOnBlur={false}
           onSubmit={(values) => payoutMethodApi(values)}
@@ -132,83 +167,89 @@ const BankDetail = (props: any) => {
             handleBlur,
             handleSubmit,
             values,
+            setFieldValue,
             errors,
             touched,
           }) => (
             <>
-              <Text style={styles.credsFont}>{t("Account holder name")}</Text>
-              <Input
-                onChangeText={handleChange("accountHolderName")}
-                onBlur={handleBlur("accountHolderName")}
-                value={values.accountHolderName}
-                style={styles.inputField}
-                icon
-                inputViewStyle={styles.inputViewStyle}
-                iconColor={"#ccc"}
-                autoCapitalize={"none"}
-                placeholder={t("Account holder name")}
-              />
-              {errors.accountHolderName && touched.accountHolderName && (
-                <Text style={styles.errorText}>
-                  {t(errors.accountHolderName)}
-                </Text>
-              )}
-              {country == "europe"
-                ? paymentType == "bank" && (
-                    <>
-                      <Text style={styles.credsFont}>{t("Bank name")}</Text>
-                      <Input
-                        onChangeText={handleChange("bankName")}
-                        onBlur={handleBlur("bankName")}
-                        value={values.bankName}
-                        style={styles.inputField}
-                        icon
-                        inputViewStyle={styles.inputViewStyle}
-                        iconColor={"#ccc"}
-                        autoCapitalize={"none"}
-                        placeholder={t("Bank name")}
-                      />
-                      {errors.bankName && touched.bankName && (
-                        <Text style={styles.errorText}>
-                          {t(errors.bankName)}
-                        </Text>
-                      )}
-                      <Text style={styles.credsFont}>{t("SWIFT / BIC")}</Text>
-                      <Input
-                        onChangeText={handleChange("routing")}
-                        onBlur={handleBlur("routing")}
-                        value={values.routing}
-                        style={styles.inputField}
-                        icon
-                        inputViewStyle={styles.inputViewStyle}
-                        iconColor={"#ccc"}
-                        autoCapitalize={"none"}
-                        placeholder={t("SWIFT / BIC")}
-                      />
-                      {errors.routing && touched.routing && (
-                        <Text style={styles.errorText}>
-                          {t(errors.routing)}
-                        </Text>
-                      )}
-                      <Text style={styles.credsFont}>{t("IBAN")}</Text>
-                      <Input
-                        style={styles.inputField}
-                        onChangeText={handleChange("iban")}
-                        onBlur={handleBlur("iban")}
-                        value={values.iban}
-                        icon
-                        inputViewStyle={styles.inputViewStyle}
-                        iconColor={"#ccc"}
-                        autoCapitalize={"none"}
-                        placeholder={t("IBAN")}
-                      />
-                      {errors.iban && touched.iban && (
-                        <Text style={styles.errorText}>{t(errors.iban)}</Text>
-                      )}
-                    </>
-                  )
+              {paymentType == 'crypto' ? null :
+                <>
+                  <Text style={styles.credsFont}>{t("Account holder name")}</Text>
+                  <Input
+                    onChangeText={handleChange("accountHolderName")}
+                    onBlur={handleBlur("accountHolderName")}
+                    value={values.accountHolderName}
+                    style={styles.inputField}
+                    icon
+                    inputViewStyle={styles.inputViewStyle}
+                    iconColor={"#ccc"}
+                    autoCapitalize={"none"}
+                    placeholder={t("Account holder name")}
+                  />
+                  {errors.accountHolderName && touched.accountHolderName && (
+                    <Text style={styles.errorText}>
+                      {t(errors.accountHolderName)}
+                    </Text>
+                  )}
+                </>}
+
+              {country == "europe" || 'UAE'
+                ?
+                paymentType == "bank" ? (
+                  <>
+                    <Text style={styles.credsFont}>{t("Bank name")}</Text>
+                    <Input
+                      onChangeText={handleChange("bankName")}
+                      onBlur={handleBlur("bankName")}
+                      value={values.bankName}
+                      style={styles.inputField}
+                      icon
+                      inputViewStyle={styles.inputViewStyle}
+                      iconColor={"#ccc"}
+                      autoCapitalize={"none"}
+                      placeholder={t("Bank name")}
+                    />
+                    {errors.bankName && touched.bankName && (
+                      <Text style={styles.errorText}>
+                        {t(errors.bankName)}
+                      </Text>
+                    )}
+                    <Text style={styles.credsFont}>{t("SWIFT / BIC")}</Text>
+                    <Input
+                      onChangeText={handleChange("routing")}
+                      onBlur={handleBlur("routing")}
+                      value={values.routing}
+                      style={styles.inputField}
+                      icon
+                      inputViewStyle={styles.inputViewStyle}
+                      iconColor={"#ccc"}
+                      autoCapitalize={"none"}
+                      placeholder={t("SWIFT / BIC")}
+                    />
+                    {errors.routing && touched.routing && (
+                      <Text style={styles.errorText}>
+                        {t(errors.routing)}
+                      </Text>
+                    )}
+                    <Text style={styles.credsFont}>{t("IBAN")}</Text>
+                    <Input
+                      style={styles.inputField}
+                      onChangeText={handleChange("iban")}
+                      onBlur={handleBlur("iban")}
+                      value={values.iban}
+                      icon
+                      inputViewStyle={styles.inputViewStyle}
+                      iconColor={"#ccc"}
+                      autoCapitalize={"none"}
+                      placeholder={t("IBAN")}
+                    />
+                    {errors.iban && touched.iban && (
+                      <Text style={styles.errorText}>{t(errors.iban)}</Text>
+                    )}
+                  </>
+                ) : null
                 : country == "unitedstates"
-                ? paymentType == "bank" && (
+                  ? paymentType == "bank" && (
                     <>
                       <Text style={styles.credsFont}>
                         {t("Routing Number")}
@@ -251,9 +292,52 @@ const BankDetail = (props: any) => {
                         </Text>
                       )}
                     </>
-                  )
-                : null}
-
+                  ) : null}
+              {paymentType == "crypto" ? (
+                <>
+                  <Text style={styles.credsFont}>{t("Select Chain")}</Text>
+                  <View style={{ zIndex: 100 }}>
+                    <DropDownPicker
+                      open={open}
+                      value={value}
+                      items={coins}
+                      setOpen={setOpen}
+                      // setValue={setValue}
+                      setValue={(val) => {
+                        setFieldValue("routing", val());
+                        setValue(val)
+                      }}
+                      setItems={setCoins}
+                      style={styles.dropDownContainer}
+                      placeholder="Select Chain"
+                      dropDownContainerStyle={styles.dropDownContainerList}
+                      onChangeValue={() => handleChange("routing")}
+                    />
+                  </View>
+                  {errors.routing && touched.routing && (
+                    <Text style={styles.errorText}>
+                      {t(errors.routing)}
+                    </Text>
+                  )}
+                  <Text style={styles.credsFont}>{t("Address")}</Text>
+                  <Input
+                    onChangeText={handleChange("account")}
+                    onBlur={handleBlur("account")}
+                    value={values.account}
+                    style={styles.inputField}
+                    icon
+                    inputViewStyle={styles.inputViewStyle}
+                    iconColor={"#ccc"}
+                    autoCapitalize={"none"}
+                    placeholder={t("Address")}
+                  />
+                  {errors.account && touched.account && (
+                    <Text style={styles.errorText}>
+                      {t(errors.account)}
+                    </Text>
+                  )}
+                </>
+              ) : null}
               {paymentType == "paypal" && (
                 <>
                   <Text style={styles.credsFont}>
@@ -284,7 +368,6 @@ const BankDetail = (props: any) => {
           style={styles.button}
           onPress={() => {
             _formik.current.handleSubmit();
-            // console.log(_formik.current.errors);
           }}
           loaderColor={styles.loaderColor}
           isLoading={isLoading}
@@ -336,6 +419,16 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingVertical: hp(2),
     flex: 1,
+  },
+  dropDownContainerList: {
+    borderWidth: 2,
+    borderTopWidth: 0,
+    borderColor: "#cccccc60",
+  },
+  dropDownContainer: {
+    borderWidth: 2,
+    marginBottom: hp(1),
+    borderColor: "#cccccc60",
   },
   credsFont: {
     fontWeight: "700",

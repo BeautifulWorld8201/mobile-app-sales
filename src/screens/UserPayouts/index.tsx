@@ -57,7 +57,7 @@ export default function UserPayouts(props: any) {
             <View
               style={{
                 height: hp(10),
-                padding: 10,
+                padding: 5,
               }}
             >
               <View style={{ flexDirection: "row" }}>
@@ -66,6 +66,7 @@ export default function UserPayouts(props: any) {
                   source={
                     payouts?.method == "bank"
                       ? require("../../../assets/images/bank.png")
+                    :payouts?.method=='crypto'?require("../../../assets/images/crypto.jpg")
                       : require("../../../assets/images/paypal.png")
                   }
                 />
@@ -74,10 +75,13 @@ export default function UserPayouts(props: any) {
                     style={{
                       flexDirection: "row",
                       justifyContent: "space-between",
-                      width: wp(73),
+                      width: wp(60),
+                      alignContent:'center',
+                      alignItems:'center',
+                      
                     }}
                   >
-                    <Text style={{ color: "#ccc" }}>{payouts?.region}</Text>
+                    {/* <Text style={{ color: "#ccc" }}>{payouts?.region}</Text> */}
                   </View>
 
                   <Text
@@ -87,11 +91,14 @@ export default function UserPayouts(props: any) {
                       marginBottom: hp(0.5),
                     }}
                   >
-                    {payouts?.accountHolder}
+                    {payouts?.method=='crypto'?"Jhon":payouts?.accountHolder}
                   </Text>
                   <Text>
                     {payouts?.bankName} - {payouts?.account}
                   </Text>
+                </View>
+                <View style={{justifyContent:'center',alignItems:'center'}}>
+                <Text style={{ color: "#ccc" }}>{payouts?.region}</Text>
                 </View>
               </View>
               <View style={styles.divider} />
@@ -168,8 +175,8 @@ const styles = StyleSheet.create({
     marginVertical: hp(1),
   },
   bankIcon: {
-    height: wp(10),
-    width: wp(10),
+    height: wp(12),
+    width: wp(12),
     alignSelf: "center",
     marginRight: hp(1),
   },
