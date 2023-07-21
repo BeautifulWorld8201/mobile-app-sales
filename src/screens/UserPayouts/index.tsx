@@ -66,7 +66,8 @@ export default function UserPayouts(props: any) {
                   source={
                     payouts?.method == "bank"
                       ? require("../../../assets/images/bank.png")
-                    :payouts?.method=='crypto'?require("../../../assets/images/crypto.jpg")
+                      : payouts?.method == "crypto"
+                      ? require("../../../assets/images/crypto.jpg")
                       : require("../../../assets/images/paypal.png")
                   }
                 />
@@ -76,9 +77,8 @@ export default function UserPayouts(props: any) {
                       flexDirection: "row",
                       justifyContent: "space-between",
                       width: wp(60),
-                      alignContent:'center',
-                      alignItems:'center',
-                      
+                      alignContent: "center",
+                      alignItems: "center",
                     }}
                   >
                     {/* <Text style={{ color: "#ccc" }}>{payouts?.region}</Text> */}
@@ -91,14 +91,18 @@ export default function UserPayouts(props: any) {
                       marginBottom: hp(0.5),
                     }}
                   >
-                    {payouts?.method=='crypto'?"Jhon":payouts?.accountHolder}
+                    {payouts?.method == "crypto"
+                      ? "Jhon"
+                      : payouts?.accountHolder}
                   </Text>
                   <Text>
                     {payouts?.bankName} - {payouts?.account}
                   </Text>
                 </View>
-                <View style={{justifyContent:'center',alignItems:'center'}}>
-                <Text style={{ color: "#ccc" }}>{payouts?.region}</Text>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
+                  <Text style={{ color: "#ccc" }}>{payouts?.region}</Text>
                 </View>
               </View>
               <View style={styles.divider} />

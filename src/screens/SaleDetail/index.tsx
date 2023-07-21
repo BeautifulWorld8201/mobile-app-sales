@@ -104,7 +104,10 @@ export default function SaleDetail(props: any) {
             <ActivityIndicator size="large" color={tintColorDark} />
           </View>
         ) : (
-          <ScrollView style={styles.innerContainer} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={styles.innerContainer}
+            showsVerticalScrollIndicator={false}
+          >
             <Image
               source={{
                 uri:

@@ -18,15 +18,15 @@ const BankDetail = (props: any) => {
   const { t } = useTranslation();
   const { country, paymentType } = props.route.params.data;
   const [selectedCoin, setCoin] = useState(null);
-  const [routing, setRouting] = useState('')
+  const [routing, setRouting] = useState("");
   const [value, setValue] = useState("BSC (BEP20)");
   const [coins, setCoins] = useState([
-    { id: 1, label: "BSC (BEP20)", value: 'BEP20' },
-    { id: 2, label: "Ethereum (ERC20)", value: 'ERC20' },
-    { id: 3, label: "Polygon", value: 'Polygon' },
-    { id: 4, label: "Solana", value: 'Solana' },
-    { id: 5, label: "Tron (TRC20)", value: 'TRC20' },
-  ])
+    { id: 1, label: "BSC (BEP20)", value: "BEP20" },
+    { id: 2, label: "Ethereum (ERC20)", value: "ERC20" },
+    { id: 3, label: "Polygon", value: "Polygon" },
+    { id: 4, label: "Solana", value: "Solana" },
+    { id: 5, label: "Tron (TRC20)", value: "TRC20" },
+  ]);
   const [open, setOpen] = useState(false);
 
   const _formik = useRef();
@@ -80,7 +80,13 @@ const BankDetail = (props: any) => {
   const payoutMethodApi = async (values) => {
     let data = {};
     data["region"] =
-    country === "other" ? "Other" : country === "UAE" ? "UAE" : country === "europe" ? "EEA" : "USA";
+      country === "other"
+        ? "Other"
+        : country === "UAE"
+        ? "UAE"
+        : country === "europe"
+        ? "EEA"
+        : "USA";
 
     data["method"] = paymentType;
     if (paymentType != "crypto") {
@@ -89,13 +95,23 @@ const BankDetail = (props: any) => {
     if (paymentType == "paypal") {
       data["email"] = values?.email;
     } else {
-      if (country == "europe" || country=='UAE') {
-        if (paymentType != 'crypto') {
+      if (country == "europe" || country == "UAE") {
+        if (paymentType != "crypto") {
           data["bankName"] = values?.bankName;
         }
       }
-      data["routing"] =paymentType=='crypto'?values.routing: country == "europe"|| country=='UAE' || country=="other" ? values.routing : values?.routingNumber;
-      data["account"] = paymentType == 'crypto' ? values.account : country == "europe"|| country=='UAE' || country=="other" ? values.iban : values?.account;
+      data["routing"] =
+        paymentType == "crypto"
+          ? values.routing
+          : country == "europe" || country == "UAE" || country == "other"
+          ? values.routing
+          : values?.routingNumber;
+      data["account"] =
+        paymentType == "crypto"
+          ? values.account
+          : country == "europe" || country == "UAE" || country == "other"
+          ? values.iban
+          : values?.account;
     }
 
     try {
@@ -126,38 +142,35 @@ const BankDetail = (props: any) => {
       <View style={styles.innerContainer}>
         <Formik
           innerRef={_formik}
-         
           initialValues={
             paymentType === "crypto"
-              ? initialValuesCrypto :
-              paymentType === "bank"
-                ? country === "unitedstates"
-                  ? intialValuesUS
-                  : country === "europe" || country=='UAE'|| country=="other" 
-                    ? intialValuesEU
-                    : intialValuesPaypal
-                : paymentType === "paypal"
-                  ? intialValuesPaypal
-                  : intialValuesPaypal
+              ? initialValuesCrypto
+              : paymentType === "bank"
+              ? country === "unitedstates"
+                ? intialValuesUS
+                : country === "europe" || country == "UAE" || country == "other"
+                ? intialValuesEU
+                : intialValuesPaypal
+              : paymentType === "paypal"
+              ? intialValuesPaypal
+              : intialValuesPaypal
           }
-         
           validationSchema={
-            paymentType === "crypto" ?
-              validationSchemaCrypto :
-              country === "unitedstates"
-                ? paymentType === "bank"
-                  ? validationSchemaUS
-                  : paymentType === "paypal"
-                    ? validationSchemaPaypal
-
-                    : validationSchemaPaypal
-                : country === "europe" || country=='UAE' || country=="other"
-                  ? paymentType === "bank"
-                    ? validationSchemaEU
-                    : paymentType === "paypal"
-                      ? validationSchemaPaypal
-                      : validationSchemaPaypal
-                  : validationSchemaPaypal
+            paymentType === "crypto"
+              ? validationSchemaCrypto
+              : country === "unitedstates"
+              ? paymentType === "bank"
+                ? validationSchemaUS
+                : paymentType === "paypal"
+                ? validationSchemaPaypal
+                : validationSchemaPaypal
+              : country === "europe" || country == "UAE" || country == "other"
+              ? paymentType === "bank"
+                ? validationSchemaEU
+                : paymentType === "paypal"
+                ? validationSchemaPaypal
+                : validationSchemaPaypal
+              : validationSchemaPaypal
           }
           validateOnBlur={false}
           onSubmit={(values) => payoutMethodApi(values)}
@@ -172,9 +185,11 @@ const BankDetail = (props: any) => {
             touched,
           }) => (
             <>
-              {paymentType == 'crypto' ? null :
+              {paymentType == "crypto" ? null : (
                 <>
-                  <Text style={styles.credsFont}>{t("Account holder name")}</Text>
+                  <Text style={styles.credsFont}>
+                    {t("Account holder name")}
+                  </Text>
                   <Input
                     onChangeText={handleChange("accountHolderName")}
                     onBlur={handleBlur("accountHolderName")}
@@ -191,10 +206,10 @@ const BankDetail = (props: any) => {
                       {t(errors.accountHolderName)}
                     </Text>
                   )}
-                </>}
+                </>
+              )}
 
-              {country == "europe" || 'UAE'
-                ?
+              {country == "europe" || "UAE" ? (
                 paymentType == "bank" ? (
                   <>
                     <Text style={styles.credsFont}>{t("Bank name")}</Text>
@@ -210,9 +225,7 @@ const BankDetail = (props: any) => {
                       placeholder={t("Bank name")}
                     />
                     {errors.bankName && touched.bankName && (
-                      <Text style={styles.errorText}>
-                        {t(errors.bankName)}
-                      </Text>
+                      <Text style={styles.errorText}>{t(errors.bankName)}</Text>
                     )}
                     <Text style={styles.credsFont}>{t("SWIFT / BIC")}</Text>
                     <Input
@@ -227,9 +240,7 @@ const BankDetail = (props: any) => {
                       placeholder={t("SWIFT / BIC")}
                     />
                     {errors.routing && touched.routing && (
-                      <Text style={styles.errorText}>
-                        {t(errors.routing)}
-                      </Text>
+                      <Text style={styles.errorText}>{t(errors.routing)}</Text>
                     )}
                     <Text style={styles.credsFont}>{t("IBAN")}</Text>
                     <Input
@@ -248,51 +259,46 @@ const BankDetail = (props: any) => {
                     )}
                   </>
                 ) : null
-                : country == "unitedstates"
-                  ? paymentType == "bank" && (
-                    <>
-                      <Text style={styles.credsFont}>
-                        {t("Routing Number")}
+              ) : country == "unitedstates" ? (
+                paymentType == "bank" && (
+                  <>
+                    <Text style={styles.credsFont}>{t("Routing Number")}</Text>
+                    <Input
+                      onChangeText={handleChange("routingNumber")}
+                      onBlur={handleBlur("routingNumber")}
+                      value={values.routingNumber}
+                      style={styles.inputField}
+                      icon
+                      //   iconName="email"
+                      inputViewStyle={styles.inputViewStyle}
+                      iconColor={"#ccc"}
+                      autoCapitalize={"none"}
+                      placeholder={t("Routing Number")}
+                    />
+                    {errors.routingNumber && touched.routingNumber && (
+                      <Text style={styles.errorText}>
+                        {t(errors.routingNumber)}
                       </Text>
-                      <Input
-                        onChangeText={handleChange("routingNumber")}
-                        onBlur={handleBlur("routingNumber")}
-                        value={values.routingNumber}
-                        style={styles.inputField}
-                        icon
-                        //   iconName="email"
-                        inputViewStyle={styles.inputViewStyle}
-                        iconColor={"#ccc"}
-                        autoCapitalize={"none"}
-                        placeholder={t("Routing Number")}
-                      />
-                      {errors.routingNumber && touched.routingNumber && (
-                        <Text style={styles.errorText}>
-                          {t(errors.routingNumber)}
-                        </Text>
-                      )}
-                      <Text style={styles.credsFont}>
-                        {t("Account Number")}
-                      </Text>
-                      <Input
-                        onChangeText={handleChange("account")}
-                        onBlur={handleBlur("account")}
-                        value={values.account}
-                        style={styles.inputField}
-                        icon
-                        //   iconName="email"
-                        inputViewStyle={styles.inputViewStyle}
-                        iconColor={"#ccc"}
-                        autoCapitalize={"none"}
-                        placeholder={t("Account Number")}
-                      />
-                      {errors.account && touched.account && (
-                        <Text style={styles.errorText}>
-                          {t(errors.account)}
-                        </Text>
-                      )}
-                    </>
-                  ) : null}
+                    )}
+                    <Text style={styles.credsFont}>{t("Account Number")}</Text>
+                    <Input
+                      onChangeText={handleChange("account")}
+                      onBlur={handleBlur("account")}
+                      value={values.account}
+                      style={styles.inputField}
+                      icon
+                      //   iconName="email"
+                      inputViewStyle={styles.inputViewStyle}
+                      iconColor={"#ccc"}
+                      autoCapitalize={"none"}
+                      placeholder={t("Account Number")}
+                    />
+                    {errors.account && touched.account && (
+                      <Text style={styles.errorText}>{t(errors.account)}</Text>
+                    )}
+                  </>
+                )
+              ) : null}
               {paymentType == "crypto" ? (
                 <>
                   <Text style={styles.credsFont}>{t("Select Chain")}</Text>
@@ -305,7 +311,7 @@ const BankDetail = (props: any) => {
                       // setValue={setValue}
                       setValue={(val) => {
                         setFieldValue("routing", val());
-                        setValue(val)
+                        setValue(val);
                       }}
                       setItems={setCoins}
                       style={styles.dropDownContainer}
@@ -315,9 +321,7 @@ const BankDetail = (props: any) => {
                     />
                   </View>
                   {errors.routing && touched.routing && (
-                    <Text style={styles.errorText}>
-                      {t(errors.routing)}
-                    </Text>
+                    <Text style={styles.errorText}>{t(errors.routing)}</Text>
                   )}
                   <Text style={styles.credsFont}>{t("Address")}</Text>
                   <Input
@@ -332,9 +336,7 @@ const BankDetail = (props: any) => {
                     placeholder={t("Address")}
                   />
                   {errors.account && touched.account && (
-                    <Text style={styles.errorText}>
-                      {t(errors.account)}
-                    </Text>
+                    <Text style={styles.errorText}>{t(errors.account)}</Text>
                   )}
                 </>
               ) : null}

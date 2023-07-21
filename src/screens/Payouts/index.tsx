@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
   Modal,
-  TextInput
+  TextInput,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import Button from "../../../components/Button";
@@ -17,7 +17,6 @@ import { hp, wp } from "../../../utils";
 import Toast from "react-native-root-toast";
 import { tintColorDark } from "../../../constants/Colors";
 import { useTranslation } from "react-i18next";
-
 
 const Payouts = (props: any) => {
   const refRBSheet = useRef();
@@ -31,7 +30,7 @@ const Payouts = (props: any) => {
     { label: "United Arab Emirates (UAE)", value: "UAE", id: 3 },
     { label: "Other", value: "other", id: 4 },
   ]);
-  
+
   const bankList = [
     {
       id: 1,
@@ -56,12 +55,8 @@ const Payouts = (props: any) => {
     },
   ];
 
- 
-
-
   return (
     <View style={styles.container}>
-    
       <Header
         title={t("Set up payouts")}
         leftButton={() => props.navigation.goBack()}
@@ -102,7 +97,6 @@ const Payouts = (props: any) => {
                 <>
                   <TouchableOpacity
                     onPress={() => {
-                     
                       setIndex(index);
                     }}
                     style={styles.payoutCard}
@@ -117,7 +111,6 @@ const Payouts = (props: any) => {
                     <CheckBox
                       checked={selectedIndex === index}
                       onPress={() => {
-                       
                         setIndex(index);
                       }}
                       checkedIcon="dot-circle-o"
@@ -136,7 +129,6 @@ const Payouts = (props: any) => {
                   <>
                     <TouchableOpacity
                       onPress={() => {
-                        
                         setIndex(index);
                       }}
                       style={styles.payoutCard}
@@ -151,7 +143,6 @@ const Payouts = (props: any) => {
                       <CheckBox
                         checked={selectedIndex === index}
                         onPress={() => {
-                        
                           setIndex(index);
                         }}
                         checkedIcon="dot-circle-o"
@@ -188,15 +179,16 @@ const Payouts = (props: any) => {
                 selectedIndex == 0
                   ? "bank"
                   : selectedIndex == 1
-                    ? "paypal"
-                    : selectedIndex==2
-                    ?'crypto':'paypal',
+                  ? "paypal"
+                  : selectedIndex == 2
+                  ? "crypto"
+                  : "paypal",
             };
 
             props.navigation.navigate("BankDetail", { data });
           }
         }}
-      // loaderColor={styles.loaderColor}
+        // loaderColor={styles.loaderColor}
       >
         <Text style={styles.buttonText}>{t("Continue")}</Text>
       </Button>
@@ -225,26 +217,26 @@ const styles = StyleSheet.create({
     width: wp(90),
   },
   chainTxt: {
-    color: 'black',
+    color: "black",
     fontSize: 22,
     marginVertical: 10,
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContant: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    width: '100%',
-    backgroundColor: 'white',
+    width: "100%",
+    backgroundColor: "white",
     padding: 20,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
-    shadowColor: 'black',
+    shadowColor: "black",
     shadowOffset: { width: 0, height: -3 },
     shadowOpacity: 1,
     shadowRadius: 10,
