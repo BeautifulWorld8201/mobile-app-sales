@@ -48,9 +48,9 @@ const Payouts = (props: any) => {
     },
     {
       id: 3,
-      title: `Crypto in ${value == "europe" ? "EUR" : "USD"}`,
-      fee: `• ${t("Paypal fees may apply")}`,
-      days: `• ${t("1 business day")}`,
+      title: `Crypto in USDT`,
+      fee: `• ${t("Transaction fees may apply")}`,
+      days: `• ${t("Instantly")}`,
       image: require("../../../assets/images/crypto.jpg"),
     },
   ];
@@ -301,10 +301,10 @@ const styles = StyleSheet.create({
     borderColor: "#cccccc60",
   },
   payoutCard: {
-    height: hp(10),
+    height: hp(12),
     // backgroundColor: "red",
     flexDirection: "row",
-    marginTop: hp(1),
+    // marginTop: hp(1),
     justifyContent: "space-around",
   },
   divider: {

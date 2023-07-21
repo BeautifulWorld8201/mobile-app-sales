@@ -24,7 +24,7 @@ export default function UserPayouts(props: any) {
     isLoading,
     refetch,
   } = useGetPayoutMethodQuery();
-
+  
   const [deletePayoutMethod, deletePayoutMethodResp] =
     useDeletePayoutMethodMutation();
 
@@ -95,6 +95,9 @@ export default function UserPayouts(props: any) {
                       ? "Jhon"
                       : payouts?.accountHolder}
                   </Text>
+                  {payouts?.method == "crypto" ? (
+                    <Text>{payouts?.routing}</Text>
+                  ) : null}
                   <Text>
                     {payouts?.bankName} - {payouts?.account}
                   </Text>
