@@ -44,7 +44,7 @@ export default function ForgotPassword(props: any) {
           duration: Toast.durations.SHORT,
           position: Toast.positions.CENTER,
         });
-        props.navigation.navigate('Signin');
+        props.navigation.navigate("Signin");
       }
     } catch (err) {
       console.log("forgot password error", err);
@@ -65,7 +65,7 @@ export default function ForgotPassword(props: any) {
           <Text style={styles.forgotFont}>{t("Forgot password")}</Text>
           <Text style={styles.detailFont}>
             {t(
-              "Provide your account email for which you want to reset your password"
+              "Provide your account email for which you want to reset your password",
             )}
           </Text>
 

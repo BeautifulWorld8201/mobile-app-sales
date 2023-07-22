@@ -42,7 +42,10 @@ export default function WriteCards(props: any) {
     }
   }, [selectedCards]);
 
-  async function writeGoogleLinkOnNFC(link: {name: string, url: string}, index: any) {
+  async function writeGoogleLinkOnNFC(
+    link: { name: string; url: string },
+    index: any,
+  ) {
     if (Platform.OS === "android") {
       setTimeout(() => {
         RBSheetRef?.current?.open();
@@ -98,8 +101,10 @@ export default function WriteCards(props: any) {
             alignItems: "center",
           }}
         >
-         <View style={{flexDirection: 'row', gap: 16}}><Text style={{color: "#888", minWidth: 16}}>{index + 1}</Text>
-          <Text>{shortenString(item?.link?.name)}</Text></View>
+          <View style={{ flexDirection: "row", gap: 16 }}>
+            <Text style={{ color: "#888", minWidth: 16 }}>{index + 1}</Text>
+            <Text>{shortenString(item?.link?.name)}</Text>
+          </View>
           {item?.checked ? (
             <Icon name={"check-circle"} color={"green"} size={25} />
           ) : (
