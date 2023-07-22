@@ -92,7 +92,7 @@ export default function UserPayouts(props: any) {
                     }}
                   >
                     {payouts?.method == "crypto"
-                      ? "Jhon"
+                      ? "Anonymous"
                       : payouts?.accountHolder}
                   </Text>
                   {payouts?.method == "crypto" ? (
