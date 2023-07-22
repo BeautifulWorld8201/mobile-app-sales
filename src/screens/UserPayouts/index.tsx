@@ -24,7 +24,7 @@ export default function UserPayouts(props: any) {
     isLoading,
     refetch,
   } = useGetPayoutMethodQuery();
-  
+
   const [deletePayoutMethod, deletePayoutMethodResp] =
     useDeletePayoutMethodMutation();
 

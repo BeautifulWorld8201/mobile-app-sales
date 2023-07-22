@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   Alert,
+  Modal,
 } from "react-native";
 import { Text, View } from "../../../components/Themed";
 import { useSelector, useDispatch } from "react-redux";
@@ -70,6 +71,10 @@ export default function MakeSale(props: any) {
 
   // const [getSales, { isLoading }] = useGetSalesMutation();
   const [selectedPeriod, setSelectedPeriod] = useState(periodSelectorData[2]);
+  const [visible, setVisible] = useState(false);
+  const [dataLoad, setDataLoad] = useState(false);
+  const [sales, setSales] = useState([]);
+
   const {
     data: saleData,
     isError,
@@ -79,7 +84,14 @@ export default function MakeSale(props: any) {
   } = useGetSalesQuery(selectedPeriod?.value);
   const { data: currentUser } = useGetCurrentUserQuery();
   const { data: payoutMethod } = useGetPayoutMethodQuery();
-  const [sales, setSales] = useState([]);
+
+  useEffect(() => {
+    if (!payoutMethod) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }, [payoutMethod]);
 
   const onClickPeriod = (selectedPeriod) => {
     setSelectedPeriod(selectedPeriod);
@@ -171,7 +183,46 @@ export default function MakeSale(props: any) {
   return (
     <View style={styles.container}>
       <Header title={t("Sales")} />
-
+      {!payoutMethod && !isLoading ? (
+        <Modal
+          visible={visible}
+          animationType="slide"
+          transparent={true}
+          // onRequestClose={onClose}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>{"PopCard Salesman"}</Text>
+              <View style={styles.modalContent}>
+                <Text>
+                  {
+                    "You need to add a payout method before starting to make new Sale."
+                  }
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignSelf: "flex-end" }}>
+                <Button
+                  style={styles.closeButton}
+                  onPress={() => {
+                    setVisible(!visible);
+                    props.navigation.navigate("Payouts");
+                  }}
+                >
+                  <Text style={styles.closeButtonText}>
+                    {"Add payout method"}
+                  </Text>
+                </Button>
+                <Button
+                  onPress={() => setVisible(!visible)}
+                  style={styles.closeButton}
+                >
+                  <Text style={styles.closeButtonText}>{"Cancel"}</Text>
+                </Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      ) : null}
       <>
         <ScrollView
           style={styles.innerContainer}
@@ -248,22 +299,23 @@ export default function MakeSale(props: any) {
                     if (payoutMethod?.id) {
                       props.navigation.navigate("Sale");
                     } else {
-                      Alert.alert(
-                        t(
-                          "You need to add a payout method before starting to make sales",
-                        ),
-                        "",
-                        [
-                          {
-                            text: t("Cancel"),
-                            style: "cancel",
-                          },
-                          {
-                            text: t("Add payout method"),
-                            onPress: () => props.navigation.navigate("Payouts"),
-                          },
-                        ],
-                      );
+                      setVisible(!visible);
+                      // Alert.alert(
+                      //   t(
+                      //     "You need to add a payout method before starting to make ",
+                      //   ),
+                      //   "",
+                      //   [
+                      //     {
+                      //       text: t("Cancel"),
+                      //       style: "cancel",
+                      //     },
+                      //     {
+                      //       text: t("Add payout method"),
+                      //       onPress: () => props.navigation.navigate("Payouts"),
+                      //     },
+                      //   ],
+                      // );
                     }
                   }}
                   style={styles.buttonBelow}
@@ -433,5 +485,34 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: hp("30%"),
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 20,
+    width: "80%",
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalContent: {
+    marginBottom: 20,
+  },
+  closeButton: {
+    padding: 10,
+    borderRadius: 4,
+  },
+  closeButtonText: {
+    color: "black",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });
