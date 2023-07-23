@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Alert,
   Modal,
+  Image,
 } from "react-native";
 import { Text, View } from "../../../components/Themed";
 import { useSelector, useDispatch } from "react-redux";
@@ -84,10 +85,20 @@ export default function MakeSale(props: any) {
   } = useGetSalesQuery(selectedPeriod?.value);
   const { data: currentUser } = useGetCurrentUserQuery();
   const { data: payoutMethod } = useGetPayoutMethodQuery();
-
+  const images = [
+    require("../../../assets/images/i1.png"),
+    require("../../../assets/images/i2.png"),
+    require("../../../assets/images/i3.png"),
+  ];
+  const pickRandomImage = () => {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    setRandomImage(images[randomIndex]);
+  };
+  const [randomImage, setRandomImage] = useState(images[0]);
   useEffect(() => {
     if (!payoutMethod) {
       setVisible(true);
+      pickRandomImage();
     } else {
       setVisible(false);
     }
@@ -192,7 +203,14 @@ export default function MakeSale(props: any) {
         >
           <View style={styles.modalOverlay}>
             <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>{"PopCard Salesman"}</Text>
+              <View style={styles.notificationView}>
+                <Image
+                  source={require("../../../assets/images/notification.png")}
+                  style={styles.notificationImage}
+                />
+              </View>
+
+              <Image source={randomImage} style={styles.modalImage} />
               <View style={styles.modalContent}>
                 <Text>
                   {
@@ -214,7 +232,7 @@ export default function MakeSale(props: any) {
                 </Button>
                 <Button
                   onPress={() => setVisible(!visible)}
-                  style={styles.closeButton}
+                  style={styles.cancelButton}
                 >
                   <Text style={styles.closeButtonText}>{"Cancel"}</Text>
                 </Button>
@@ -299,6 +317,7 @@ export default function MakeSale(props: any) {
                     if (payoutMethod?.id) {
                       props.navigation.navigate("Sale");
                     } else {
+                      pickRandomImage();
                       setVisible(!visible);
                       // Alert.alert(
                       //   t(
@@ -497,6 +516,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 20,
     width: "80%",
+    alignItems: "center",
   },
   modalTitle: {
     fontSize: 16,
@@ -507,12 +527,44 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    padding: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: 4,
+    backgroundColor: "#ffc000",
+  },
+  cancelButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 4,
+    backgroundColor: "#ff726f",
+    marginLeft: 10,
   },
   closeButtonText: {
-    color: "black",
-    fontSize: 14,
+    color: "white",
+    fontSize: 12,
     fontWeight: "bold",
+  },
+  modalImage: {
+    height: 150,
+    width: "100%",
+    resizeMode: "cover",
+    marginBottom: 10,
+  },
+  notificationView: {
+    marginTop: -50,
+    height: 70,
+    width: 70,
+    borderRadius: 50,
+    backgroundColor: "#ffc000",
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "white",
+    borderWidth: 3,
+  },
+  notificationImage: {
+    width: "80%",
+    height: "80%",
+    resizeMode: "center",
+    tintColor: "white",
   },
 });
