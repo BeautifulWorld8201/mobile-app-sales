@@ -34,14 +34,14 @@ const Payouts = (props: any) => {
   const bankList = [
     {
       id: 1,
-      title: `Bank account in ${value == "europe" ? "EUR" : "USD"}`,
+      title: `Bank account`,
       fee: `• ${t("No fees")}`,
       days: `• ${t("3-5 business days")}`,
       image: require("../../../assets/images/bank.png"),
     },
     {
       id: 2,
-      title: `PayPal in ${value == "europe" ? "EUR" : "USD"}`,
+      title: `PayPal`,
       fee: `• ${t("Paypal fees may apply")}`,
       days: `• ${t("1 business day")}`,
       image: require("../../../assets/images/paypal.png"),
