@@ -302,7 +302,6 @@ const styles = StyleSheet.create({
   },
   payoutCard: {
     height: hp(12),
-    // backgroundColor: "red",
     flexDirection: "row",
     // marginTop: hp(1),
     justifyContent: "space-around",
