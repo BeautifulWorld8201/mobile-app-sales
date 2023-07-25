@@ -84,7 +84,7 @@ export default function MakeSale(props: any) {
     isFetching,
   } = useGetSalesQuery(selectedPeriod?.value);
   const { data: currentUser } = useGetCurrentUserQuery();
-  const { data: payoutMethod } = useGetPayoutMethodQuery();
+  const { data: payoutMethod, isSuccess: payoutLoaded } = useGetPayoutMethodQuery();
   const images = [
     require("../../../assets/images/i1.png"),
     require("../../../assets/images/i2.png"),
@@ -96,13 +96,13 @@ export default function MakeSale(props: any) {
   };
   const [randomImage, setRandomImage] = useState(images[0]);
   useEffect(() => {
-    if (!payoutMethod) {
+    if (payoutLoaded && !payoutMethod) {
       setVisible(true);
       pickRandomImage();
     } else {
       setVisible(false);
     }
-  }, [payoutMethod]);
+  }, [payoutLoaded]);
 
   const onClickPeriod = (selectedPeriod) => {
     setSelectedPeriod(selectedPeriod);
