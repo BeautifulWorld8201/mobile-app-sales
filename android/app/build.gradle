@@ -118,8 +118,8 @@ android {
         applicationId 'com.popcardsalesmen'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.10.0"
+        versionCode 3
+        versionName "1.11.0"
     }
 
     splits {
