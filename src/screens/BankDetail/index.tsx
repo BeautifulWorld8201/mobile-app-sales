@@ -56,6 +56,9 @@ const BankDetail = (props: any) => {
     routing: yup.string("Required").required("Required"),
     account: yup.string("Required").required("Required"),
   });
+  const validationSchemaCash = yup.object().shape({
+    accountHolderName: yup.string("Required").required("Required"),
+  });
   const intialValuesUS = {
     routingNumber: "",
     account: "",
@@ -74,6 +77,9 @@ const BankDetail = (props: any) => {
   const initialValuesCrypto = {
     routing: "",
     account: "",
+  };
+  const initialValuesCash = {
+    accountHolderName: "",
   };
   const [payoutMethod, { isLoading }] = usePayoutMethodMutation();
 
@@ -113,7 +119,6 @@ const BankDetail = (props: any) => {
           ? values.iban
           : values?.account;
     }
-
     try {
       const resp = await payoutMethod(data);
 
@@ -143,7 +148,9 @@ const BankDetail = (props: any) => {
         <Formik
           innerRef={_formik}
           initialValues={
-            paymentType === "crypto"
+            paymentType === "cash"
+              ? initialValuesCash
+              : paymentType === "crypto"
               ? initialValuesCrypto
               : paymentType === "bank"
               ? country === "unitedstates"
@@ -156,7 +163,9 @@ const BankDetail = (props: any) => {
               : intialValuesPaypal
           }
           validationSchema={
-            paymentType === "crypto"
+            paymentType === "cash"
+              ? validationSchemaCash
+              : paymentType === "crypto"
               ? validationSchemaCrypto
               : country === "unitedstates"
               ? paymentType === "bank"

@@ -51,9 +51,16 @@ const Payouts = (props: any) => {
       title: `Crypto in USDT`,
       fee: `• ${t("Transaction fees may apply")}`,
       days: `• ${t("Instantly")}`,
-      image: require("../../../assets/images/crypto.jpg"),
+      image: require("../../../assets/images/crypto.jpg")
     },
-  ];
+    {
+      id: 4,
+      title: `Cash`,
+      fee: `• ${t("No fee")}`,
+      days: `• ${t("Upto 7 days")}`,
+      image:require("../../../assets/images/money.png")
+    }]
+
 
   return (
     <View style={styles.container}>
@@ -182,6 +189,8 @@ const Payouts = (props: any) => {
                   ? "paypal"
                   : selectedIndex == 2
                   ? "crypto"
+                  : selectedIndex==3
+                  ?'cash'
                   : "paypal",
             };
 
@@ -303,8 +312,7 @@ const styles = StyleSheet.create({
   payoutCard: {
     height: hp(12),
     // backgroundColor: "red",
-    flexDirection: "row",
-    // marginTop: hp(1),
+    flexDirection:'row',
     justifyContent: "space-around",
   },
   divider: {

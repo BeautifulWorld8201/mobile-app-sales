@@ -64,7 +64,9 @@ export default function UserPayouts(props: any) {
                 <Image
                   style={styles.bankIcon}
                   source={
-                    payouts?.method == "bank"
+                    payouts?.method == "cash"
+                      ? require("../../../assets/images/money.png")
+                      : payouts?.method == "bank"
                       ? require("../../../assets/images/bank.png")
                       : payouts?.method == "crypto"
                       ? require("../../../assets/images/crypto.jpg")
