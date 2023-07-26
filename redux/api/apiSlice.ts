@@ -15,8 +15,8 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
 	let result: any = '';
-
-	if (moment().isAfter(api.getState()?.auth?.accessToken?.expires)) {
+	
+	if (moment().isAfter(api.getState()?.auth?.accessToken?.expires) && args.url == "/users/me") {
 		const refreshResult = await baseQuery(
 			{
 				url: '/auth/refresh-tokens',
@@ -28,7 +28,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 			api,
 			extraOptions
 		);
-
 		if (refreshResult.data) {
 			api.dispatch(setAccessToken(refreshResult?.data?.tokens?.access));
 			api.dispatch(setRefreshToken(refreshResult?.data?.tokens?.refresh));
