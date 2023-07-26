@@ -438,7 +438,6 @@ const styles = StyleSheet.create({
   listItem: {
     borderBottomColor: "#ccc",
     borderBottomWidth: 0.5,
-    height: hp(10),
     paddingVertical: hp(1),
   },
   listItemTop: {
