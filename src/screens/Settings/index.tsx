@@ -280,7 +280,7 @@ export default function Settings(props: any) {
                 message: "Become a verified Popcard seller today!",
                 url:
                   Platform.OS != "ios"
-                    ? "market://details?id=${GOOGLE_PACKAGE_NAME}"
+                    ? "market://details?id=com.popcardsalesmen"
                     : "https://apps.apple.com/app/popcard-salesmen/id6448954487",
               }).catch((e) => Alert.alert(e));
             }}
@@ -313,7 +313,7 @@ export default function Settings(props: any) {
               if (Platform.OS != "ios") {
                 //To open the Google Play Store
                 Linking.openURL(
-                  `market://details?id={GOOGLE_PACKAGE_NAME}`,
+                  `market://details?id=com.popcardsalesmen`,
                 ).catch((err) => alert(t("Google Play Store not found")));
               } else {
                 //To open the Apple App Store

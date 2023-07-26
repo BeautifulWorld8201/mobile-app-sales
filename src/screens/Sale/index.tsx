@@ -161,7 +161,7 @@ export default function Sale(props: any): JSX.Element {
 
       dispatch(setSelectedCards(arr));
       if (resp?.data) {
-        props.navigation.navigate("TakePayment");
+        props.navigation.navigate("TakePayment", { stripLink: resp?.data });
         scheduleSaleReminderNotification(true);
       } else if (resp?.error) {
         Toast.show(resp.error.data.message, {

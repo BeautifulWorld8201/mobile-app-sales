@@ -34,14 +34,14 @@ const Payouts = (props: any) => {
   const bankList = [
     {
       id: 1,
-      title: `Bank account in ${value == "europe" ? "EUR" : "USD"}`,
+      title: `Bank account`,
       fee: `• ${t("No fees")}`,
       days: `• ${t("3-5 business days")}`,
       image: require("../../../assets/images/bank.png"),
     },
     {
       id: 2,
-      title: `PayPal in ${value == "europe" ? "EUR" : "USD"}`,
+      title: `PayPal`,
       fee: `• ${t("Paypal fees may apply")}`,
       days: `• ${t("1 business day")}`,
       image: require("../../../assets/images/paypal.png"),
@@ -51,9 +51,16 @@ const Payouts = (props: any) => {
       title: `Crypto in USDT`,
       fee: `• ${t("Transaction fees may apply")}`,
       days: `• ${t("Instantly")}`,
-      image: require("../../../assets/images/crypto.jpg"),
+      image: require("../../../assets/images/crypto.jpg")
     },
-  ];
+    {
+      id: 4,
+      title: `Cash`,
+      fee: `• ${t("No fee")}`,
+      days: `• ${t("Upto 7 days")}`,
+      image:require("../../../assets/images/money.png")
+    }]
+
 
   return (
     <View style={styles.container}>
@@ -182,6 +189,8 @@ const Payouts = (props: any) => {
                   ? "paypal"
                   : selectedIndex == 2
                   ? "crypto"
+                  : selectedIndex==3
+                  ?'cash'
                   : "paypal",
             };
 
@@ -302,8 +311,8 @@ const styles = StyleSheet.create({
   },
   payoutCard: {
     height: hp(12),
-    flexDirection: "row",
-    // marginTop: hp(1),
+    // backgroundColor: "red",
+    flexDirection:'row',
     justifyContent: "space-around",
   },
   divider: {

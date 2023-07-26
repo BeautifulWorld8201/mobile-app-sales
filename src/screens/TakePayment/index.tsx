@@ -1,14 +1,26 @@
-import { StyleSheet, View, Image } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  View,
+  Image,
+  Modal,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
+import React, { useState } from "react";
 import Header from "../../../components/Header";
 import { hp, wp } from "../../../utils";
 import Text from "../../../components/Text";
 import { tintColorDark } from "../../../constants/Colors";
 import MyButton from "../../../components/Button";
 import { useTranslation } from "react-i18next";
-
+import QRCode from "react-native-qrcode-svg";
 export default function TakePayment(props: any) {
   const { t } = useTranslation();
+
+  const stripLink = props?.route?.params?.stripLink;
+
+  const [visible, setVisible] = useState(false);
+
   return (
     <>
       <View style={styles.container}>
@@ -20,6 +32,32 @@ export default function TakePayment(props: any) {
           )}
           leftButton={() => props.navigation.goBack()}
         />
+
+        <Modal animationType="fade" transparent={true} visible={visible}>
+          <TouchableWithoutFeedback onPress={() => setVisible(!visible)}>
+            <View style={styles.modalContainer}>
+              <TouchableWithoutFeedback onPress={() => {}}>
+                <View style={styles.modalContent}>
+                  <TouchableOpacity
+                    onPress={() => setVisible(!visible)}
+                    style={styles.closeButton}
+                  >
+                    <Image
+                      source={require("../../../assets/images/close.png")}
+                      style={styles.crossButton}
+                    />
+                  </TouchableOpacity>
+                  <View style={styles.qrCodeContainer}>
+                    <QRCode
+                      value={stripLink.links.payment_link.url}
+                      size={200}
+                    />
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
         <View style={styles.innerContainer}>
           <Text style={styles.statusText}>
             {t(
@@ -49,6 +87,9 @@ export default function TakePayment(props: any) {
           }}
         >
           <Text style={styles.buttonText}>{t("Done")}</Text>
+        </MyButton>
+        <MyButton style={styles.button} onPress={() => setVisible(!visible)}>
+          <Text style={styles.buttonText}>{t("Show QR")}</Text>
         </MyButton>
       </View>
     </>
@@ -82,7 +123,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: "center",
-    // bottom: 0,
     backgroundColor: "white",
     paddingHorizontal: hp(2.5),
   },
@@ -101,5 +141,35 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 10,
     marginTop: hp(10),
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  closeButton: {
+    alignSelf: "flex-end",
+    height: 20,
+    width: 20,
+  },
+  closeText: {
+    color: "blue",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  qrCodeContainer: {
+    marginVertical: 20,
+  },
+  crossButton: {
+    width: 15,
+    height: 15,
+    tintColor: "gray",
   },
 });

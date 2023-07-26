@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
   RefreshControl,
   Alert,
+  Modal,
+  Image,
 } from "react-native";
 import { Text, View } from "../../../components/Themed";
 import { useSelector, useDispatch } from "react-redux";
@@ -70,6 +72,10 @@ export default function MakeSale(props: any) {
 
   // const [getSales, { isLoading }] = useGetSalesMutation();
   const [selectedPeriod, setSelectedPeriod] = useState(periodSelectorData[2]);
+  const [visible, setVisible] = useState(false);
+  const [dataLoad, setDataLoad] = useState(false);
+  const [sales, setSales] = useState([]);
+
   const {
     data: saleData,
     isError,
@@ -78,8 +84,25 @@ export default function MakeSale(props: any) {
     isFetching,
   } = useGetSalesQuery(selectedPeriod?.value);
   const { data: currentUser } = useGetCurrentUserQuery();
-  const { data: payoutMethod } = useGetPayoutMethodQuery();
-  const [sales, setSales] = useState([]);
+  const { data: payoutMethod, isSuccess: payoutLoaded } = useGetPayoutMethodQuery();
+  const images = [
+    require("../../../assets/images/i1.png"),
+    require("../../../assets/images/i2.png"),
+    require("../../../assets/images/i3.png"),
+  ];
+  const pickRandomImage = () => {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    setRandomImage(images[randomIndex]);
+  };
+  const [randomImage, setRandomImage] = useState(images[0]);
+  useEffect(() => {
+    if (payoutLoaded && !payoutMethod) {
+      setVisible(true);
+      pickRandomImage();
+    } else {
+      setVisible(false);
+    }
+  }, [payoutLoaded]);
 
   const onClickPeriod = (selectedPeriod) => {
     setSelectedPeriod(selectedPeriod);
@@ -171,7 +194,53 @@ export default function MakeSale(props: any) {
   return (
     <View style={styles.container}>
       <Header title={t("Sales")} />
+      {!payoutMethod && !isLoading ? (
+        <Modal
+          visible={visible}
+          animationType="slide"
+          transparent={true}
+          // onRequestClose={onClose}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <View style={styles.notificationView}>
+                <Image
+                  source={require("../../../assets/images/notification.png")}
+                  style={styles.notificationImage}
+                />
+              </View>
 
+              <Image source={randomImage} style={styles.modalImage} />
+              <View style={styles.modalContent}>
+                <Text>
+                  {
+                    "You need to add a payout method before starting to make new Sale."
+                  }
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", alignSelf: "flex-end" }}>
+                <Button
+                  style={styles.closeButton}
+                  onPress={() => {
+                    setVisible(!visible);
+                    props.navigation.navigate("Payouts");
+                  }}
+                >
+                  <Text style={styles.closeButtonText}>
+                    {"Add payout method"}
+                  </Text>
+                </Button>
+                <Button
+                  onPress={() => setVisible(!visible)}
+                  style={styles.cancelButton}
+                >
+                  <Text style={styles.closeButtonText}>{"Cancel"}</Text>
+                </Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      ) : null}
       <>
         <ScrollView
           style={styles.innerContainer}
@@ -248,22 +317,24 @@ export default function MakeSale(props: any) {
                     if (payoutMethod?.id) {
                       props.navigation.navigate("Sale");
                     } else {
-                      Alert.alert(
-                        t(
-                          "You need to add a payout method before starting to make sales",
-                        ),
-                        "",
-                        [
-                          {
-                            text: t("Cancel"),
-                            style: "cancel",
-                          },
-                          {
-                            text: t("Add payout method"),
-                            onPress: () => props.navigation.navigate("Payouts"),
-                          },
-                        ],
-                      );
+                      pickRandomImage();
+                      setVisible(!visible);
+                      // Alert.alert(
+                      //   t(
+                      //     "You need to add a payout method before starting to make ",
+                      //   ),
+                      //   "",
+                      //   [
+                      //     {
+                      //       text: t("Cancel"),
+                      //       style: "cancel",
+                      //     },
+                      //     {
+                      //       text: t("Add payout method"),
+                      //       onPress: () => props.navigation.navigate("Payouts"),
+                      //     },
+                      //   ],
+                      // );
                     }
                   }}
                   style={styles.buttonBelow}
@@ -432,5 +503,67 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: hp("30%"),
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 20,
+    width: "80%",
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalContent: {
+    marginBottom: 20,
+  },
+  closeButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 4,
+    backgroundColor: "#ffc000",
+  },
+  cancelButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 4,
+    backgroundColor: "#ff726f",
+    marginLeft: 10,
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  modalImage: {
+    height: 150,
+    width: "100%",
+    resizeMode: "cover",
+    marginBottom: 10,
+  },
+  notificationView: {
+    marginTop: -50,
+    height: 70,
+    width: 70,
+    borderRadius: 50,
+    backgroundColor: "#ffc000",
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "white",
+    borderWidth: 3,
+  },
+  notificationImage: {
+    width: "80%",
+    height: "80%",
+    resizeMode: "center",
+    tintColor: "white",
   },
 });
