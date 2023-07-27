@@ -13,33 +13,70 @@ const baseQuery = fetchBaseQuery({
 	},
 });
 
+let refreshingToken = false;
+let tokenRefreshPromise: Promise<void> | null = null;
+const tokenRefreshQueue: any = [];
 const baseQueryWithReauth = async (args, api, extraOptions) => {
 	let result: any = '';
 
-	if (moment().isAfter(api.getState()?.auth?.accessToken?.expires)) {
-		const refreshResult = await baseQuery(
-			{
-				url: '/auth/refresh-tokens',
-				method: 'POST',
-				body: {
-					refreshToken: `${api.getState()?.auth?.refreshToken?.token}`,
-				},
-			},
-			api,
-			extraOptions
-		);
+	const refreshTokenIfNeeded = async () => {
+		if (refreshingToken) {
+			return tokenRefreshPromise;
+		} else {
+			refreshingToken = true;
+			try {
+				const refreshResult = await baseQuery(
+					{
+						url: '/auth/refresh-tokens',
+						method: 'POST',
+						body: {
+							refreshToken: `${api.getState()?.auth?.refreshToken?.token}`,
+						},
+					},
+					api,
+					extraOptions
+				);
 
-		if (refreshResult.data) {
-			api.dispatch(setAccessToken(refreshResult?.data?.tokens?.access));
-			api.dispatch(setRefreshToken(refreshResult?.data?.tokens?.refresh));
-			result = await baseQuery(args, api, extraOptions);
-		} else if (refreshResult.error) {
-			api.dispatch(logOut());
-			api.dispatch(apiSlice.util.resetApiState());
+				if (refreshResult.data) {
+					api.dispatch(setAccessToken(refreshResult?.data?.tokens?.access));
+					api.dispatch(setRefreshToken(refreshResult?.data?.tokens?.refresh));
+					while (tokenRefreshQueue.length) {
+						const { resolve } = tokenRefreshQueue.shift();
+						resolve();
+					}
+				} else if (refreshResult.error) {
+					api.dispatch(logOut());
+					api.dispatch(apiSlice.util.resetApiState());
+					while (tokenRefreshQueue.length) {
+						const { reject } = tokenRefreshQueue.shift();
+						reject(new Error('Token refresh failed.'));
+					}
+				}
+			} catch (error) {
+				console.error('Token refresh error:', error);
+				while (tokenRefreshQueue.length) {
+					const { reject } = tokenRefreshQueue.shift();
+					reject(error);
+				}
+			} finally {
+				refreshingToken = false;
+			}
 		}
+	};
+
+	if (moment().isAfter(api.getState()?.auth?.accessToken?.expires)) {
+		if (!tokenRefreshPromise) {
+			tokenRefreshPromise = refreshTokenIfNeeded();
+		}
+
+		await tokenRefreshPromise;
+		tokenRefreshPromise = null;
+
+		result = await baseQuery(args, api, extraOptions);
 	} else {
 		result = await baseQuery(args, api, extraOptions);
 	}
+
 	return result;
 };
 
