@@ -76,6 +76,11 @@ export default function TakePayment(props: any) {
 				</View>
 			</View>
 			<View style={styles.buttonContainer}>
+				{stripLink?.links?.payment_link?.url && (
+					<MyButton style={styles.button} onPress={() => setVisible(!visible)}>
+						<Text style={styles.buttonText}>{t('Show QR')}</Text>
+					</MyButton>
+				)}
 				<MyButton
 					style={styles.button}
 					onPress={() => {
@@ -85,9 +90,6 @@ export default function TakePayment(props: any) {
 					}}
 				>
 					<Text style={styles.buttonText}>{t('Done')}</Text>
-				</MyButton>
-				<MyButton style={styles.button} onPress={() => setVisible(!visible)}>
-					<Text style={styles.buttonText}>{t('Show QR')}</Text>
 				</MyButton>
 			</View>
 		</>
