@@ -1,6 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
-
+apply plugin: 'com.google.gms.google-services'
 import com.android.build.OutputFile
 
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
@@ -118,8 +118,8 @@ android {
         applicationId 'com.popcardsalesmen'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.10.0"
+        versionCode 6
+        versionName "1.11.2"
     }
 
     splits {

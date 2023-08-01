@@ -30,7 +30,7 @@ import {
 	useUpdateNotificationSettingsMutation,
 } from '../../redux/user/userApiSlice';
 import * as Notifications from 'expo-notifications';
-
+import Constants from 'expo-constants';
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -200,18 +200,28 @@ export default function StackNavigator(props: any) {
 
 	async function registerForPushNotificationsAsync() {
 		let token;
+		console.log('isDevice', isDevice);
 		if (isDevice) {
 			const { status: existingStatus } = await Notifications.getPermissionsAsync();
 			let finalStatus = existingStatus;
+			console.log('existingStatus', existingStatus);
+
 			if (existingStatus !== 'granted') {
 				const { status } = await Notifications.requestPermissionsAsync();
 				finalStatus = status;
+				console.log('FinalStatus', finalStatus);
 			}
 			if (finalStatus !== 'granted') {
 				return;
 			}
-			token = (await Notifications.getExpoPushTokenAsync()).data;
-			console.log(token);
+			try {
+				token = await Notifications.getExpoPushTokenAsync({
+					projectId: Constants.expoConfig.extra.eas.projectId,
+				});
+				console.log('Token', token.data);
+			} catch (error) {
+				console.log('Error fatch Token', error);
+			}
 		} else {
 			alert('Must use physical device for Push Notifications');
 		}

@@ -161,7 +161,7 @@ export default function Sale(props: any): JSX.Element {
 
       dispatch(setSelectedCards(arr));
       if (resp?.data) {
-        props.navigation.navigate("TakePayment");
+        props.navigation.navigate("TakePayment", { stripLink: resp?.data });
         scheduleSaleReminderNotification(true);
       } else if (resp?.error) {
         Toast.show(resp.error.data.message, {
@@ -600,6 +600,7 @@ const styles = StyleSheet.create({
     fontSize: hp(2),
   },
   innerContainer: {
+    height: 500,
     marginHorizontal: hp(2.5),
     marginTop: hp(2),
   },
@@ -609,7 +610,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 6,
     height: hp(6),
-
     width: "90%",
     color: "black",
   },
@@ -683,5 +683,8 @@ const styles = StyleSheet.create({
     borderColor: "#f9f9f9",
     backgroundColor: "#f9f9f9",
   },
-  listItem: { height: hp(8), padding: 5 },
+  listItem: {
+    height: hp(8),
+    padding: 5,
+  },
 });

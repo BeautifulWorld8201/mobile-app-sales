@@ -97,16 +97,15 @@ export default function WriteCards(props: any) {
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-
             alignItems: "center",
           }}
         >
           <View style={{ flexDirection: "row", gap: 16 }}>
-            <Text style={{ color: "#888", minWidth: 16 }}>{index + 1}</Text>
+            <Text style={{ color: "#888", minWidth: hp(2) }}>{index + 1}</Text>
             <Text>{shortenString(item?.link?.name)}</Text>
           </View>
           {item?.checked ? (
-            <Icon name={"check-circle"} color={"green"} size={25} />
+            <Icon name={"check-circle"} color={"green"} size={hp(3)} />
           ) : (
             <Button
               style={styles.writeBtn}
@@ -189,8 +188,8 @@ export default function WriteCards(props: any) {
               : require("../../../assets/images/nfc-tag.png")
           }
           style={{
-            height: 150,
-            width: 150,
+            height: hp(20),
+            width: hp(20),
             marginTop: hp(2),
           }}
           resizeMode="contain"
@@ -255,7 +254,9 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(2),
+    // marginTop: hp(2),
+    position: "absolute",
+    bottom: hp(2),
   },
   buttonText: {
     color: "white",
