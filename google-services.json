@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "759723605107",
-    "project_id": "popcard-acde1",
-    "storage_bucket": "popcard-acde1.appspot.com"
+    "project_number": "840095657285",
+    "project_id": "popcardsalemen",
+    "storage_bucket": "popcardsalemen.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:759723605107:android:7cd2b42d8d35887ae6be06",
+        "mobilesdk_app_id": "1:840095657285:android:c7e96922772e1f3a80e22c",
         "android_client_info": {
           "package_name": "com.popcardsalesmen"
         }
       },
       "oauth_client": [
         {
-          "client_id": "759723605107-vibl48acit69idb9v5v40uirafvb2hcn.apps.googleusercontent.com",
+          "client_id": "840095657285-0qcceihb96g9in05rhv3v67ibvk1qch8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB6BLXwKQfNmwVqTQa_NlbJsHxw5_pEfyQ"
+          "current_key": "AIzaSyAfu2VZoqZpFgowCwrFSVnQjwW6zbkI380"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "759723605107-vibl48acit69idb9v5v40uirafvb2hcn.apps.googleusercontent.com",
+              "client_id": "840095657285-0qcceihb96g9in05rhv3v67ibvk1qch8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
