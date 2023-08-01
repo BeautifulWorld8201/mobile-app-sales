@@ -11,7 +11,10 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import * as Notifications from "expo-notifications";
 
 import "./i18n.config";
+import { LogBox } from "react-native";
 import { isDevice } from "expo-device";
+
+LogBox.ignoreAllLogs(true)
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

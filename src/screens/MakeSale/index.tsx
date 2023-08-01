@@ -84,7 +84,8 @@ export default function MakeSale(props: any) {
     isFetching,
   } = useGetSalesQuery(selectedPeriod?.value);
   const { data: currentUser } = useGetCurrentUserQuery();
-  const { data: payoutMethod, isSuccess: payoutLoaded } = useGetPayoutMethodQuery();
+  const { data: payoutMethod, isSuccess: payoutLoaded } =
+    useGetPayoutMethodQuery();
   const images = [
     require("../../../assets/images/i1.png"),
     require("../../../assets/images/i2.png"),

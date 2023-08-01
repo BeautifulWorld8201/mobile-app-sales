@@ -49,7 +49,7 @@ export default function TakePayment(props: any) {
                   </TouchableOpacity>
                   <View style={styles.qrCodeContainer}>
                     <QRCode
-                      value={stripLink.links.payment_link.url}
+                      value={stripLink?.links?.payment_link?.url}
                       size={200}
                     />
                   </View>
