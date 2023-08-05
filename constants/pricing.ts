@@ -1,7 +1,7 @@
 const pricing: any = {
 	1: {
 		USD: {
-			price: 49,
+			price: 100,
 		},
 		EUR: {
 			price: 100,
@@ -15,7 +15,7 @@ const pricing: any = {
 	},
 	3: {
 		USD: {
-			price: 79,
+			price: 200,
 		},
 		EUR: {
 			price: 200,
@@ -29,7 +29,7 @@ const pricing: any = {
 	},
 	5: {
 		USD: {
-			price: 99,
+			price: 250,
 		},
 		EUR: {
 			price: 250,
@@ -43,7 +43,7 @@ const pricing: any = {
 	},
 	10: {
 		USD: {
-			price: 149,
+			price: 400,
 		},
 		EUR: {
 			price: 400,
